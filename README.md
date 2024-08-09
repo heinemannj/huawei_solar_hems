@@ -1,2 +1,1 @@
-# huawei_solar_ems
-Huawei Solar Energy Management System
+# Huawei Solar Energy Management System
