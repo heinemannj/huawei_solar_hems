@@ -1,11 +1,8 @@
 # Huawei Solar EMS
-**Energy Management System**
 
 [![License][license-shield]](LICENSE)
 
-#[![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
-
-#[![Community Forum][forum-shield]][forum]
+**Energy Management System**
 
 **Huawei Solar EMS package** enrich sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom Home Assistant integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces.
 
