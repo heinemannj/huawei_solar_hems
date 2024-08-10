@@ -1,13 +1,28 @@
 # Huawei Solar EMS
 
-**Energy Management System**
+Home Assistent (HA) **Energy Management System**
 
 [![License][license-shield]](LICENSE) [![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
 
 [![Community Forum][forum-shield]][forum]
 
+**Huawei Solar EMS** assist you with **a set of custom** HA **template sensors**, **automations** and **dashboards** also referred to as the *"Huawei Solar EMS package"*.
 
-**Huawei Solar EMS package** enrich sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom Home Assistant integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces.
+These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation (including your Batteries, but without the corrections we see in FusionSolar) based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces.
+
+Additional EMS features:
+
+- **PV Solar Forecast** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
+- **EPEXSpot price forecast** by the usage of [EPEXSpot integration]()
+- **House load and batteries SOC forecasts** by the usage of [EMHass addon]()
+
+## Table of Contents
+
+- [Screenshots](#screenshots)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Inverter polling frequency](#inverter-polling-frequency)
+- [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Project Description
 
@@ -34,19 +49,6 @@ The provided custom sensors are based on a setup with two inverters and one batt
 |![Power Meter Sensors](images/power_meter_sensors.png)   | ![Optimizer Sensors](images/optimizer_sensors.png)  |
 
 
-
-**HA Energy Dashboard**
-
-![energy-config](images/energy-config.png)
-
-**Services**
-
-This integration exposes multiple services, allowing you to [actively control the amount of electricity exported to the grid](https://github.com/wlcrs/huawei_solar/wiki/Changing-Active-Power-Control) and [forcibly charge/discharge your battery](https://github.com/wlcrs/huawei_solar/wiki/Force-charge-discharge-battery). 
-
-![services](images/services.png)
-
-To enable these advanced features, you need to select 'Elevate permissions' during the setup of this integration.
-
 ## Prerequisites
 
 This integration supports two connection modes to SUN2000 inverters:
@@ -54,6 +56,17 @@ This integration supports two connection modes to SUN2000 inverters:
 - network connection
 
 Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
+
+**Services**
+
+[Huawei Solar Integration](https://github.com/wlcrs/huawei_solar/) exposes multiple services, allowing you to [actively control the amount of electricity exported to the grid](https://github.com/wlcrs/huawei_solar/wiki/Changing-Active-Power-Control) and [forcibly charge/discharge your battery](https://github.com/wlcrs/huawei_solar/wiki/Force-charge-discharge-battery). 
+
+To enable these advanced features, you need to select 'Elevate permissions' during the setup of [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar/) otherwise otherwise the majority of EMS features provided within this solution will not work.
+
+6. When using the `elevate permissions` feature in combination with certain connection methods (most TCP-connections, not for serial connections), 
+   you will be asked to enter the credentials to the `installer` account in a next step. These are the
+credentials used to connect to the inverter in the "Device Commissioning" section of
+the FusionSolar App. The default password is `00000a`. If necessary, you can [perform a password reset](https://support.huawei.com/enterprise/en/doc/EDOC1100136173/8aa1f88a/resetting-password). This will not reset other parameters like the FusionSolar cloud connection or other changes made by the firm which did your solar installation.
 
 ## Installation
 
@@ -89,13 +102,7 @@ repository into the `custom_components/huawei_solar` directory
 
 ![](images/network-configuration.png)
 
-6. When using the `elevate permissions` feature in combination with certain connection methods (most TCP-connections, not for serial connections), 
-   you will be asked to enter the credentials to the `installer` account in a next step. These are the
-credentials used to connect to the inverter in the "Device Commissioning" section of
-the FusionSolar App. The default password is `00000a`. If necessary, you can [perform a password reset](https://support.huawei.com/enterprise/en/doc/EDOC1100136173/8aa1f88a/resetting-password). This will not reset other parameters like the FusionSolar cloud connection or other changes made by the firm which did your solar installation.
-
-
-## Inverter polling frequency
+### Inverter polling frequency
 
 The integration will poll the inverter for new values every 30 seconds. If you wish to receive fresh inverter data less (or more) frequently, you can disable the automatic refresh in the integration's system options (Enable polling for updates) and create your own automation with your desired polling frequency.
 
@@ -113,6 +120,92 @@ The integration will poll the inverter for new values every 30 seconds. If you w
 ```
 
 Note that optimizer data is refreshed only every 5 minutes, which matches how frequently the inverter refreshes this data.
+
+## Dashboards
+
+Copy the following folder
+
+- **YAML packages** `<config>/packages`
+
+to your HA `<config>` folder and modify your `<config>/configuration.yaml`:
+
+```
+homeassistant:
+  customize_glob: !include customize_glob.yaml
+  customize: !include customize.yaml
+  packages:
+    huawei_solar_yield: !include packages/huawei-solar-yield-package.yaml
+    huawei_solar_battery_card: !include packages/huawei-solar-battery-card-package.yaml
+    huawei_solar_battery_correction: !include packages/huawei-solar-battery-correction-package.yaml
+    huawei_solar_diagnostic: !include packages/huawei-solar-diagnostic-package.yaml
+    huawei_solar_power_flow_card: !include packages/huawei-solar-power-flow-card-package.yaml
+    huawei_solar_energy_flow_card: !include packages/huawei-solar-energy-flow-card-package.yaml
+    solcast_solar: !include packages/solcast-solar-package.yaml
+```
+
+Copy the following folders
+
+- **YAML dashboards** `<config>/dashboards`<br>
+- **Jinja templates used in cards and template sensors** `<config>/custom_templates`<br>
+- **Card-Mod theme** (css styles) `<config>/themes/dashboards.yaml`<br>
+- **Card background images** `<config>/www/images`<br>
+
+to your HA `<config>` folder and modify your `<config>/configuration.yaml` and `<config>/ui-lovelace.yaml`.
+
+`<config>/configuration.yaml`
+
+```
+automation: !include automations.yaml
+group: !include groups.yaml
+lovelace: !include ui-lovelace.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+frontend:
+  themes: !include_dir_merge_named themes
+```
+
+`<config>/ui-lovelace.yaml`
+
+```
+# UI managed dashboards
+#
+mode: storage
+```
+
+```
+# Additional YAML dashboards
+#
+dashboards:
+  100-rooms-yaml:
+    mode: yaml
+    title: 100_Rooms
+    icon: mdi:home
+    show_in_sidebar: true
+    filename: dashboards/100-rooms/index.yaml
+```
+
+![image](https://github.com/heinemannj/home-assistant-config/blob/master/assets/100-tablet-home.png)
+
+```
+  420-pv-yaml:
+    mode: yaml
+    title: 420_PV
+    icon: mdi:solar-power-variant
+    show_in_sidebar: true
+    filename: dashboards/420-pv/index.yaml
+```
+
+![image](https://github.com/heinemannj/home-assistant-config/blob/master/assets/421-pv.png)
+
+![image](https://github.com/heinemannj/home-assistant-config/blob/master/assets/422-pv.png)
+
+![image](https://github.com/heinemannj/home-assistant-config/blob/master/assets/423-pv.png)
+
+## Notes
+
+- Private information is stored in secrets.yaml (not uploaded).
+
+---
 
 ## FAQ - Troubleshooting
 
@@ -150,8 +243,6 @@ logger:
     homeassistant.components.huawei_solar: debug
 ```
 By providing logs directly when creating the issue, you will likely get help much faster.
-
----
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_ems.svg
 [commits]: https://github.com/heinemannj/huawei_solar_ems/commits/master
