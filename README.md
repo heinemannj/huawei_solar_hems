@@ -1,7 +1,7 @@
 # Huawei Solar EMS
 **Energy Management System**
 
-[![License][license-shield]](LICENSE.md) [![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
+[![License][license-shield]](LICENSE) [![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
 
 [![Community Forum][forum-shield]][forum]
 
