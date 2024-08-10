@@ -171,3 +171,7 @@ By providing logs directly when creating the issue, you will likely get help muc
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
 [last-commit-shield]: https://img.shields.io/github/last-commit/heinemannj/huawei_solar_ems.svg
 [stars-shield]: https://img.shields.io/github/stars/heinemannj/huawei_solar_ems.svg?style=social&label=Stars
+[forks-shield]: https://img.shields.io/github/forks/heinemannj/huawei_solar_ems.svg?style=social&label=Forks
+[watchers-shield]: https://img.shields.io/github/watchers/heinemannj/huawei_solar_ems.svg?style=social&label=Watchers
+[black-duck-shield]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_ems/branches/master/badge-risk.svg
+[black-duck]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_ems/branches/master/
