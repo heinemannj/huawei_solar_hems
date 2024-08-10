@@ -1,8 +1,11 @@
 # Huawei Solar EMS
 
-[![License][license-shield]](LICENSE)
-
 **Energy Management System**
+
+[![License][license-shield]](LICENSE) [![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
+
+[![Community Forum][forum-shield]][forum]
+
 
 **Huawei Solar EMS package** enrich sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom Home Assistant integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces.
 
@@ -146,7 +149,25 @@ logger:
     huawei_solar: debug
     homeassistant.components.huawei_solar: debug
 ```
-
 By providing logs directly when creating the issue, you will likely get help much faster.
 
 ---
+
+[commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_ems.svg
+[commits]: https://github.com/heinemannj/huawei_solar_ems/commits/master
+[actions-shield]: https://github.com/heinemannj/huawei_solar_ems/workflows/Home%20Assistant%20CI/badge.svg
+[actions]: https://github.com/heinemannj/huawei_solar_ems/actions
+[contributors]: https://github.com/heinemannj/huawei_solar_ems/graphs/contributors
+[discord-shield]: https://img.shields.io/discord/330944238910963714.svg
+[discord]: https://discord.gg/c5DvZ4e
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
+[forum]: https://community.home-assistant.io/?u=heinemannj
+[heinemannj]: https://github.com/heinemannj
+[travis-shield]: https://travis-ci.org/heinemannj/huawei_solar_ems.svg?branch=master
+[travis]: https://travis-ci.org/heinemannj/huawei_solar_ems
+[home-assistant]: https://home-assistant.io
+[issue]: https://github.com/heinemannj/huawei_solar_ems/issues
+[license-shield]: https://img.shields.io/badge/license-MIT-green.svg
+[maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
+[last-commit-shield]: https://img.shields.io/github/last-commit/heinemannj/huawei_solar_ems.svg
+[stars-shield]: https://img.shields.io/github/stars/heinemannj/huawei_solar_ems.svg?style=social&label=Stars
