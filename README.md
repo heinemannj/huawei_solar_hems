@@ -12,9 +12,15 @@ These custom sensors and automations calculate all the power and energy flows of
 
 Additional EMS features:
 
-- **PV Solar Forecast** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
-- **EPEXSpot price forecast** by the usage of [EPEXSpot integration]()
-- **House load and batteries SOC forecasts** by the usage of [EMHass addon]()
+- **PV Solar Forecasts** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar).
+  </br>This custom component integrates the [Solcast Hobby PV Forecast API](https://solcast.com/free-rooftop-solar-forecasting) into HA.
+- **EPEX Spot electricity price forecasts** by the usage of [EPEXSpot integration](https://github.com/mampfes/ha_epex_spot).
+  </br>This custom component adds electricity prices from the European Power EXchange ( [EPEX Spot](https://www.epexspot.com/en/about) ) into HA.
+  </br>It covers Austria, Belgium, Denmark, Germany, Finland, France, Luxembourg, the Netherlands, Norway, Poland, Sweden, the United Kingdom and Switzerland at this time.
+- **Hourly Weather Forecasts**
+- **House load and batteries SOC forecasts** by the usage of the [EMHASS Add-on](https://github.com/davidusb-geek/emhass-add-on).
+  </br>[EMHASS](https://github.com/davidusb-geek/emhass) (Energy Management for Home Assistant) is an optimization tool designed for residential households connected to HA.
+- **Tibber consumption/cost exports**
 
 ## Table of Contents
 
