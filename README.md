@@ -252,25 +252,25 @@ logger:
 ```
 By providing logs directly when creating the issue, you will likely get help much faster.
 
-[commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_ems.svg
-[commits]: https://github.com/heinemannj/huawei_solar_ems/commits/master
-[actions-shield]: https://github.com/heinemannj/huawei_solar_ems/workflows/Home%20Assistant%20CI/badge.svg
-[actions]: https://github.com/heinemannj/huawei_solar_ems/actions
-[contributors]: https://github.com/heinemannj/huawei_solar_ems/graphs/contributors
+[commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_hems.svg
+[commits]: https://github.com/heinemannj/huawei_solar_hems/commits/master
+[actions-shield]: https://github.com/heinemannj/huawei_solar_hems/workflows/Home%20Assistant%20CI/badge.svg
+[actions]: https://github.com/heinemannj/huawei_solar_hems/actions
+[contributors]: https://github.com/heinemannj/huawei_solar_hems/graphs/contributors
 [discord-shield]: https://img.shields.io/discord/330944238910963714.svg
 [discord]: https://discord.gg/c5DvZ4e
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
 [forum]: https://community.home-assistant.io/?u=heinemannj
 [heinemannj]: https://github.com/heinemannj
-[travis-shield]: https://travis-ci.org/heinemannj/huawei_solar_ems.svg?branch=master
-[travis]: https://travis-ci.org/heinemannj/huawei_solar_ems
+[travis-shield]: https://travis-ci.org/heinemannj/huawei_solar_hems.svg?branch=master
+[travis]: https://travis-ci.org/heinemannj/huawei_solar_hems
 [home-assistant]: https://home-assistant.io
-[issue]: https://github.com/heinemannj/huawei_solar_ems/issues
+[issue]: https://github.com/heinemannj/huawei_solar_hems/issues
 [license-shield]: https://img.shields.io/badge/license-MIT-green.svg
 [maintenance-shield]: https://img.shields.io/maintenance/yes/2023.svg
-[last-commit-shield]: https://img.shields.io/github/last-commit/heinemannj/huawei_solar_ems.svg
-[stars-shield]: https://img.shields.io/github/stars/heinemannj/huawei_solar_ems.svg?style=social&label=Stars
-[forks-shield]: https://img.shields.io/github/forks/heinemannj/huawei_solar_ems.svg?style=social&label=Forks
-[watchers-shield]: https://img.shields.io/github/watchers/heinemannj/huawei_solar_ems.svg?style=social&label=Watchers
-[black-duck-shield]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_ems/branches/master/badge-risk.svg
-[black-duck]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_ems/branches/master/
+[last-commit-shield]: https://img.shields.io/github/last-commit/heinemannj/huawei_solar_hems.svg
+[stars-shield]: https://img.shields.io/github/stars/heinemannj/huawei_solar_hems.svg?style=social&label=Stars
+[forks-shield]: https://img.shields.io/github/forks/heinemannj/huawei_solar_hems.svg?style=social&label=Forks
+[watchers-shield]: https://img.shields.io/github/watchers/heinemannj/huawei_solar_hems.svg?style=social&label=Watchers
+[black-duck-shield]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_hems/branches/master/badge-risk.svg
+[black-duck]: https://copilot.blackducksoftware.com/github/repos/heinemannj/huawei_solar_hems/branches/master/
