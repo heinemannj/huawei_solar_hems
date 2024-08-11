@@ -1,26 +1,28 @@
-# Huawei Solar EMS
+# Huawei Solar HEMS
 
-Home Assistent (HA) **Energy Management System**
+Home Assistent (HA) **Home Energy Management System** (HEMS)
 
 [![License][license-shield]](LICENSE) [![GitHub Last Commit][last-commit-shield]][commits] ![GitHub Stars][stars-shield] ![GitHub Watchers][watchers-shield] ![GitHub Forks][forks-shield]
 
 [![Community Forum][forum-shield]][forum]
 
-**Huawei Solar EMS** assist you with **a set of custom** HA **template sensors**, **automations** and **dashboards** also referred to as the *"Huawei Solar EMS package"*.
+**Huawei Solar HEMS** assist you with **a set of custom** HA **template sensors**, **automations** and **dashboards** also referred to as the *"Huawei Solar HEMS package"*.
 
-These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation (including your Batteries, but without the corrections we see in FusionSolar) based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces.
+These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation (including your Batteries, but without the corrections we see in FusionSolar) based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces, which is far away from enhanced requirements of an HEMS.
 
-Additional EMS features including detailed visualisations (dashboards):
+**Additional HEMS features** including detailed visualisations (dashboards):
 
-- **PV Solar Forecasts** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
+- **PV Solar forecasts** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
   </br>This custom component integrates the [Solcast Hobby PV Forecast API](https://solcast.com/free-rooftop-solar-forecasting) into HA.
 - **EPEX Spot electricity price forecasts** by the usage of [EPEXSpot integration](https://github.com/mampfes/ha_epex_spot)
   </br>This custom component adds electricity prices from the European Power EXchange ( [EPEX Spot](https://www.epexspot.com/en/about) ) into HA.
   </br>It covers Austria, Belgium, Denmark, Germany, Finland, France, Luxembourg, the Netherlands, Norway, Poland, Sweden, the United Kingdom and Switzerland at this time.
-- **Hourly Weather Forecasts**
+- **Hourly Weather forecasts**
 - **House load and batteries SOC forecasts** by the usage of the [EMHASS Add-on](https://github.com/davidusb-geek/emhass-add-on)
   </br>[EMHASS](https://github.com/davidusb-geek/emhass) (Energy Management for Home Assistant) is an optimization tool designed for residential households connected to HA.
 - **Tibber consumption/cost exports**
+
+All custom template sensors and automations are available as HA package files and all dashboards are available through HA YAML dashboards for an easy [Installation](#installation).
 
 ## Table of Contents
 
