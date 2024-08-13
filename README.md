@@ -8,9 +8,27 @@ Home Assistent (HA) **Home Energy Management System** (HEMS)
 
 **Huawei Solar HEMS** assist you with **a set of custom** HA **template sensors**, **automations** and **dashboards** also referred to as the *"Huawei Solar HEMS package"*.
 
+![Dashboard-1](assets/dashboard-1.png)      
+
 These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation (including your Batteries, but without the corrections we see in FusionSolar) based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces, which is far away from enhanced requirements of an HEMS.
 
-**Additional HEMS features** including detailed visualisations (dashboards):
+All custom template sensors and automations are available as HA package files and all dashboards are available through HA YAML dashboards for an easy [Installation](#installation).
+
+## Table of Contents
+
+- [Additional HEMS features including detailed visualisations (dashboards)](#additional_features)
+  - [Forecasting](#forecasting)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Inverter polling frequency](#inverter-polling-frequency)
+- [FAQ - Troubleshooting](#faq---troubleshooting)
+
+## Additional HEMS features including detailed visualisations (dashboards)
+{:additional_features}
+
+### Forecasting
+
+![Dashboard-2](assets/dashboard-2.png)
 
 - **PV Solar forecasts** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
   </br>This custom component integrates the [Solcast Hobby PV Forecast API](https://solcast.com/free-rooftop-solar-forecasting) into HA.
@@ -20,17 +38,25 @@ These custom sensors and automations calculate all the power and energy flows of
 - **Hourly Weather forecasts**
 - **House load and batteries SOC forecasts** by the usage of the [EMHASS Add-on](https://github.com/davidusb-geek/emhass-add-on)
   </br>[EMHASS](https://github.com/davidusb-geek/emhass) (Energy Management for Home Assistant) is an optimization tool designed for residential households connected to HA.
-- **Tibber consumption/cost exports**
 
-All custom template sensors and automations are available as HA package files and all dashboards are available through HA YAML dashboards for an easy [Installation](#installation).
+### Monitoring
 
-## Table of Contents
+![Dashboard-3](assets/dashboard-3.png)
+  
+### Tibber prices, consumption and costs
+| Today & tomorrow                               | Past                                           |
+|------------------------------------------------|------------------------------------------------|
+| ![Dashboard-4-1](assets/dashboard-4-1.png)     | ![Dashboard-4-2](assets/dashboard-4-2.png)     |
 
-- [Screenshots](#screenshots)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Inverter polling frequency](#inverter-polling-frequency)
-- [FAQ - Troubleshooting](#faq---troubleshooting)
+### Tibber consumption and costs
+
+| Hourly                                         | Daily                                          |
+|------------------------------------------------|------------------------------------------------|
+| ![Dashboard-4-3-1](assets/dashboard-4-3-1.png) | ![Dashboard-4-3-2](assets/dashboard-4-3-2.png) |
+
+| Monthly                                        | Yearly                                         |
+|------------------------------------------------|------------------------------------------------|
+| ![Dashboard-4-3-3](assets/dashboard-4-3-3.png) | ![Dashboard-4-3-4](assets/dashboard-4-3-4.png) |
 
 ## Project Description
 
@@ -46,15 +72,7 @@ The provided custom sensors are based on a setup with two inverters and one batt
 
 ## Screenshots
 
-| **Inverter**                                                           | **Battery**                                                  |
-|:----------------------------------------------------------------------:|:------------------------------------------------------------:|
-|![Inverter Sensors](images/inverter_sensors.png)                        | ![Battery Sensors](images/battery_sensors.png)               |
-|![Inverter Diagnostics](images/inverter_configuration_diagnostics.png)  | ![Battery Configuration](images/battery_configuration.png)   |
 
-
-|**Power Meter**                                          | **Optimizer**                                       |
-|:-------------------------------------------------------:|:---------------------------------------------------:|
-|![Power Meter Sensors](images/power_meter_sensors.png)   | ![Optimizer Sensors](images/optimizer_sensors.png)  |
 
 
 ## Prerequisites
