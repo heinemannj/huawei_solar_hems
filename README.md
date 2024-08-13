@@ -16,15 +16,17 @@ All custom template sensors and automations are available as HA package files an
 
 ## Table of Contents
 
-- [Additional HEMS features including detailed visualisations (dashboards)](#additional_features)
+- [Additional HEMS features](#additional-hems-features)
   - [Forecasting](#forecasting)
+  - [Monitoring](#monitoring)
+  - [Tibber prices](#tibber-prices)
+  - [Tibber consumption and costs](#tibber-consumption-and-costs)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Inverter polling frequency](#inverter-polling-frequency)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
-## Additional HEMS features including detailed visualisations (dashboards)
-{:additional_features}
+## Additional HEMS features
 
 ### Forecasting
 
@@ -43,7 +45,7 @@ All custom template sensors and automations are available as HA package files an
 
 ![Dashboard-3](assets/dashboard-3.png)
   
-### Tibber prices, consumption and costs
+### Tibber prices
 | Today & tomorrow                               | Past                                           |
 |------------------------------------------------|------------------------------------------------|
 | ![Dashboard-4-1](assets/dashboard-4-1.png)     | ![Dashboard-4-2](assets/dashboard-4-2.png)     |
