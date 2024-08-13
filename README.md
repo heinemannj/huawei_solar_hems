@@ -72,18 +72,14 @@ This README guides you through a simple installation and setup process. For an o
 
 The provided custom sensors are based on a setup with two inverters and one battery. This is reflected throughout this README and the [Wiki Pages](https://github.com/JensenNick/huawei_solar_pees/wiki). The custom sensors are available as a package for an easy "installation". See more about this in chapter 3. Installation.
 
-## Screenshots
-
-
-
-
 ## Prerequisites
+### Huawei Solar integration
 
 This integration supports two connection modes to SUN2000 inverters:
 - direct serial connection to the RS485A1 and RS485B1 pins of the COM port 
 - network connection
 
-Detailed information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
+Detailed Huawei Solar integration information can be found on the ['Connecting to the inverter' Wiki-page](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter)
 
 **Services**
 
