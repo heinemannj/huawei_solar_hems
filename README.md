@@ -8,8 +8,8 @@ Home Assistent (HA) **Home Energy Management System** (HEMS)
 
 **Huawei Solar HEMS** assist you with **a set of custom** HA **template sensors**, **automations** and **dashboards** also referred to as the *"Huawei Solar HEMS package"*.
 
-| Dashboard view: Level 1 |
-|:--:|
+| Dashboard: Level 1                     |
+|:--------------------------------------:|
 | ![Dashboard-1](assets/dashboard-1.png) |
 
 These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation (including your Batteries, but without the corrections we see in FusionSolar) based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces, which is far away from enhanced requirements of an HEMS.
@@ -32,8 +32,8 @@ All custom template sensors and automations are available as HA package files an
 
 ### Forecasting
 
-| Dashboard view: Level 2 |
-|:--:|
+| Dashboard: Level 2                     |
+|:--------------------------------------:|
 | ![Dashboard-2](assets/dashboard-2.png) |
 
 - **PV Solar forecasts** by the usage of [Solcast integration](https://github.com/BJReplay/ha-solcast-solar)
@@ -47,23 +47,23 @@ All custom template sensors and automations are available as HA package files an
 
 ### Monitoring
 
-| Dashboard view: Level 3 |
-|:--:|
+| Dashboard: Level 3                     |
+|:--------------------------------------:|
 | ![Dashboard-3](assets/dashboard-3.png) |
   
 ### Tibber prices
 
-| Dashboard view: Level 4-1 - Today & tomorrow   | Dashboard view: Level 4-2 - Past               |
+| Dashboard: Level 4-1 - Today & tomorrow        | Dashboard: Level 4-2 - Past                    |
 |:----------------------------------------------:|:----------------------------------------------:|
 | ![Dashboard-4-1](assets/dashboard-4-1.png)     | ![Dashboard-4-2](assets/dashboard-4-2.png)     |
 
 ### Tibber consumption and costs
 
-| Dashboard view: Level 4-3-1 - Hourly           | Dashboard view: Level 4-3-2 - Daily            |
+| Dashboard: Level 4-3-1 - Hourly                | Dashboard: Level 4-3-2 - Daily                 |
 |:----------------------------------------------:|:----------------------------------------------:|
 | ![Dashboard-4-3-1](assets/dashboard-4-3-1.png) | ![Dashboard-4-3-2](assets/dashboard-4-3-2.png) |
 
-| Dashboard view: Level 4-3-3 - Monthly          | Dashboard view: Level 4-3-4 - Yearly           |
+| Dashboard: Level 4-3-3 - Monthly               | Dashboard: Level 4-3-4 - Yearly                |
 |:----------------------------------------------:|:----------------------------------------------:|
 | ![Dashboard-4-3-3](assets/dashboard-4-3-3.png) | ![Dashboard-4-3-4](assets/dashboard-4-3-4.png) |
 
@@ -252,9 +252,9 @@ Include above [package](https://www.home-assistant.io/docs/configuration/package
 
 ## Lovelace Cards 
 
-`Custom Cards` to be installed via `HACS` as recommended by the card developer.
+`Custom Cards` to be installed via `HACS` as recommended by the card developers.
 
-* No support by "Huawei Solar" integration.
+* No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
 
 |Name|Installation|Description|
 |----|------------|-----------|
@@ -273,7 +273,7 @@ Include above [package](https://www.home-assistant.io/docs/configuration/package
 |<a name="c13">[custom:bar-card](https://github.com/custom-cards/bar-card)</a>|HACS|Customizable Animated Bar card.
 
 Potentially a couple of Custom Cards are missing in above listing.
-Please crosscheck and report in [Dashboard Discussion](https://github.com/wlcrs/huawei_solar/discussions/355).
+Please crosscheck and report in [Huawei Solar Dashboard Discussion](https://github.com/wlcrs/huawei_solar/discussions/355).
 
 ## Colors for Entities within Dashboard Cards ##########
 
@@ -396,7 +396,7 @@ dashboards:
 
 * Dashboards Ideas/Proposals only.
 * Alpha version at this stage. Especially the persistant template sensors should be validated by the community.
-* No support by "Huawei Solar", SOLCAst, EPEX Spot and EMHASS integrations.
+* No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
 * Not for HA beginners ...
 
 Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://github.com/wlcrs/huawei_solar/discussions/355)
