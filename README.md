@@ -77,8 +77,6 @@ This README guides you through a simple installation and setup process. For an o
 
 > *Economy Sensors. Track your solar PV investment, compare it to what your economy would have been without solar PV, and track the net retur of your investment.*
 
-The provided custom sensors are based on a setup with two inverters and one battery. This is reflected throughout this README and the [Wiki Pages](https://github.com/JensenNick/huawei_solar_pees/wiki). The custom sensors are available as a package for an easy "installation". See more about this in chapter 3. Installation.
-
 ## Prerequisites
 ### Huawei Solar integration
 
@@ -158,10 +156,10 @@ Note that optimizer data is refreshed only every 5 minutes, which matches how fr
 
 |Dashboard|Row|Cards             |Integration        |Custom Sensors                       |Cards                              |
 |---------|---|------------------|-------------------|-------------------------------------|-----------------------------------|
-|Level Two|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Weather (Hourly)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-hourly-weather-card.yaml)|Weather integration|TBD by your own                      |[custom:hourly-weather](#c6)       |
-|Level Two|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Power Flows (Now)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-power-flow-card.yaml)<br>[Solar Power](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-power-gauge-card.yaml)<br>[Battery Capacity](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-battery-capacity-gauge-card.yaml)<br>[Battery Status](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-battery-status-card.yaml)<br>[Self Sufficiency](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-self-sufficiency-gauge-card.yaml)<br>[Inverter Temp.](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-temp-gauge-card.yaml)<br>[Misc. Status](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-misc-status-card.yaml)<br>[Energy Flows (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-energy-flow-card.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[Solar Yield](#S1)<br>[Battery Status](#S2)<br>[Battery Corrections](#S3)<br>[Power Flows](#S5)<br>[Energy Flows](#S6)|[custom:power-flow-card-plus](#c7)<br>[custom:energy-flow-card-plus](#c8)<br>[gauge](#c9)<br>[custom:vertical-stack-in-card](#c5)<br>[custom:mushroom-template-card](#c11)|
-|Level Two|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Solar Forecast](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-forecast-chart-large-width.yaml)|[Solcast Solar](https://github.com/oziee/ha-solcast-solar)|[Power Flows](#S5)<br>[Remaining Solar Forecast](#S7)|[custom:apexcharts-card](#c10)|
-|Level Two|[3](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Solar Yield - Self Use](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-self-use_radial_chart.yaml)<br>[Solar Yield - Self Sufficiency](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-self-sufficiency_radial_chart.yaml)<br>[Solar Yield - Usage (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-usage-today_donut_chart.yaml)<br>[House - Consumption (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-house-consumption-today_donut_chart.yaml)<br>[Inverter - Input/Output (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-input-output-today_donut_chart.yaml)<br>[Inverter - Loss (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-loss-today_donut_chart.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[Solar Yield](#S1)<br>[Energy Flows](#S6)<br>[Battery Corrections](#S3)|[custom:apexcharts-card](#c10)|
+|Level One|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Weather (Hourly)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-hourly-weather-card.yaml)|Weather integration|TBD by your own                      |[custom:hourly-weather](#c6)       |
+|Level One|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Power Flows (Now)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-power-flow-card.yaml)<br>[Solar Power](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-power-gauge-card.yaml)<br>[Battery Capacity](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-battery-capacity-gauge-card.yaml)<br>[Battery Status](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-battery-status-card.yaml)<br>[Self Sufficiency](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-self-sufficiency-gauge-card.yaml)<br>[Inverter Temp.](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-temp-gauge-card.yaml)<br>[Misc. Status](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-misc-status-card.yaml)<br>[Energy Flows (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-energy-flow-card.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[Solar Yield](#S1)<br>[Battery Status](#S2)<br>[Battery Corrections](#S3)<br>[Power Flows](#S5)<br>[Energy Flows](#S6)|[custom:power-flow-card-plus](#c7)<br>[custom:energy-flow-card-plus](#c8)<br>[gauge](#c9)<br>[custom:vertical-stack-in-card](#c5)<br>[custom:mushroom-template-card](#c11)|
+|Level One|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Solar Forecast](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-forecast-chart-large-width.yaml)|[Solcast Solar](https://github.com/oziee/ha-solcast-solar)|[Power Flows](#S5)<br>[Remaining Solar Forecast](#S7)|[custom:apexcharts-card](#c10)|
+|Level One|[3](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/421-pv.yaml)|[Solar Yield - Self Use](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-self-use_radial_chart.yaml)<br>[Solar Yield - Self Sufficiency](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-self-sufficiency_radial_chart.yaml)<br>[Solar Yield - Usage (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-solar-yield-usage-today_donut_chart.yaml)<br>[House - Consumption (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-house-consumption-today_donut_chart.yaml)<br>[Inverter - Input/Output (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-input-output-today_donut_chart.yaml)<br>[Inverter - Loss (Today)](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/420-pv-inverter-loss-today_donut_chart.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[Solar Yield](#S1)<br>[Energy Flows](#S6)<br>[Battery Corrections](#S3)|[custom:apexcharts-card](#c10)|
 
 # Level Two
 
@@ -169,8 +167,8 @@ Note that optimizer data is refreshed only every 5 minutes, which matches how fr
 
 |Dashboard  |Column               |Integration |Custom Sensors                       |Cards                    |Background Image|Image Size|
 |-----------|---------------------|------------|-------------------------------------|-------------------------|----------------|----------|
-|Level Three|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/422-pv-col-1.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[picture-elements](#c12)<br>[custom:bar-card](#c13)|[sun2000-luna2000.png](https://github.com/heinemannj/home-assistant-config/blob/master/www/images/huawei-solar/sun2000-luna2000.png)|`800 x 628 px`|
-|Level Three|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/422-pv-col-2.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[custom:apexcharts-card](#c10)||
+|Level Two|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/422-pv-col-1.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[picture-elements](#c12)<br>[custom:bar-card](#c13)|[sun2000-luna2000.png](https://github.com/heinemannj/home-assistant-config/blob/master/www/images/huawei-solar/sun2000-luna2000.png)|`800 x 628 px`|
+|Level Two|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/422-pv-col-2.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[custom:apexcharts-card](#c10)||
 
 Upload [picture-elements](https://www.home-assistant.io/dashboards/picture-elements/) card background image to
 [HA www image folder](https://www.home-assistant.io/integrations/http#hosting-files) `/config/www/images/huawei-solar` and ensure that the image size will not change.
@@ -183,8 +181,8 @@ Upload [picture-elements](https://www.home-assistant.io/dashboards/picture-eleme
 
 |Dashboard |Column               |Integration |Custom Sensors                       |Cards                    |Background Image|Image Size|
 |----------|---------------------|------------|-------------------------------------|-------------------------|----------------|----------|
-|Level Four|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/423-pv-col-1.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[picture-elements](#c12)|[sun2000-luna2000-power-energy-flows.png](https://github.com/heinemannj/home-assistant-config/blob/master/www/images/huawei-solar/sun2000-luna2000-power-energy-flows.png)|`953 x 508 px`|
-|Level Four|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/423-pv.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[custom:power-flow-card-plus](#c7)<br>[custom:energy-flow-card-plus](#c8)||
+|Level Three|[1](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/cards/423-pv-col-1.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[picture-elements](#c12)|[sun2000-luna2000-power-energy-flows.png](https://github.com/heinemannj/home-assistant-config/blob/master/www/images/huawei-solar/sun2000-luna2000-power-energy-flows.png)|`953 x 508 px`|
+|Level Three|[2](https://github.com/heinemannj/home-assistant-config/blob/master/dashboards/420-pv/views/423-pv.yaml)|[Huawei Solar](#Huawei-Solar-integration-Sensors)|[All Custom Sensors](#Custom-Sensors)|[custom:power-flow-card-plus](#c7)<br>[custom:energy-flow-card-plus](#c8)||
 
 Upload [picture-elements](https://www.home-assistant.io/dashboards/picture-elements/) card background image to
 [HA www image folder](https://www.home-assistant.io/integrations/http#hosting-files) `/config/www/images/huawei-solar` and ensure that the image size will not change.
@@ -398,6 +396,25 @@ dashboards:
 * Alpha version at this stage. Especially the persistant template sensors should be validated by the community.
 * No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
 * Not for HA beginners ...
+
+The provided custom sensors are based on a setup with one inverter and two batteries:
+
+- Inverter Type: SUN2000-6KTL-M1 (High Current)
+- Inverter Firmware version: V100R001C00SPC165
+- MBUS Firmware version: V100R001C00SPC335
+- PV1: 3900 Wp
+- PV2: 3900 Wp
+- sDongle Type: sDongleA-05 (WiFi / Ethernet)
+- sDongle Connectivitiy: Ethernet
+- sDongle Firmware: V200R022C10SPC118
+- Power meter present: three phase
+- Optimizers Present: No
+- Battery-1: LUNA2000-5KW-C0
+- Battery-2: LUNA2000-10KW-C0
+- Batteries Firmware version: V100R002C00SPC624
+- Huawei Solar integration version: latest
+
+This is reflected throughout this README and the [Huawei Solar HEMS Wiki Pages](https://github.com/heinemannj/huawei_solar_hems/wiki).
 
 Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://github.com/wlcrs/huawei_solar/discussions/355)
 
