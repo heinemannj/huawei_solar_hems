@@ -1,0 +1,84 @@
+logging_level: INFO
+data_path: /share/
+costfun: self-consumption
+sensor_power_photovoltaics: sensor.inverter_input_power
+sensor_power_load_no_var_loads: sensor.house_consumption_power
+set_total_pv_sell: false
+set_nocharge_from_grid: false
+set_nodischarge_to_grid: true
+maximum_power_from_grid: 9000
+maximum_power_to_grid: 6600
+number_of_deferrable_loads: 1
+list_nominal_power_of_deferrable_loads:
+  - nominal_power_of_deferrable_loads: 0
+  - nominal_power_of_deferrable_loads: 0
+list_operating_hours_of_each_deferrable_load:
+  - operating_hours_of_each_deferrable_load: 0
+  - operating_hours_of_each_deferrable_load: 0
+list_start_timesteps_of_each_deferrable_load:
+  - start_timesteps_of_each_deferrable_load: 0
+  - start_timesteps_of_each_deferrable_load: 0
+list_end_timesteps_of_each_deferrable_load:
+  - end_timesteps_of_each_deferrable_load: 0
+  - end_timesteps_of_each_deferrable_load: 0
+list_peak_hours_periods_start_hours:
+  - peak_hours_periods_start_hours: "05:54"
+  - peak_hours_periods_start_hours: "17:54"
+list_peak_hours_periods_end_hours:
+  - peak_hours_periods_end_hours: "09:24"
+  - peak_hours_periods_end_hours: "20:24"
+list_treat_deferrable_load_as_semi_cont:
+  - treat_deferrable_load_as_semi_cont: true
+  - treat_deferrable_load_as_semi_cont: true
+list_set_deferrable_load_single_constant:
+  - set_deferrable_load_single_constant: false
+  - set_deferrable_load_single_constant: false
+list_set_deferrable_startup_penalty:
+  - set_deferrable_startup_penalty: 0
+  - set_deferrable_startup_penalty: 0
+load_peak_hours_cost: 0.36
+load_offpeak_hours_cost: 0.28
+photovoltaic_production_sell_price: 0.08
+list_pv_module_model:
+  - pv_module_model: Trina_Solar_TSM_390DE09_05
+list_pv_inverter_model:
+  - pv_inverter_model: >-
+      SolaX_Power_Network_Technology__Zhe_jiang__Co___Ltd___A1_Hybrid_7_0_US__240V_
+list_surface_tilt:
+  - surface_tilt: 45
+list_surface_azimuth:
+  - surface_azimuth: 139
+list_modules_per_string:
+  - modules_per_string: 10
+list_strings_per_inverter:
+  - strings_per_inverter: 2
+inverter_is_hybrid: true
+compute_curtailment: true
+set_use_battery: true
+battery_nominal_energy_capacity: 15000
+hass_url: empty
+long_lived_token: empty
+optimization_time_step: 30
+historic_days_to_retrieve: 7
+method_ts_round: first
+lp_solver: COIN_CMD
+lp_solver_path: /usr/bin/cbc
+set_battery_dynamic: false
+battery_dynamic_max: 1
+battery_dynamic_min: -1
+weight_battery_discharge: 0
+weight_battery_charge: 0
+load_forecast_method: mlforecaster
+battery_discharge_power_max: 6600
+battery_charge_power_max: 7500
+battery_discharge_efficiency: 0.9
+battery_charge_efficiency: 0.9
+battery_minimum_state_of_charge: 0.05
+battery_maximum_state_of_charge: 1
+battery_target_state_of_charge: 1
+production_price_forecast_method: constant
+set_zero_min: true
+load_negative: false
+load_cost_forecast_method: hp_hc_periods
+weather_forecast_method: scrapper
+delta_forecast_daily: 9
