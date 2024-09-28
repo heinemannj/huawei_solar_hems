@@ -24,7 +24,6 @@ For an overview and a more detailed description of the custom sensors and automa
   - [Monitoring](#monitoring)
   - [Tibber prices](#tibber-prices)
   - [Tibber consumption and costs](#tibber-consumption-and-costs)
-- [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Inverter polling frequency](#inverter-polling-frequency)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
@@ -68,97 +67,11 @@ For an overview and a more detailed description of the custom sensors and automa
 |:----------------------------------------------:|:----------------------------------------------:|
 | ![Dashboard-4-3-3](assets/dashboard-4-3-3.png) | ![Dashboard-4-3-4](assets/dashboard-4-3-4.png) |
 
-## Prerequisites
-### Huawei Solar integration
+## Installation
 
-## Custom Sensors
+For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installation) follow all [prerequisites and installation guides](https://github.com/heinemannj/huawei_solar_hems/wiki/Installation#prerequisites) strictly!
 
-`Huawei Solar` integration only exposes the information and functions made available by Huawei Solar inverters firmware, directly via one of its Modbus interfaces in Home Assistant.
-
-But under specific conditions Inverter, Battery and Power Meter figures do not fit together and/or are incomplete.
-
-A couple of adaptations are required to archieve an reliable reporting and monitoring:
-
-|Integration |Custom sensors                      |Subfolder|Package name                                                        |Description|
-|------------|------------------------------------|---------|--------------------------------------------------------------------|-----------|
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s1">Solar Yield</a>        |packages |[huawei-solar-yield-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-yield-package.yaml)|[Yield of solar panels](https://github.com/wlcrs/huawei_solar/wiki/Daily-Solar-Yield) and required corrections for efficiency losses or overproduction by the inverter.|
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s2">Battery Status</a>     |packages |[huawei-solar-battery-card-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-battery-card-package.yaml)||
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s3">Battery Corrections</a>|packages |[huawei-solar-battery-correction-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-battery-correction-package.yaml)||
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s4">Diagnostics</a>        |packages |[huawei-solar-diagnostic-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-diagnostic-package.yaml)||
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s5">Power Flows</a>        |packages |[huawei-solar-power-flow-card-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-power-flow-card-package.yaml)||
-|[Huawei Solar](#Huawei-Solar-integration-Sensors)|<a name="s6">Energy Flows</a>       |packages |[huawei-solar-energy-flow-card-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/huawei-solar-energy-flow-card-package.yaml)||
-|[Solcast Solar](https://github.com/oziee/ha-solcast-solar)|<a name="s7">Remaining Solar Forecast</a>|packages |[solcast-solar-package.yaml](https://github.com/heinemannj/home-assistant-config/blob/master/packages/solcast-solar-package.yaml)|Improvements to archive the most accurate [remaining solar forecast actually (this minute)](https://community.home-assistant.io/t/solcast-global-solar-power-forecast-integration/334681/173)|
-
-Include above [package](https://www.home-assistant.io/docs/configuration/packages/) files into [configuration.yaml](https://www.home-assistant.io/docs/configuration/):
-
-    homeassistant:
-      packages:
-        huawei_solar_yield: !include packages/huawei-solar-yield-package.yaml
-        huawei_solar_battery_card: !include packages/huawei-solar-battery-card-package.yaml
-        huawei_solar_battery_correction: !include packages/huawei-solar-battery-correction-package.yaml
-        huawei_solar_diagnostic: !include packages/huawei-solar-diagnostic-package.yaml
-        huawei_solar_power_flow_card: !include packages/huawei-solar-power-flow-card-package.yaml
-        huawei_solar_energy_flow_card: !include packages/huawei-solar-energy-flow-card-package.yaml
-        solcast_solar: !include packages/solcast-solar-package.yaml
-
-## Lovelace Cards 
-
-`Custom Cards` to be installed via `HACS` as recommended by the card developers.
-
-* No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
-
-|Name|Installation|Description|
-|----|------------|-----------|
-|<a name="c1">[custom:card-mod 3](https://github.com/thomasloven/lovelace-card-mod)</a>|HACS|Allows you to apply CSS styles to various elements of the Home Assistant frontend.|
-|<a name="c2">[custom:layout-card](https://github.com/thomasloven/lovelace-layout-card)</a>|HACS|Get more control over the placement of lovelace cards.
-|<a name="c3">[vertical-stack](https://www.home-assistant.io/dashboards/vertical-stack/)</a>|N/A|Group multiple cards so they always sit in the same column.
-|<a name="c4">[horizontal-stack](https://www.home-assistant.io/dashboards/horizontal-stack/)</a>|N/A|Group multiple cards, so they always sit in the same line.
-|<a name="c5">[custom:vertical-stack-in-card](https://github.com/ofekashery/vertical-stack-in-card)</a>|HACS|Group multiple cards into a single sleek card.
-|<a name="c6">[custom:hourly-weather](https://github.com/decompil3d/lovelace-hourly-weather)</a>|HACS|Hourly weather card for Home Assistant.
-|<a name="c7">[custom:power-flow-card-plus](https://github.com/flixlix/power-flow-card-plus)</a>|HACS|Display current `power`, gas, and water usage in a display that matches the official Energy Distribution card.
-|<a name="c8">[custom:energy-flow-card-plus](https://github.com/flixlix/energy-flow-card-plus)</a>|HACS|Display current `energy`, gas, and water usage in a display that matches the official Energy Distribution card. 
-|<a name="c9">[gauge](https://www.home-assistant.io/dashboards/gauge/)</a>|N/A|The Gauge card is a basic card that allows visually seeing sensor data.
-|<a name="c10">[custom:apexcharts-card](https://github.com/RomRider/apexcharts-card)</a>|HACS|A higly customizable graph card.
-|<a name="c11">[custom:mushroom](https://github.com/piitaya/lovelace-mushroom)</a>|HACS|Mushroom is a collection of cards for Home Assistant Dashboard UI.
-|<a name="c12">[picture-elements](https://www.home-assistant.io/dashboards/picture-elements/)</a>|N/A|Position icons or text and even services on an image based on coordinates.
-|<a name="c13">[custom:bar-card](https://github.com/custom-cards/bar-card)</a>|HACS|Customizable Animated Bar card.
-
-Potentially a couple of Custom Cards are missing in above listing.
-Please crosscheck and report in [Huawei Solar Dashboard Discussion](https://github.com/wlcrs/huawei_solar/discussions/355).
-
-## Colors for Entities within Dashboard Cards ##########
-
-    Solar Forecast        :  Grey
-
-    Batteries             : '#f06292'
-    Batteries Capacity    : '#f06292'
-
-    Batteries-In          : '#f06292'
-    Batteries-Out         : '#4db6ac'
-
-    Solar                 : '#ff9800'
-
-    Inverter Active Power : Yellow
-
-    Grid                  : '#488fc2'
-    Grid In               : '#488fc2'
-    Grid Out              : '#a280db'
-
-    House / Load          :  MediumAquaMarine
-    Non Fossil            : '#0f9d58'
-    Individual One        : '#d0cc5b'
-    Individual Two        : '#964cb5'
-
-## Dashboard Cards
-
-It is mandatory to create each Dashboard page by using the view type `Grid (layout-card)`.
-
-![image](https://user-images.githubusercontent.com/3251642/235348111-7b9a6533-2f0e-4995-a4d9-44c7a61f6648.png)
-*image_caption*
-
-To add a card (row) select the `Manual` option and `insert the YAML code as below`.
-
-![image](https://user-images.githubusercontent.com/3251642/235348809-67b10e17-3201-426b-beb0-ac1b8b5cd35f.png)
+* **Step by step**.
 
 
 ## Dashboards
