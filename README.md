@@ -75,12 +75,13 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 
 ## Notes
 
-**Huawei FusionSolar alternative dashboard proposals**: Under construction and to be verified ...
-
-* Dashboards Ideas/Proposals only.
-* Alpha version at this stage. Especially the persistant template sensors should be validated by the community.
+* Alpha version at this stage.
+  * Especially the persistant template sensors and all automations should be validated by the community.
+  * In my environment [Wife Acceptance Factor](https://en.wikipedia.org/wiki/Wife_acceptance_factor) (WAF) is strongly increasing - **Save your money to have more fun** ;-)
+  * ...
 * No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
-* Not for HA beginners ...
+* Not for HA beginners, but hopefully our **community will help** ...
+* **Do the needful** - **Safe our earth**!
 
 The provided custom sensors are based on a setup with one inverter and two batteries:
 
@@ -108,6 +109,11 @@ Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://gi
 ---
 
 ## FAQ - Troubleshooting
+
+**At this time just a copy of** [Huawei Solar FAQ](https://github.com/wlcrs/huawei_solar#faq---troubleshooting).
+<br>**To be adjusted in short time** ;-)
+
+---
 
 **Q**: Why do I get the error "Connection succeeded, but failed to read from inverter." while setting up this integration?
 
