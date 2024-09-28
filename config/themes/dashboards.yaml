@@ -1,0 +1,346 @@
+# https://www.home-assistant.io/integrations/frontend/#defining-themes
+#
+# Based on Mushroom theme, the default HA theme since 2022.11
+#
+dashboards:
+  card-mod-theme: dashboards
+  card-mod-card-yaml: |
+
+    $: |
+      /* ************************************************** */
+      /* #shadow-root                                       */
+      /* ************************************************** */
+      .card-header {
+        line-height: 0px !important;
+        padding-top: 18px !important;
+        padding-bottom: 20px !important;
+        color: var(--secondary-text-color) !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+      }
+
+    ha-gauge$: |
+      /* ************************************************** */
+      /* #shadow-root                                       */
+      /* ************************************************** */
+      svg text {
+        transform: scale(0.8) translateY(0px);
+      }
+
+    .: |
+      /* ************************************************** */
+      /* ha-card Classes                                    */
+      /* ************************************************** */
+
+      /* ************************************************** */
+      /* Gauge Cards                                        */
+      /* ************************************************** */
+      ha-card.gauge-card-small {
+          width: 128px !important;
+          height: 100px !important;
+      }
+      ha-card.gauge-card-small .name {
+          font-size: 12px !important;
+          margin-top: 2px !important;
+      }
+      ha-card.gauge-card-small ha-gauge {
+          width: 120% !important;
+      }
+
+      /* ************************************************** */
+      /* Power Flow and Energy Flow Card Plus               */
+      /* ************************************************** */
+      ha-card.power-energy-flow-card .card-header {
+        line-height: 0px !important;
+        padding-top: 18px !important;
+        padding-bottom: 20px !important;
+        color: var(--secondary-text-color) !important;
+        font-size: 16px !important;
+        font-weight: 500 !important;
+        overflow: hidden !important;
+        white-space: nowrap !important;
+        text-overflow: ellipsis !important;
+      }
+      ha-card.power-energy-flow-card {
+        width: 355px !important;
+        height: 380px !important;
+      }
+
+      /* ************************************************** */
+      /* Apexchart Cards                                    */
+      /* ************************************************** */
+      ha-card.donut-chart {
+          width: 257px !important;
+          height: 297px !important;
+          }
+      ha-card.donut-chart-large-width {
+          width: 290px !important;
+          height: 300px !important;
+      }
+
+      ha-card.solar-forecast-chart {
+        width: 470px;
+        height: 270px !important;
+      }
+      ha-card.solar-forecast-chart-large-width {
+          width: 915px !important;
+          height: 270px !important;
+      }
+      ha-card.solar-forecast-chart-full-width {
+          width: auto !important;
+          height: 320px !important;
+      }
+      ha-card.elevation-forecast-chart {
+          width: auto !important;
+          height: 516px !important;
+      }
+      ha-card.tibber-chart-full-width,
+      ha-card.tibber-consumption-chart-full-width {
+          width: auto !important;
+          height: 240px !important;
+          box-shadow: none !important;
+          border: none 0px !important;
+          border-style: none !important;
+      }
+      ha-card.tibber-brush-chart-full-width {
+          width: auto !important;
+          box-shadow: none !important;
+          border: none 0px !important;
+          border-style: none !important;
+      }
+
+      ha-card.solar-forecast-chart #header,
+      ha-card.solar-forecast-chart-large-width #header,
+      ha-card.solar-forecast-chart-full-width #header,
+      ha-card.elevation-forecast-chart #header,
+      ha-card.tibber-chart-full-width #header,
+      ha-card.tibber-consumption-chart-full-width #header,
+      ha-card.tibber-brush-chart-full-width #header {
+        padding-top: 10px !important;
+        line-height: 1.0em !important;
+      }
+
+      ha-card.donut-chart #state__value > #state,
+      ha-card.donut-chart-large-width #state__value > #state,
+      ha-card.solar-forecast-chart #state__value > #state,
+      ha-card.solar-forecast-chart-large-width #state__value > #state,
+      ha-card.solar-forecast-chart-full-width #state__value > #state,
+      ha-card.elevation-forecast-chart #state__value > #state,
+      ha-card.tibber-chart-full-width #state__value > #state,
+      ha-card.tibber-consumption-chart-full-width #state__value > #state,
+      ha-card.tibber-brush-chart-full-width #state__value > #state {
+        font-size: 0.8em !important;
+      }
+      ha-card.donut-chart #state__value > #uom,
+      ha-card.donut-chart-large-width #state__value > #uom,
+      ha-card.solar-forecast-chart #state__value > #uom,
+      ha-card.solar-forecast-chart-large-width #state__value > #uom,
+      ha-card.solar-forecast-chart-full-width #state__value > #uom,
+      ha-card.elevation-forecast-chart #state__value > #uom,
+      ha-card.tibber-chart-full-width #state__value > #uom,
+      ha-card.tibber-consumption-chart-full-width #state__value > #uom,
+      ha-card.tibber-brush-chart-full-width #state__value > #uom {
+        font-size: 0.6em !important;
+      }
+
+      /* ************************************************** */
+      /* Mushroom Status Cards                              */
+      /* ************************************************** */
+      ha-card.mushroom-room-status-card {
+        margin: -2px 12px 12px !important;
+        --chip-background: rgba(var(--rgb-disabled), 0.15) !important;
+        --chip-border-width: 0 !important;
+        --chip-border-radius: 12px !important;
+        --chip-height: 40px !important;
+        --chip-padding: 12px !important;
+        --chip-spacing: 10px !important;
+      }
+
+      ha-card.mushroom-card-no-border {
+        box-shadow: none !important;
+        border: none 0px !important;
+        border-style: none !important;
+      }
+      ha-card.mushroom-card-no-border-vertical-stack-in {
+        padding-bottom: 12px !important;
+      }
+
+      ha-card.mushroom-status-card-normal-icon {
+        --card-primary-font-size: var(--mush-card-primary-font-size, 12px) !important;
+      }
+      ha-card.mushroom-status-card-normal-icon .shape {
+        margin-right: 6x !important;
+      }
+      ha-card.mushroom-status-card-normal-icon-vertical-stack-in {
+        height: 160px !important;
+        --mush-spacing: 5px 5px 6px 6px !important;
+      }
+
+      ha-card.mushroom-pv-status-card {
+          height: 1.5em !important;
+          padding: 0px 0px 0px 0px !important;
+          --card-primary-font-size: var(--mush-card-primary-font-size, 12px) !important;
+          --card-primary-font-weight: var(--mush-card-primary-font-weight, none) !important;
+          border-style: none !important;
+      }
+      ha-card.mushroom-pv-status-card-margin-top {
+          height: 1.5em !important;
+          margin-top: 8px !important;
+          padding: 0px 0px 0px 0px !important;
+          --card-primary-font-size: var(--mush-card-primary-font-size, 12px) !important;
+          --card-primary-font-weight: var(--mush-card-primary-font-weight, none) !important;
+          border-style: none !important;
+      }
+      ha-card.mushroom-pv-status-card-vertical-stack-in {
+          width: 128px !important;
+          height: 100px !important;
+      }
+
+      ha-card.mushroom-status-card-small-icon {
+        height: 1.7em !important;
+        --card-primary-font-size: var(--mush-card-primary-font-size, 12px) !important;
+        --card-primary-font-weight: var(--mush-card-primary-font-weight, none) !important;
+      }
+      ha-card.mushroom-status-card-small-icon-margin-top {
+        height: 1.7em !important;
+        margin-top: 10px !important;
+        --card-primary-font-size: var(--mush-card-primary-font-size, 12px) !important;
+        --card-primary-font-weight: var(--mush-card-primary-font-weight, none) !important;
+      }
+      ha-card.mushroom-status-card-small-icon mushroom-shape-icon,
+      ha-card.mushroom-status-card-small-icon-margin-top mushroom-shape-icon,
+      ha-card.mushroom-pv-status-card mushroom-shape-icon,
+      ha-card.mushroom-pv-status-card-margin-top mushroom-shape-icon {
+        --shape-color: none !important;
+      }
+      ha-card.mushroom-status-card-small-icon-vertical-stack-in {
+        height: 160px !important;
+        --mush-spacing: 2px 10px 0px 2px !important;
+      }
+
+      /* ************************************************** */
+      /* Moon Card                                          */
+      /* ************************************************** */
+      ha-card.moon-card {
+        height: 160px !important;
+        --mush-spacing: 0px 0px 0px 0px !important;
+      }
+      ha-card.moon-image {
+        margin: 12px !important;
+        border-style: none !important;
+      }
+      ha-card.moon-image :host {
+        --mush-icon-size: 55px !important;
+      }
+
+      /* ************************************************** */
+      /* Bar Cards                                          */
+      /* ************************************************** */
+      ha-card.bar-card {
+        padding: 12px !important;
+        margin-left: 12px !important;
+        --bar-card-border-radius: 12px !important;
+        border-style: none !important;
+      }
+      ha-card.bar-card bar-card-backgroundbar {
+        opacity: 0.2 !important;
+        filter: brightness(1) !important;
+      }
+
+      ha-card.pv-bar-card {
+          border-style: none !important;
+      }
+
+      /* ************************************************** */
+      /* Compass Cards                                      */
+      /* ************************************************** */
+      ha-card.compass-card {
+        height: 160px !important;
+      }
+      ha-card.compass-card .compass {
+        margin: 4px auto !important;
+      }
+      ha-card.compass-card .indicator-sensors,
+      ha-card.compass-card .sensor-0,
+      ha-card.compass-card .sensor-1,
+      ha-card.compass-card .sensor-0 .value,
+      ha-card.compass-card .sensor-1 .value {
+        font-size: 12px !important;
+        line-height: 1em !important;
+        height: 1em !important;
+      }
+      ha-card.compass-card .sensor-0 .measurement,
+      ha-card.compass-card .sensor-1 .measurement {
+        font-size: 10px !important; 
+      } 
+
+      /* ************************************************** */
+      /* Clock Weather Card                                 */
+      /* ************************************************** */
+      ha-card.clock-weather-card-today {
+        padding-top: 28px !important;
+        height: 160px !important;
+      }
+      ha-card.clock-weather-card-today .card-content {
+        padding: 0px 0px 0px 0px !important;
+      }
+      ha-card.clock-weather-card-today clock-weather-card-today-left,
+      ha-card.clock-weather-card-today clock-weather-card-today-right {
+        width: 50% !important;
+      }
+      ha-card.clock-weather-card-today clock-weather-card-today-right-wrap-center {
+        height: 2.5rem !important;
+        font-size: 2rem !important;
+      }
+
+      ha-card.clock-weather-card-forecast {
+        height: 160px !important;
+        --bar-height: 1.0rem !important;
+      }
+      ha-card.clock-weather-card-forecast .card-content {
+        padding: 10px 12px 0px 12px !important;
+      }
+
+      /* ************************************************** */
+      /* Meteoalarm Card                                    */
+      /* ************************************************** */
+      ha-card.meteoalarm-card,
+      ha-card.meteoalarm-card .swiper {
+        height: 80px !important;
+      }
+      ha-card.meteoalarm-card .content {
+        height: 80px !important;
+        padding: 6px 6px !important;
+      }
+      ha-card.meteoalarm-card .headline {
+        margin: -20px auto auto 10px !important;
+      }
+      ha-card.meteoalarm-card .main-icon {
+        margin: -20px auto -20px -10px !important;
+      }
+
+      /* ************************************************** */
+      /* Horizon Card                                       */
+      /* ************************************************** */
+      ha-card.horizon-card {
+        height: 160px !important;
+        font-size: 0.2em !important;
+      }
+
+      /* ************************************************** */
+      /* Tibber Card                                       */
+      /* ************************************************** */
+      ha-card.tibber-prognose-mushroom-chips-card {
+        border: none !important;
+        box-shadow: none !important; 
+        padding: 3px !important;
+        background: none !important;
+        margin-bottom: -10px !important;
+        font-size: 5rem !important;
+      }
+  modes:
+    light: {}
+    dark: {}
