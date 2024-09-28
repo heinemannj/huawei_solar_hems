@@ -1,0 +1,165 @@
+# ########## Huawei Solar Integration ##########
+#
+# huawei-solar-battery-correction-package.yaml
+#
+# - sensor.inverter_loss_daily
+# - sensor.batteries_day_discharge_with_loss
+# - sensor.batteries_day_charge_with_loss
+# - sensor.batteries_discharge_loss_daily
+# - sensor.batteries_charge_loss_daily
+# - sensor.house_consumption_energy_daily_control
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+# - for Persistent Template Sensor states after HA or huawei_solar integration restart
+# - for resetting sensor states at 00:00:00
+#
+template:
+  - trigger:
+      - platform: time
+        at: "00:00:00"
+      - platform: state
+        entity_id:
+          - sensor.batteries_day_charge
+          - sensor.batteries_day_discharge
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          inv_in_solar: "{{ states(var.inv_in_solar)|float(0) }}"
+          inv_in_grid: "{{ states(var.inv_in_grid)|float(0) }}"
+          inv_out: "{{ states(var.inv_out)|float(0) }}"
+          bat_in: "{{ states(var.bat_in)|float(0) }}"
+          bat_out: "{{ states(var.bat_out)|float(0) }}"
+          bat_in_loss_last: "{{ states(var.bat_in_loss)|float(0) }}"
+          bat_out_loss_last: "{{ states(var.bat_out_loss)|float(0) }}"
+          total_loss: "{{ (inv_in_solar + inv_in_grid + bat_out - bat_in - inv_out)|float(0) }}"
+          bat_out_loss: >-
+            {% if trigger.entity_id == var.bat_out %}
+              {{ total_loss - bat_in_loss_last }}
+            {% else %}
+              {{ bat_out_loss_last }}
+            {% endif %}
+          bat_out_with_loss: "{{ (bat_out - bat_out_loss)|float(0) }}"
+          bat_in_loss: >-
+            {% if trigger.entity_id == var.bat_in %}
+              {{ total_loss - bat_out_loss_last }}
+            {% else %}
+              {{ bat_in_loss_last }}
+            {% endif %}
+          bat_in_with_loss: "{{ (bat_in + bat_in_loss)|float(0) }}"
+          trigger_entity_id: "{{ trigger.entity_id }}"
+    sensor:
+      #
+      # Inverter Loss (Energy)
+      #
+      - name: inverter_loss_daily
+        unique_id: inverter_loss_daily
+        #friendly_name: "Inverter Loss - Daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% if trigger.platform == 'state' %}
+            {% if total_loss > 0 %}
+              {{ total_loss }}
+            {% else %}
+              {{ states(var.inv_loss)|float(0) }}
+            {% endif %}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+        attributes:
+          trigger_entity_id: "{{ trigger.entity_id }}"
+      #
+      # Battery Day Discharge with Loss
+      #
+      - name: batteries_day_discharge_with_loss
+        unique_id: batteries_day_discharge_with_loss
+        #friendly_name: "Battery discharge with Loss - Daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% if trigger.platform == 'state' %}
+            {% if bat_out_with_loss > 0 %}
+              {{ bat_out_with_loss }}
+            {% else %}
+              {{ states(var.bat_out_with_loss)|float(0) }}
+            {% endif %}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+      #
+      # Battery Day Charge with Loss
+      #
+      - name: batteries_day_charge_with_loss
+        unique_id: batteries_day_charge_with_loss
+        #friendly_name: "Battery Day Charge with Loss - Daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% if trigger.platform == 'state' %}
+            {% if bat_in_with_loss > 0 %}
+              {{ bat_in_with_loss }}
+            {% else %}
+              {{ states(var.bat_in_with_loss)|float(0) }}
+            {% endif %}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+      #
+      # Battery Discharge Loss (Energy)
+      #
+      - name: batteries_discharge_loss_daily
+        unique_id: batteries_discharge_loss_daily
+        #friendly_name: "batteries_discharge_loss_daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% if trigger.platform == 'state' %}
+            {% if bat_out_loss > 0 %}
+              {{ bat_out_loss }}
+            {% else %}
+              {{ bat_out_loss_last }}
+            {% endif %}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+      #
+      # Battery Charge Loss (Energy)
+      #
+      - name: batteries_charge_loss_daily
+        unique_id: batteries_charge_loss_daily
+        #friendly_name: "batteries_charge_loss_daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% if trigger.platform == 'state' %}
+            {% if bat_in_loss > 0 %}
+              {{ bat_in_loss }}
+            {% else %}
+              {{ bat_in_loss_last }}
+            {% endif %}
+          {% else %}
+            {{ 0.0 }}
+          {% endif %}
+  #
+  # ########## End: Persistent Template Sensors ##########

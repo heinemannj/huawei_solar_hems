@@ -1,0 +1,138 @@
+# ########## Huawei Solar Integration ##########
+#
+# huawei-solar-yield-package.yaml
+#
+# - sensor.inverter_input_power_corrected
+# - sensor.solar_yield
+# - sensor.solar_yield_daily
+#
+# - sensor.solar_yield_without_correction
+# - sensor.solar_yield_without_correction_daily
+#
+# - sensor.solar_yield_quarter_hourly
+#
+# - sensor.solar_yield_hourly
+#
+# ########## Setting for UPDATE_INTERVAL in const.py ##########
+#
+# UPDATE_INTERVAL = timedelta(seconds=1)
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+template:
+  - sensor:
+      #
+      # Inverter Input Power (with Correction/loss)
+      #
+      # - for Riemann Integration:
+      #   - for real Solar Input Energy (Solar Yield )
+      #
+      - name: inverter_input_power_corrected
+        unique_id: inverter_input_power_corrected
+        #friendly_name: "Inverter input power corrected"
+        state_class: measurement
+        device_class: power
+        unit_of_measurement: "W"
+        icon: mdi:solar-power
+        state: >-
+          {# For SUN2000-3-10KTL-M1 (High Current Version) #}
+          {# sensor.inverter_efficiency = 100% #}
+
+          {# Check your Input Voltage of connected MPPTs #}
+          {# Assuming an Input Voltage above 600 V #}
+
+          {% from '032-emhass.jinja' import globalVariables %}
+          {% set var = globalVariables()|from_json %}
+          {% set inv_input_power = states(var.inv_input_power)|float(0) %}
+
+          {% if inv_input_power < (var.inverter_rated_power * 0.05) %}
+            {# inv_input_power < 300 W #}
+            {{ (inv_input_power * 1.00)|float(0) }}
+          {% elif inv_input_power < (var.inverter_rated_power * 0.1) %}
+            {# inv_input_power < 600 W #}
+            {{ (inv_input_power * 1.00)|float(0) }}
+          {% elif inv_input_power < (var.inverter_rated_power * 0.15) %}
+            {# inv_input_power < 900 W #}
+            {{ (inv_input_power * 1.00)|float(0) }}
+          {% elif inv_input_power < (var.inverter_rated_power * 0.2) %}
+            {# inv_input_power < 1200 W #}
+            {{ (inv_input_power * 1.00)|float(0) }}
+          {% elif inv_input_power < (var.inverter_rated_power * 0.25) %}
+            {# inv_input_power < 1500 W #}
+            {{ (inv_input_power * 1.00)|float(0) }}
+          {% elif inv_input_power < (var.inverter_rated_power * 0.3) %}
+            {# inv_input_power < 1800 W #}
+            {{ (inv_input_power * 1.0038)|float(0) }}
+          {% else %}
+            {# inv_input_power >= 1800 W #}
+            {{ (inv_input_power * 1.0063)|float(0) }}
+          {% endif %}
+#
+# ########## End: Template Sensors ##########
+#
+# ########## Start: Integration Sensors ##########
+#
+sensor:
+  #
+  # Solar Yield (with Loss/Correction)
+  #
+  # - For Production and used in the cards
+  #
+  - platform: integration
+    name: solar_yield
+    unique_id: solar_yield
+    source: sensor.inverter_input_power
+    unit_prefix: k
+    method: left
+  #
+  # Batteries Charge Energy from Grid (with Loss/Correction)
+  #
+  # - For Production and used in the cards
+  #
+  - platform: integration
+    name: batteries_charge_from_grid_energy_total
+    unique_id: batteries_charge_from_grid_energy_total
+    source: sensor.batteries_charge_from_grid_power
+    unit_prefix: k
+    method: left
+#
+# ########## End: Integration Sensors ##########
+#
+# ########## Start: Utility Meter Sensors ##########
+#
+utility_meter:
+  #
+  # Solar Yield (with Loss/Correction)
+  #
+  # - For Production and used in the Energy Cards
+  #
+  solar_yield_daily:
+    unique_id: "solar_yield_daily"
+    name: "solar_yield_daily"
+    # friendly_name: 'solar_yield - Energy daily'
+    source: sensor.solar_yield
+    cycle: daily
+  #
+  # Batteries Charge Energy from Grid (with Loss/Correction)
+  #
+  # - For Production and used in the Energy Cards
+  #
+  batteries_charge_from_grid_energy_daily:
+    unique_id: "batteries_charge_from_grid_energy_daily"
+    name: "batteries_charge_from_grid_energy_daily"
+    # friendly_name: 'batteries_charge_from_grid - Energy daily'
+    source: sensor.batteries_charge_from_grid_energy_total
+    cycle: daily
+  #
+  # PV Yield (New Inverter Register 32108 without Loss/Correction)
+  #
+  # - For Production and used in the Energy Cards
+  #
+  pv_yield_daily:
+    unique_id: "pv_yield_daily"
+    name: "pv_yield_daily"
+    # friendly_name: 'pv_yield - Energy daily'
+    source: sensor.inverter_total_dc_input_energy
+    cycle: daily
+#
+# ########## Endt: Utility Meter Sensors ##########

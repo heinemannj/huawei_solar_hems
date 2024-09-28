@@ -1,0 +1,26 @@
+# ########## Sun2 Integration ##########
+#
+# sun2-package.yaml
+#
+# - sensor.hems_sun_prediction_end
+# - sensor.hems_sun_pv_excess_end
+# - sensor.hems_sun_pv_excess_start
+#
+sun2:
+  - unique_id: hems
+    sensors:
+      - unique_id: prediction_end
+        time_at_elevation: 25
+        direction: setting
+        icon: mdi:weather-sunset-down
+        name: Prediction end
+      - unique_id: pv_excess_end
+        time_at_elevation: 15
+        direction: setting
+        icon: mdi:weather-sunset-down
+        name: PV excess end
+      - unique_id: pv_excess_start
+        time_at_elevation: 15
+        direction: rising
+        icon: mdi:weather-sunset-up
+        name: PV excess start

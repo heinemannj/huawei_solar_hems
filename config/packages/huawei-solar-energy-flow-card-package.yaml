@@ -1,0 +1,405 @@
+# ########## Huawei Solar Integration ##########
+#
+# huawei-solar-energy-flow-card-package.yaml
+#
+# ########## Abbreviations ##########
+#
+# PV modules/strings    : pv
+# inverter              : inv
+# battery               : bat
+# power meter           : pm
+# house                 : house
+# grid                  : grid
+#
+# ########## Colors for Entities within Dashboard Cards ##########
+#
+# Solar Forecast        :  Grey
+#
+# Batterie              : '#f06292'
+# Batterie Capacity     : '#f06292'
+#
+# Battery-In            : '#f06292'
+# Battery-Out           : '#4db6ac'
+#
+# Solar                 : '#ff9800'
+#
+# Inverter Active Power : Yellow
+#
+# Grid                  : '#488fc2'
+# Grid In               : '#488fc2'
+# Grid Out              : '#a280db'
+#
+# House / Load          :  MediumAquaMarine
+# Non Fossil            : '#0f9d58'
+#
+# Individual One        : '#d0cc5b'
+# Individual Two        : '#964cb5'
+#
+# ######### FusionSolar Portal figures ##########
+#
+# PV Yield Today (FusionSolar)                  : sensor.inverter_daily_solar_yield
+# PV Yield Total (FusionSolar)                  : sensor.inverter_total_yield
+# House Consumption Total (FusionSolar)         : sensor.house_consumption_energy_total
+# House Consumption Today (FusionSolar)         : sensor.house_consumption_energy_daily
+# House Consumption from PV Today (FusionSolar) :
+#
+# ######### Dashboard sensors ##########
+#
+# - sensor.house_consumption_energy_total
+# - sensor.house_consumption_energy_daily
+# - sensor.house_consumption_solar_energy_daily
+# - sensor.inverter_yield_self_use_total
+# - sensor.inverter_yield_self_use_daily
+# - sensor.inverter_yield_self_use_weekly
+# - sensor.inverter_yield_self_use_monthly
+# - sensor.inverter_yield_self_use_yearly
+# - sensor.house_self_sufficiency_daily
+# - sensor.power_meter_consumption_energy_daily
+# - sensor.power_meter_consumption_energy_weekly
+# - sensor.power_meter_consumption_energy_monthly
+# - sensor.power_meter_consumption_energy_yearly
+# - sensor.power_meter_exported_energy_daily
+# - sensor.power_meter_exported_energy_weekly
+# - sensor.power_meter_exported_energy_monthly
+# - sensor.power_meter_exported_energy_yearly
+# - sensor.house_consumption_energy_weekly
+# - sensor.house_consumption_energy_monthly
+# - sensor.house_consumption_energy_yearly
+# - sensor.inverter_yield_weekly
+# - sensor.inverter_yield_monthly
+# - sensor.inverter_yield_yearly
+#
+# ########## Start: Energy Cards ##########
+#
+# custom:system-energy-flow-card
+# https://github.com/Neuvidor/system-energy-flow-card
+#
+# solar                                         : sensor.solar_yield_daily
+# battery_consumption                           : sensor.batteries_day_discharge_with_loss
+# battery_production                            : sensor.batteries_day_charge_with_loss
+# battery_charge                                : sensor.batteries_state_of_capacity
+# grid_consumption                              : sensor.power_meter_consumption_energy_daily
+# grid_production                               : sensor.power_meter_exported_energy_daily
+# house                                         : sensor.house_consumption_energy_daily
+# house_solar                                   : sensor.house_consumption_solar_energy_daily
+#
+template:
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.inverter_total_yield
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          inv_out_total: "{{ states(var.inv_out_total)|float(0) }}"
+          grid_out_total: "{{ states(var.grid_out_total)|float(0) }}"
+          grid_in_total: "{{ states(var.grid_in_total)|float(0) }}"
+          house_in_total: "{{ (inv_out_total - grid_out_total + grid_in_total)|float(0) }}"
+          self_use_total: "{{ (inv_out_total - grid_out_total)|float(0) }}"
+          self_sufficiency_total: >-
+            {% if house_in_total > 0 and self_use_total > 0 %}
+              {{ (self_use_total / house_in_total * 100)|float(0) }}
+            {% else %}
+              {{ states(var.self_sufficiency_total)|float(0) }}
+            {% endif %}
+    sensor:
+      #
+      # For Solar Yield - Self use
+      # For Solar Yield - Self-Sufficiency
+      #
+      - name: house_consumption_energy_total
+        unique_id: house_consumption_energy_total
+        #friendly_name: "Hausverbrauch Total"
+        state_class: "total"
+        device_class: "energy"
+        unit_of_measurement: "kWh"
+        icon: "mdi:solar-power"
+        state: "{{ house_in_total }}"
+      #
+      # For Solar Yield - Self use
+      # For Solar Yield - Self-Sufficiency
+      #
+      - name: inverter_yield_self_use_total
+        unique_id: inverter_yield_self_use_total
+        #friendly_name: "Eigenverbrauch - Total"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: "{{ self_use_total }}"
+
+      - name: house_self_sufficiency_total
+        unique_id: house_self_sufficiency_total
+        #friendly_name: "House Self-Sufficiency - Total"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        icon: mdi:solar-power
+        state: "{{ self_sufficiency_total }}"
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.inverter_daily_yield
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          inv_out: "{{ states(var.inv_out)|float(0) }}"
+          grid_out: "{{ states(var.grid_out)|float(0) }}"
+          grid_in: "{{ states(var.grid_in)|float(0) }}"
+          inv_in_solar: "{{ states(var.inv_in_solar)|float(0) }}"
+          inv_in_grid: "{{ states(var.inv_in_grid)|float(0) }}"
+          bat_in_with_loss: "{{ states(var.bat_in_with_loss)|float(0) }}"
+          bat_out_with_loss: "{{ states(var.bat_out_with_loss)|float(0) }}"
+          house_in: "{{ (inv_out - grid_out + grid_in)|float(0) }}"
+          house_in_solar: >-
+            {% set house_in = (inv_in_solar + inv_in_grid - bat_in_with_loss - grid_out)|float(0) %}
+            {% if house_in > 0 %}
+              {{ house_in }}
+            {% else %}
+              {{ 0.0 }}
+            {% endif %}
+          self_use: "{{ (inv_out - grid_out)|float(0) }}"
+          self_sufficiency: >-
+            {% if house_in > 0 and self_use > 0 %}
+              {{ (self_use / house_in * 100)|float(0) }}
+            {% else %}
+              {{ states(var.self_sufficiency_daily)|float(0) }}
+            {% endif %}
+    sensor:
+      #
+      # For Solar Yield - Self use
+      # For Solar Yield - Self-Sufficiency
+      #
+      - name: house_consumption_energy_daily
+        unique_id: house_consumption_energy_daily
+        #friendly_name: "Hausverbrauch daily"
+        state_class: "total"
+        device_class: "energy"
+        unit_of_measurement: "kWh"
+        icon: "mdi:solar-power"
+        state: "{{ house_in }}"
+      #
+      # house_consumption_solar_energy_daily
+      #
+      - name: house_consumption_solar_energy_daily
+        unique_id: house_consumption_solar_energy_daily
+        #friendly_name: "Hausverbrauch PV ohne Speicher und ohne Einspeisung"
+        state_class: "total"
+        device_class: "energy"
+        unit_of_measurement: "kWh"
+        icon: "mdi:solar-power"
+        state: "{{ house_in_solar }}"
+
+      - name: inverter_yield_self_use_daily
+        unique_id: inverter_yield_self_use_daily
+        #friendly_name: "Eigenverbrauch - Daily"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: "{{ self_use }}"
+      #
+      # For Solar Yield - Self-Sufficiency
+      # For Gauge card
+      #
+      - name: house_self_sufficiency_daily
+        unique_id: house_self_sufficiency_daily
+        #friendly_name: "House Self-Sufficiency - Daily"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        icon: mdi:solar-power
+        state: "{{ self_sufficiency }}"
+      #
+      # Control if Solar Yield and Battery Correction is fitting to real House Load
+      # (Solar Yield with Inverter Correction and Battery Loss)
+      #
+      - name: house_consumption_energy_daily_control
+        unique_id: house_consumption_energy_daily_control
+        #friendly_name: "Hausverbrauch Total Control"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:home
+        state: >-
+          {{ inv_in_solar - bat_in_with_loss - grid_out + grid_in + bat_out_with_loss }}
+
+  - sensor:
+      - name: inverter_yield_self_use_weekly
+        unique_id: inverter_yield_self_use_weekly
+        #friendly_name: "Eigenverbrauch - Weekly"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% from '032-emhass.jinja' import globalVariables %}
+          {% set var = globalVariables()|from_json %}
+          {% set inv_out_weekly = states(var.inv_out_weekly)|float(0) %}
+          {% set grid_out_weekly = states(var.grid_out_weekly)|float(0) %}
+          {{ (inv_out_weekly - grid_out_weekly)|float(0) }}
+
+      - name: inverter_yield_self_use_monthly
+        unique_id: inverter_yield_self_use_monthly
+        #friendly_name: "Eigenverbrauch - Monthly"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% from '032-emhass.jinja' import globalVariables %}
+          {% set var = globalVariables()|from_json %}
+          {% set inv_out_monthly = states(var.inv_out_monthly)|float(0) %}
+          {% set grid_out_monthly = states(var.grid_out_monthly)|float(0) %}
+          {{ (inv_out_monthly - grid_out_monthly)|float(0) }}
+
+      - name: inverter_yield_self_use_yearly
+        unique_id: inverter_yield_self_use_yearly
+        #friendly_name: "Eigenverbrauch - Yearly"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {% from '032-emhass.jinja' import globalVariables %}
+          {% set var = globalVariables()|from_json %}
+          {% set inv_out_yearly = states(var.inv_out_yearly)|float(0) %}
+          {% set grid_out_yearly = states(var.grid_out_yearly)|float(0) %}
+          {{ (inv_out_yearly - grid_out_yearly)|float(0) }}
+#
+# ########## End: Energy Cards ##########
+#
+# ########## Start: Utility Meter Sensors ##########
+#
+utility_meter:
+  #
+  # For Energy Cards
+  # For Solar Yield - Self use
+  # For Solar Yield - Self-Sufficiency
+  #
+  power_meter_consumption_energy_hourly:
+    unique_id: power_meter_consumption_energy_hourly
+    name: "power_meter_consumption_energy_hourly"
+    # friendly_name: 'power_meter_consumption - Energy hourly'
+    source: sensor.power_meter_consumption
+    cycle: hourly
+  power_meter_consumption_energy_daily:
+    unique_id: power_meter_consumption_energy_daily
+    name: "power_meter_consumption_energy_daily"
+    # friendly_name: 'power_meter_consumption - Energy daily'
+    source: sensor.power_meter_consumption
+    cycle: daily
+  power_meter_consumption_energy_weekly:
+    unique_id: power_meter_consumption_energy_weekly
+    name: "power_meter_consumption_energy_weekly"
+    # friendly_name: 'power_meter_consumption - Energy weekly'
+    source: sensor.power_meter_consumption
+    cycle: weekly
+  power_meter_consumption_energy_monthly:
+    unique_id: power_meter_consumption_energy_monthly
+    name: "power_meter_consumption_energy_monthly"
+    # friendly_name: 'power_meter_consumption - Energy monthly'
+    source: sensor.power_meter_consumption
+    cycle: monthly
+  power_meter_consumption_energy_yearly:
+    unique_id: power_meter_consumption_energy_yearly
+    name: "power_meter_consumption_energy_yearly"
+    # friendly_name: 'power_meter_consumption - Energy yearly'
+    source: sensor.power_meter_consumption
+    cycle: yearly
+  #
+  # For Energy Cards
+  # For Solar Yield - Self use
+  # For Solar Yield - Self-Sufficiency
+  #
+  power_meter_exported_energy_daily:
+    unique_id: power_meter_exported_energy_daily
+    name: "power_meter_exported_energy_daily"
+    # friendly_name: 'power_meter_exported - Energy daily'
+    source: sensor.power_meter_exported
+    cycle: daily
+  power_meter_exported_energy_weekly:
+    unique_id: power_meter_exported_energy_weekly
+    name: "power_meter_exported_energy_weekly"
+    # friendly_name: 'power_meter_exported - Energy weekly'
+    source: sensor.power_meter_exported
+    cycle: weekly
+  power_meter_exported_energy_monthly:
+    unique_id: power_meter_exported_energy_monthly
+    name: "power_meter_exported_energy_monthly"
+    # friendly_name: 'power_meter_exported - Energy monthly'
+    source: sensor.power_meter_exported
+    cycle: monthly
+  power_meter_exported_energy_yearly:
+    unique_id: power_meter_exported_energy_yearly
+    name: "power_meter_exported_energy_yearly"
+    # friendly_name: 'power_meter_exported - Energy yearly'
+    source: sensor.power_meter_exported
+    cycle: yearly
+  #
+  # For Solar Yield - Self use
+  # For Solar Yield - Self-Sufficiency
+  #
+  inverter_yield_weekly:
+    unique_id: inverter_yield_weekly
+    name: "inverter_yield_weekly"
+    # friendly_name: ' inverter_yield - Energy weekly'
+    source: sensor.inverter_total_yield
+    cycle: weekly
+  inverter_yield_monthly:
+    unique_id: inverter_yield_monthly
+    name: "inverter_yield_monthly"
+    # friendly_name: ' inverter_yield - Energy monthly'
+    source: sensor.inverter_total_yield
+    cycle: monthly
+  inverter_yield_yearly:
+    unique_id: inverter_yield_yearly
+    name: "inverter_yield_yearly"
+    # friendly_name: ' inverter_yield - Energy yearly'
+    source: sensor.inverter_total_yield
+    cycle: yearly
+  #
+  # For Solar Yield - Self use
+  # For Solar Yield - Self-Sufficiency
+  #
+  house_consumption_energy_weekly:
+    unique_id: house_consumption_energy_weekly
+    name: "house_consumption_energy_weekly"
+    # friendly_name: 'house_consumption - Energy weekly'
+    source: sensor.house_consumption_energy_total
+    cycle: weekly
+  house_consumption_energy_monthly:
+    unique_id: house_consumption_energy_monthly
+    name: "house_consumption_energy_monthly"
+    # friendly_name: 'house_consumption - Energy monthly'
+    source: sensor.house_consumption_energy_total
+    cycle: monthly
+  house_consumption_energy_yearly:
+    unique_id: house_consumption_energy_yearly
+    name: "house_consumption_energy_yearly"
+    # friendly_name: 'house_consumption - Energy yearly'
+    source: sensor.house_consumption_energy_total
+    cycle: yearly
+#
+# ########## End: Utility Meter Sensors ##########

@@ -1,0 +1,188 @@
+# ########## EPEX Spot Data add-on ##########
+#
+# epexspot-package.yaml
+#
+# - binary_sensor.epex_spot_data_update
+#
+# - sensor.hwc_charge_interval_night
+# - sensor.heating_off_interval_morning
+# - sensor.heating_off_interval_evening
+#
+# - sensor.epex_spot_data_price
+# - sensor.epex_spot_data_net_price
+# - sensor.epex_spot_data_quantile
+#
+# ########## Start: Template Binary Sensors and Sensors ##########
+#
+template:
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          data_update: "{{ states(var.epexspot_data_update) }}"
+          last_update: "{{ state_attr(var.epexspot_data_update, 'last_update') }}"
+          next_poll_time: "{{ state_attr(var.epexspot_data_update, 'next_poll_time') }}"
+          data: "{{ state_attr(var.epexspot_net_price, 'data') }}"
+          APIUpdate: >-
+            {% from '032-epexspot.jinja' import APIUpdate %}
+            {{ APIUpdate(data_update, last_update, next_poll_time, data)|from_json }}
+    binary_sensor:
+      - name: "epex_spot_data_update"
+        unique_id: epex_spot_data_update
+        icon: mdi:clock
+        state: >-
+          {{ APIUpdate.tomorrow_data_available }}
+        attributes:
+          last_data: "{{ APIUpdate.last_data }}"
+          last_api_update: "{{ APIUpdate.last_update }}"
+          next_poll_time: "{{ APIUpdate.next_poll_time }}"
+          last_updated: "{{ now().isoformat() }}"
+
+  - trigger:
+      - platform: time
+        at: "00:15:00"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+      - service: epex_spot.get_lowest_price_interval
+        data:
+          latest_end: "05:30:00"
+          duration:
+            hours: 1
+            minutes: 30
+        response_variable: hwc_charge_interval_night
+      - service: epex_spot.get_highest_price_interval
+        data:
+          latest_end: "11:00:00"
+          duration:
+            hours: 2
+            minutes: 30
+        response_variable: heating_off_interval_morning
+      - service: epex_spot.get_highest_price_interval
+        data:
+          earliest_start: "14:00:00"
+          latest_end: "23:00:00"
+          duration:
+            hours: 3
+            minutes: 0
+        response_variable: heating_off_interval_evening
+    sensor:
+      - name: hwc_charge_interval_night
+        unique_id: hwc_charge_interval_night
+        device_class: timestamp
+        state: "{{ hwc_charge_interval_night.start is defined and hwc_charge_interval_night.start }}"
+        attributes:
+          start: "{{ hwc_charge_interval_night.start|as_timestamp|timestamp_local }}"
+          end: "{{ hwc_charge_interval_night.end|as_timestamp|timestamp_local }}"
+          net_price_ct_per_kwh: "{{ hwc_charge_interval_night.net_price_ct_per_kwh }}"
+      - name: heating_off_interval_morning
+        unique_id: heating_off_interval_morning
+        device_class: timestamp
+        state: "{{ heating_off_interval_morning.start is defined and heating_off_interval_morning.start }}"
+        attributes:
+          start: "{{ heating_off_interval_morning.start|as_timestamp|timestamp_local }}"
+          end: "{{ heating_off_interval_morning.end|as_timestamp|timestamp_local }}"
+          net_price_ct_per_kwh: "{{ heating_off_interval_morning.net_price_ct_per_kwh }}"
+      - name: heating_off_interval_evening
+        unique_id: heating_off_interval_evening
+        device_class: timestamp
+        state: "{{ heating_off_interval_evening.start is defined and heating_off_interval_evening.start }}"
+        attributes:
+          start: "{{ heating_off_interval_evening.start|as_timestamp|timestamp_local }}"
+          end: "{{ heating_off_interval_evening.end|as_timestamp|timestamp_local }}"
+          net_price_ct_per_kwh: "{{ heating_off_interval_evening.net_price_ct_per_kwh }}"
+          last_updated: "{{ t }}"
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.epex_spot_data_price_1
+          - sensor.epex_spot_data_price_2
+          - sensor.epex_spot_data_price_3
+    action:
+      - variables:
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          sensor_list: "{{ [var.epexspot_price_1, var.epexspot_price_2, var.epexspot_price_3] }}"
+          sensor_active: >-
+            {% from '032-epexspot.jinja' import redundantSensor %}
+            {{ redundantSensor(sensor_list) }}
+    sensor:
+      - name: epex_spot_data_price
+        unique_id: epex_spot_data_price
+        #friendly_name: "EPEX Spot Data Price"
+        #        state_class: "total"
+        state_class: measurement
+        unit_of_measurement: "EUR/MWh"
+        icon: mdi:currency-eur
+        state: "{{ states(sensor_active)|float(0) }}"
+        attributes:
+          data: "{{ state_attr(sensor_active, 'data') }}"
+          price_ct_per_kwh: "{{ state_attr(sensor_active, 'price_ct_per_kwh') }}"
+          sensor_active: "{{ sensor_active }}"
+          last_updated: "{{ now().isoformat() }}"
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.epex_spot_data_net_price_1
+          - sensor.epex_spot_data_net_price_2
+          - sensor.epex_spot_data_net_price_3
+    action:
+      - variables:
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          sensor_list: "{{ [var.epexspot_net_price_1, var.epexspot_net_price_2, var.epexspot_net_price_3] }}"
+          sensor_active: >-
+            {% from '032-epexspot.jinja' import redundantSensor %}
+            {{ redundantSensor(sensor_list) }}
+    sensor:
+      - name: epex_spot_data_net_price
+        unique_id: epex_spot_data_net_price
+        #friendly_name: "EPEX Spot Data Net Price"
+        #        state_class: "total"
+        state_class: measurement
+        unit_of_measurement: "ct/kWh"
+        icon: mdi:currency-eur
+        state: "{{ states(sensor_active)|float(0) }}"
+        attributes:
+          data: "{{ state_attr(sensor_active, 'data') }}"
+          sensor_active: "{{ sensor_active }}"
+          last_updated: "{{ now().isoformat() }}"
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.epex_spot_data_quantile_1
+          - sensor.epex_spot_data_quantile_2
+          - sensor.epex_spot_data_quantile_3
+    action:
+      - variables:
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          sensor_list: "{{ [var.epexspot_quantile_1, var.epexspot_quantile_2, var.epexspot_quantile_3] }}"
+          sensor_active: >-
+            {% from '032-epexspot.jinja' import redundantSensor %}
+            {{ redundantSensor(sensor_list) }}
+    sensor:
+      - name: epex_spot_data_quantile
+        unique_id: epex_spot_data_quantile
+        #friendly_name: "EPEX Spot Data Quantile"
+        #        state_class: "total"
+        state_class: measurement
+        #        unit_of_measurement: "ct/kWh"
+        #        icon: mdi:currency-eur
+        state: "{{ states(sensor_active)|float(0) }}"
+        attributes:
+          data: "{{ state_attr(sensor_active, 'data') }}"
+          sensor_active: "{{ sensor_active }}"
+          last_updated: "{{ now().isoformat() }}"
+#
+# ########## End: Template Sensor ##########

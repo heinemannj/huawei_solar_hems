@@ -1,0 +1,465 @@
+# ########## EMHASS add-on ##########
+#
+# emhass-package.yaml
+#
+# - binary_sensor.batteries_charge_from_grid
+# - binary_sensor.batteries_maximum_charging_power
+# - binary_sensor.batteries_maximum_discharging_power
+# - binary_sensor.batteries_forcible_charge
+# - sensor.emhass_prediction_horizon
+# - sensor.emhass_forecast_data
+# - sensor.load_forecast_remaining_today_every_minute
+# - sensor.solcast_forecast_remaining_today_every_minute
+# - sensor.sg_ready_mode
+#
+# rest_command:
+#
+# - emhass_publish_data
+# - emhass_perfect_optim
+# - emhass_dayahead_optim_forecast
+# - emhass_naive_mpc_optim_forecast
+# - emhass_ml_load_forecast_model_fit
+# - emhass_ml_load_forecast_model_predict
+# - emhass_ml_load_forecast_model_tune
+#
+# ########## Start: Template Sensor ##########
+#
+template:
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          grid_power_forecast: "{{ states(var.grid_power_forecast)|float(0) }}"
+          load_power_forecast: "{{ states(var.load_power_forecast)|float(0) }}"
+          inv_input_power: "{{ states(var.inv_input_power)|float(0) }}"
+          inv_active_power_forecast: "{{ states(var.inv_active_power_forecast)|float(0) }}"
+          prediction_status: "{{ states(var.prediction_status) }}"
+          epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
+          load_energy_forecast: "{{ states(var.load_energy_forecast)|float(0) }}"
+          load_energy_forecast_solar_noon: "{{ state_attr(var.load_energy_forecast, 'solar_noon_energy')|float(0) }}"
+          load_energy_forecast_prediction_end: "{{ state_attr(var.load_energy_forecast, 'prediction_end_energy')|float(0) }}"
+          load_energy_forecast_pv_excess_start: "{{ state_attr(var.load_energy_forecast, 'pv_excess_start_energy')|float(0) }}"
+          load_energy_forecast_pv_excess_end: "{{ state_attr(var.load_energy_forecast, 'pv_excess_end_energy')|float(0) }}"
+          solar_energy_forecast: "{{ states(var.solar_energy_forecast)|float(0) }}"
+          solar_noon_time: "{{ state_attr(var.solar_noon_time, 'today')|as_datetime|as_local }}"
+          solar_energy_forecast_solar_noon: "{{ state_attr(var.solar_energy_forecast, 'solar_noon_energy')|float(0) }}"
+          solar_energy_forecast_prediction_end: "{{ state_attr(var.solar_energy_forecast, 'prediction_end_energy')|float(0) }}"
+          solar_energy_forecast_pv_excess_start: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_start_energy')|float(0) }}"
+          solar_energy_forecast_pv_excess_end: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_end_energy')|float(0) }}"
+          bat_soc: "{{ states(var.bat_soc)|float(0) }}"
+          bat_power: "{{ states(var.bat_power)|float(0) }}"
+          bat_charge_energy_remaining: "{{ states(var.bat_charge_energy_remaining)|float(0) }}"
+          bat_charge_energy_forecast: "{{ solar_energy_forecast - load_energy_forecast }}"
+          bat_charge_energy_forecast_solar_noon: "{{ solar_energy_forecast_solar_noon - load_energy_forecast_solar_noon }}"
+          bat_charge_energy_forecast_prediction_end: "{{ solar_energy_forecast_prediction_end - load_energy_forecast_prediction_end }}"
+          bat_charge_energy_forecast_pv_excess_start: "{{ solar_energy_forecast_pv_excess_start - load_energy_forecast_pv_excess_start }}"
+          bat_charge_energy_forecast_pv_excess_end: "{{ solar_energy_forecast_pv_excess_end - load_energy_forecast_pv_excess_end }}"
+    binary_sensor:
+      - name: "batteries_charge_from_grid"
+        unique_id: batteries_charge_from_grid
+        icon: mdi:battery-charging-50
+        state: >-
+          {{ load_power_forecast > 0
+              and grid_power_forecast > 0
+              and inv_active_power_forecast < 0
+              and epexspot_quantile <= var.epexspot_quantile_setpoint_low
+              and prediction_status == 'Optimal' }}
+        attributes:
+          bat_target_soc: "{{ var.batteries_soc_setpoint_high }}"
+          epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
+          epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
+          last_updated: "{{ t }}"
+      - name: "batteries_maximum_charging_power"
+        unique_id: batteries_maximum_charging_power
+        icon: mdi:battery-charging-50
+        state: "{{ bat_soc == 100
+                    or bat_charge_energy_forecast_solar_noon <= bat_charge_energy_remaining }}"
+        attributes:
+          maximum_charging_power: >-
+            {% set charge_time = ((solar_noon_time|as_timestamp - now().timestamp()) / 3600)|float(0) %}
+
+            {% if charge_time > 0 %}
+              {% set charge_power = (bat_charge_energy_remaining / charge_time * 1000)|float(0)|round(0) %}
+            {% else %}
+              {% set charge_power = var.batteries_rated_charge_power %}
+            {% endif %}
+
+            {% if var.batteries_soc_setpoint_neutral < bat_soc < 100
+                and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
+                and (inv_input_power - var.inverter_maximum_active_power) > charge_power %}
+              {{ inv_input_power - var.inverter_rated_power }}
+            {% elif var.batteries_soc_setpoint_neutral < bat_soc < 100
+                and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
+                and charge_power < var.batteries_rated_charge_power %}
+              {{ charge_power }}
+            {% else %}
+              {{ var.batteries_rated_charge_power }}
+            {% endif %}
+          charge_end_time_expected: "{{ solar_noon_time }}"
+          charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
+          charge_energy_forecast_solar_noon: "{{ bat_charge_energy_forecast_solar_noon|float(0)|round(3) }}"
+          charge_energy_forecast_prediction_end: "{{ bat_charge_energy_forecast_prediction_end|float(0)|round(3) }}"
+          charge_energy_forecast_pv_excess_start: "{{ bat_charge_energy_forecast_pv_excess_start|float(0)|round(3) }}"
+          charge_energy_forecast_pv_excess_end: "{{ bat_charge_energy_forecast_pv_excess_end|float(0)|round(3) }}"
+          last_updated: "{{ t }}"
+      - name: "batteries_maximum_discharging_power"
+        unique_id: batteries_maximum_discharging_power
+        icon: mdi:battery-charging-50
+        state: >-
+            {% if epexspot_quantile <= var.epexspot_quantile_setpoint_low and bat_soc <= var.batteries_soc_setpoint_low %}
+              {{ 'off' }}
+            {% else %}
+              {{ 'on' }}
+            {% endif %}
+        attributes:
+          maximum_discharging_power: >-
+            {% if epexspot_quantile <= var.epexspot_quantile_setpoint_low and bat_soc <= var.batteries_soc_setpoint_low %}
+              {{ 0 }}
+            {% else %}
+              {{ var.batteries_rated_discharge_power }}
+            {% endif %}
+          soc_setpoint_low: "{{ var.batteries_soc_setpoint_low }}"
+          epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
+          last_updated: "{{ t }}"
+      - name: "batteries_forcible_charge"
+        unique_id: batteries_forcible_charge
+        icon: mdi:battery-charging-50
+        state: >-
+          {{ solar_energy_forecast > 0.0
+              and epexspot_quantile <= var.epexspot_quantile_setpoint_neutral
+              and bat_power < 3500.0
+              and bat_charge_energy_forecast_prediction_end <= bat_charge_energy_remaining }}
+        attributes:
+          bat_charge_energy_forecast_prediction_end: "{{ bat_charge_energy_forecast_prediction_end|float(0)|round(3) }}"
+          bat_charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
+          bat_power: "{{ bat_power }}"
+          bat_power_setpoint: 3500
+          bat_target_soc: "{{ var.batteries_soc_setpoint_high }}"
+          epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
+          epexspot_quantile_setpoint_neutral: "{{ var.epexspot_quantile_setpoint_neutral|float(0)|round(4) }}"
+          last_updated: "{{ t }}"
+
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          sun_rising_time_today: "{{ state_attr(var.sun_rising_time, 'today')|as_datetime|as_local }}"
+          sun_setting_time_today: "{{ state_attr(var.sun_setting_time, 'today')|as_datetime|as_local }}"
+          solar_noon_time_today: "{{ state_attr(var.solar_noon_time, 'today')|as_datetime|as_local }}"
+          prediction_end_time_today: "{{ state_attr(var.prediction_end_time, 'today')|as_datetime|as_local }}"
+          prediction_end_time_tomorrow: "{{ state_attr(var.prediction_end_time, 'tomorrow')|as_datetime|as_local }}"
+          pv_excess_start_time_today: "{{ state_attr(var.pv_excess_start_time, 'today')|as_datetime|as_local }}"
+          pv_excess_end_time_today: "{{ state_attr(var.pv_excess_end_time, 'today')|as_datetime|as_local }}"
+          load_power_forecast: "{{ state_attr(var.load_power_forecast, 'forecasts') }}"
+          solcast: >
+            {% from '032-emhass.jinja' import convertDate %}
+            {{ convertDate(state_attr(var.solcast_forecast_today, 'detailedForecast'), 'period_start')|from_json }}
+    sensor:
+      - name: "emhass_prediction_horizon"
+        unique_id: emhass_prediction_horizon
+        state: "{{ ((prediction_end_time_tomorrow|as_timestamp - now()|as_timestamp)/60/30)|int(0) + 1 }}"
+        attributes:
+          sun_rising_time_today: "{{ sun_rising_time_today }}"
+          sun_setting_time_today: "{{ sun_setting_time_today }}"
+          solar_noon_time_today: "{{ solar_noon_time_today }}"
+          prediction_end_time_today: "{{ prediction_end_time_today }}"
+          prediction_end_time_tomorrow: "{{ prediction_end_time_tomorrow }}"
+          prediction_time_step: 30
+          prediction_elevation: 25
+          pv_excess_start_time_today: "{{ pv_excess_start_time_today }}"
+          pv_excess_start_elevation: 15
+          pv_excess_end_time_today: "{{ pv_excess_end_time_today }}"
+          pv_excess_end_elevation: 15
+          last_updated: "{{ t }}"
+      - name: load_forecast_remaining_today_every_minute
+        unique_id: load_forecast_remaining_today_every_minute
+        #friendly_name: "EMHass Load Forecast Remaining Today (Every Minute)"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:home-lightning-bolt-outline
+        state: >-
+          {%- set ts_end_time = ((as_timestamp(today_at("00:00:00") + timedelta( days = 1))/1800)|round(0,'floor')|int * 1800) %}
+
+          {% from '032-emhass.jinja' import forecastPeriod %}
+          {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+        attributes:
+          solar_noon_time: "{{ solar_noon_time_today }}"
+          solar_noon_energy: >-
+            {%- set ts_end_time = solar_noon_time_today|as_timestamp %}
+
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+          prediction_end_time: "{{ prediction_end_time_today }}"
+          prediction_end_energy: >-
+            {%- set ts_end_time = prediction_end_time_today|as_timestamp %}
+
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+          pv_excess_start_time: "{{ pv_excess_start_time_today }}"
+          pv_excess_start_energy: >-
+            {%- set ts_end_time = pv_excess_start_time_today|as_timestamp %}
+
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+          pv_excess_end_time: "{{ pv_excess_end_time_today }}"
+          pv_excess_end_energy: >-
+            {%- set ts_end_time = pv_excess_end_time_today|as_timestamp %}
+
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+          last_updated: "{{ t }}"
+      - name: solcast_forecast_remaining_today_every_minute
+        unique_id: solcast_forecast_remaining_today_every_minute
+        #friendly_name: "Solcast Forecast Remaining Today (Every Minute)"
+        state_class: "total"
+        device_class: energy
+        unit_of_measurement: "kWh"
+        icon: mdi:solar-power
+        state: >-
+          {%- set ts_end_time = ((as_timestamp(today_at("00:00:00") + timedelta( days = 1))/1800)|round(0,'floor')|int * 1800) %}
+          {% from '032-emhass.jinja' import forecastPeriod %}
+          {{ forecastPeriod(solcast, 'period_start', 'pv_estimate', 1, ts_end_time)|float(0) }}
+        attributes:
+          solar_noon_time: "{{ solar_noon_time_today }}"
+          solar_noon_energy: >-
+            {% set ts_end_time = solar_noon_time_today|as_timestamp %}
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(solcast, 'period_start', 'pv_estimate', 1, ts_end_time)|float(0) }}
+          prediction_end_time: "{{ prediction_end_time_today }}"
+          prediction_end_energy: >-
+            {% set ts_end_time = prediction_end_time_today|as_timestamp %}
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(solcast, 'period_start', 'pv_estimate', 1, ts_end_time)|float(0) }}
+          pv_excess_start_time: "{{ pv_excess_start_time_today }}"
+          pv_excess_start_energy: >-
+            {% set ts_end_time = pv_excess_start_time_today|as_timestamp %}
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(solcast, 'period_start', 'pv_estimate', 1, ts_end_time)|float(0) }}
+          pv_excess_end_time: "{{ pv_excess_end_time_today }}"
+          pv_excess_end_energy: >-
+            {% set ts_end_time = pv_excess_end_time_today|as_timestamp %}
+            {% from '032-emhass.jinja' import forecastPeriod %}
+            {{ forecastPeriod(solcast, 'period_start', 'pv_estimate', 1, ts_end_time)|float(0) }}
+          last_updated: "{{ now() }}"
+
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          epexspot_net_price: "{{ states(var.epexspot_net_price)|float(0) / 100 }}"
+          net_price: >-
+            {% from '032-emhass.jinja' import forecastEPEXSpot %}
+            {{ forecastEPEXSpot(state_attr(var.epexspot_net_price, 'data'))|from_json }}
+          ts_start_time: "{{ (now().replace(second=0).replace(microsecond=0) - timedelta(minutes=(now().minute)))|as_timestamp }}"
+          stat: >-
+            {% from '032-emhass.jinja' import priceStatistics %}
+            {{ priceStatistics(net_price, 'start_time', 'price_ct_per_kwh', ts_start_time)|from_json }}
+          solcast: >-
+            {% from '032-emhass.jinja' import convertDate %}
+            {%- set today = convertDate(state_attr(var.solcast_forecast_today, 'detailedForecast'), 'period_start')|from_json %}
+            {%- set tomorrow = convertDate(state_attr(var.solcast_forecast_tomorrow, 'detailedForecast'), 'period_start')|from_json %}
+            {{ today + tomorrow }}
+    sensor:
+      - name: emhass_forecast_data
+        unique_id: emhass_forecast_data
+        #friendly_name: "emhass_forecast_data"
+#        state_class: "total"
+        state_class: measurement
+        unit_of_measurement: "EUR/kWh"
+        icon: mdi:eye
+        state: "{{ epexspot_net_price|round(5) }}"
+        attributes:
+          data: >-
+            {%- set var = namespace(result = []) %}
+
+            {# Construct new array putting everthing together #}
+            {%- for record in net_price if record.start_time|as_timestamp >= ts_start_time %}
+              {# Split into 30 min interval #}
+              {# Solar Forecast is already in in 30 min interval #}
+
+              {# - 1. half hour #}
+              {# - if clause is only necessary for the first iteration to deceide starting the var.result array with 0 or 30 min interval #}
+              {% if record.start_time|as_timestamp >= (t|as_timestamp - 1800) %}
+                {%- set end_time = (record.end_time|as_timestamp - 1800)|timestamp_local %}
+
+                {% from '032-emhass.jinja' import forecastArray %}
+                {%- set var.result = forecastArray(var.result, solcast, record.start_time, end_time, record.price_ct_per_kwh)|from_json %}
+              {% endif %}
+
+              {# - 2. half hour #}
+              {%- set start_time = (record.start_time|as_timestamp + 1800)|timestamp_local %}
+
+              {% from '032-emhass.jinja' import forecastArray %}
+              {%- set var.result = forecastArray(var.result, solcast, start_time, record.end_time, record.price_ct_per_kwh)|from_json %}
+            {%- endfor %}
+            {{ var.result }}
+          epexspot_max_price: "{{ stat.max_price|round(5) }}"
+          epexspot_min_price: "{{ stat.min_price|round(5) }}"
+          epexspot_avg_price: "{{ stat.avg_price|round(5) }}"
+          epexspot_price_range: "{{ stat.price_range|round(5) }}"
+          last_updated: "{{ t }}"
+
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
+          grid_active_power: "{{ states(var.grid_active_power)|float(0) }}"
+          EVU: "{{ states(var.sg_ready_evu) }}"
+          PV: "{{ states(var.sg_ready_pv) }}"
+    sensor:
+      - name: "sg-ready-mode"
+        unique_id: sg-ready-mode
+        state: >-
+          {% if EVU == 'off' and PV == 'off' %}
+            {{ 'Normal' }}
+          {% elif EVU == 'on' and PV == 'off' %}
+            {{ 'EVU lock' }}
+          {% elif EVU == 'off' and PV == 'on' %}
+            {{ 'Recommendation' }}
+          {% elif EVU == 'on' and PV == 'on' %}
+            {{ 'Turn On' }}
+          {% elif EVU == 'off' and PV == 'off' %}
+            {{ 'Normal' }}
+          {% else %}
+            {{ 'Unavailable' }}
+          {% endif %}
+        attributes:
+          mode: >-
+            {% if epexspot_quantile|float(0) >= var.epexspot_quantile_setpoint_high|float(0)
+                and grid_active_power <= 1000 %}
+              {{ 'EVU lock' }}
+            {% else %}
+              {{ 'Normal' }}
+            {% endif %}
+          evu_lock: "{{ EVU }}"
+          pv_ready: "{{ PV }}"
+          last_updated: "{{ t }}"
+#
+# ########## End: Template Sensor ##########
+
+rest_command:
+  emhass_publish_data:
+    url: http://localhost:5000/action/publish-data
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: "{}"
+
+  emhass_perfect_optim:
+    url: http://localhost:5000/action/perfect-optim
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: "{}"
+
+  emhass_dayahead_optim_forecast:
+    url: http://localhost:5000/action/dayahead-optim
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: >-
+      {% set prediction_horizon = states('sensor.emhass_prediction_horizon')|int(0) %}
+      {
+        "pv_power_forecast": {{
+          ([states('sensor.inverter_input_power')|float(0)] +
+          (state_attr('sensor.emhass_forecast_data', 'data')|map(attribute='p_pv_forecast')|list)[1:48]
+          )| tojson
+        }},
+        "load_cost_forecast": {{
+          ([states('sensor.epex_spot_data_net_price')|float(0)|round(2)/100] +
+          (state_attr('sensor.emhass_forecast_data', 'data')|map(attribute='epexspot_price_eur_per_kwh')|list)[1:48] 
+          )| tojson 
+        }},
+        "prediction_horizon": {{prediction_horizon}},
+        "soc_init": {{states('sensor.batteries_state_of_capacity')|float(0)/100}},
+        "soc_final": 1.0,
+        "def_total_hours": [0,0],
+        "alpha": 1,
+        "beta": 0
+      }
+
+  emhass_naive_mpc_optim_forecast:
+    url: http://localhost:5000/action/naive-mpc-optim
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: >-
+      {% set prediction_horizon = states('sensor.emhass_prediction_horizon')|int(0) %}
+      {
+        "pv_power_forecast": {{
+          ([states('sensor.inverter_input_power')|float(0)] +
+          (state_attr('sensor.emhass_forecast_data', 'data')|map(attribute='p_pv_forecast')|list)[1:-1]
+          )|tojson
+        }},
+        "load_cost_forecast": {{
+          ([states('sensor.epex_spot_data_net_price')|float(0)|round(2)/100] +
+          (state_attr('sensor.emhass_forecast_data', 'data')|map(attribute='epexspot_price_eur_per_kwh')|list)[1:-1] 
+          )|tojson 
+        }},
+        "prediction_horizon": {{prediction_horizon}},
+        "soc_init": {{states('sensor.batteries_state_of_capacity')|float(0)/100}},
+        "soc_final": 1.0,
+        "def_total_hours": [0,0],
+        "alpha": 1,
+        "beta": 0,
+        "continual_publish":false
+      }
+
+  emhass_ml_load_forecast_model_fit:
+    url: http://localhost:5000/action/forecast-model-fit
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: >-
+      {
+        "days_to_retrieve": 7,
+        "model_type":"load_forecast",
+        "var_model":"sensor.house_consumption_power",
+        "num_lags": 96,
+        "split_date_delta": "48h",
+        "perform_backtest": true
+      }
+
+  emhass_ml_load_forecast_model_predict:
+    url: http://localhost:5000/action/forecast-model-predict
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: >-
+      {
+        "model_predict_publish": true,
+        "model_predict_entity_id": "sensor.p_load_forecast",
+        "model_predict_unit_of_measurement": "W",
+      }
+
+  emhass_ml_load_forecast_model_tune:
+    url: http://localhost:5000/action/forecast-model-tune
+    method: POST
+    content_type: "application/json"
+    timeout: 30
+    payload: >-
+      {
+        "var_model":"sensor.house_consumption_power"
+      }

@@ -1,0 +1,526 @@
+# ########## Tibber Rest, Multiscrape and Template Sensors ##########
+#
+# - sensor.tibber_prices
+# - sensor.tibber_price_level
+# - sensor.tibber_electricity_spot_price
+# - sensor.tibber_hourly_cost
+# - sensor.tibber_daily_cost
+# - sensor.tibber_monthly_cost
+# - sensor.tibber_yearly_cost
+#
+# - sensor.tibber_strompreisentwicklung_website_text
+#
+# - sensor.tibber_hourly_cost_total
+# - sensor.tibber_daily_cost_total
+# - sensor.tibber_monthly_cost_total
+# - sensor.tibber_yearly_cost_total
+#
+# - sensor.tibber_hourly_cost_statistics
+# - sensor.tibber_daily_cost_statistics
+# - sensor.tibber_monthly_cost_statistics
+# - sensor.tibber_yearly_cost_statistics
+#
+# ########## Start: Rest Sensors ##########
+#
+rest:
+  #
+  # Tibber Actual and Forecast Prices
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { current { total energy tax level startsAt } today { total energy tax level startsAt } tomorrow { total energy tax level startsAt } } } } } }" }'
+    scan_interval: 60
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_prices
+        name: Electricity spot price
+        json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo"
+        value_template: "{{ value_json.data.viewer.homes[0].currentSubscription.priceInfo.current.total | float(default=0) }}"
+        json_attributes:
+          - current
+          - today
+          - tomorrow
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+  #
+  # Tibber Historical Electricity Spot Prices
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { currentSubscription { priceInfo { range(resolution: HOURLY, last: 13200) { nodes { total startsAt } } } } } } }" }'
+    scan_interval: 600
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_electricity_spot_price
+        name: Tibber Electricity Spot Price
+        json_attributes_path: "$.data.viewer.homes[0].currentSubscription.priceInfo.range"
+        value_template: >
+          {% if value_json.data.viewer.homes[0].currentSubscription.priceInfo.range.nodes %}
+            {{ value_json.data.viewer.homes[0].currentSubscription.priceInfo.range.nodes[-1].total | float(default=0) }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+        json_attributes:
+          - nodes
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+  #
+  # Tibber Hourly Consumption and Cost Sensor
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { consumption(resolution: HOURLY, last: 72) { nodes { consumption consumptionUnit cost currency unitPrice unitPriceVAT from to } } } } }" }'
+    scan_interval: 60
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_hourly_cost
+        name: Tibber Hourly Cost
+        json_attributes_path: "$.data.viewer.homes[0].consumption"
+        value_template: >
+          {% if value_json.data.viewer.homes[0].consumption.nodes %}
+            {{ value_json.data.viewer.homes[0].consumption.nodes[-1].cost | float(default=0) }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+        json_attributes:
+          - nodes
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+  #
+  # Tibber Daily Consumption and Cost Sensor
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { consumption(resolution: DAILY, last: 90) { nodes { consumption consumptionUnit cost currency unitPrice unitPriceVAT from to } } } } }" }'
+    scan_interval: 600
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_daily_cost
+        name: Tibber Daily Cost
+        json_attributes_path: "$.data.viewer.homes[0].consumption"
+        value_template: >
+          {% if value_json.data.viewer.homes[0].consumption.nodes %}
+            {{ value_json.data.viewer.homes[0].consumption.nodes[-1].cost | float(default=0) }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+        json_attributes:
+          - nodes
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+  #
+  # Tibber Monthly Consumption and Cost Sensor
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { consumption(resolution: MONTHLY, last: 24) { nodes { consumption consumptionUnit cost currency unitPrice unitPriceVAT from to } } } } }" }'
+    scan_interval: 600
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_monthly_cost
+        name: Tibber Monthly Cost
+        json_attributes_path: "$.data.viewer.homes[0].consumption"
+        value_template: >
+          {% if value_json.data.viewer.homes[0].consumption.nodes %}
+            {{ value_json.data.viewer.homes[0].consumption.nodes[-1].cost | float(default=0) }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+        json_attributes:
+          - nodes
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+  #
+  # Tibber Yearly Consumption and Cost Sensor
+  #
+  - resource: https://api.tibber.com/v1-beta/gql
+    method: POST
+    payload: '{ "query": "{ viewer { homes { consumption(resolution: ANNUAL, last: 10) { nodes { consumption consumptionUnit cost currency unitPrice unitPriceVAT from to } } } } }" }'
+    scan_interval: 600
+    headers:
+      Authorization: !secret tibber_token
+      Content-Type: application/json
+      User-Agent: REST
+    sensor:
+      - unique_id: tibber_yearly_cost
+        name: Tibber Yearly Cost
+        json_attributes_path: "$.data.viewer.homes[0].consumption"
+        value_template: >
+          {% if value_json.data.viewer.homes[0].consumption.nodes %}
+            {{ value_json.data.viewer.homes[0].consumption.nodes[-1].cost | float(default=0) }}
+          {% else %}
+            {{ 0 }}
+          {% endif %}
+        json_attributes:
+          - nodes
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+#
+# ########## End: Rest Sensors ##########
+#
+# ########## Start: Multiscrape Sensors ##########
+#
+multiscrape:
+  - name: HA scraper
+    resource: https://tibber.com/de/strompreisentwicklung
+    scan_interval: 3600
+    sensor:
+      - unique_id: tibber_strompreisentwicklung_website_text
+        name: tibber_strompreisentwicklung_website_text
+        select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.no-padding > div > div > div > div > div > div > div > h2"
+        attributes:
+          - name: tibber_price_preview_week_number
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.no-padding > div > div > div > div > div > div > div > h2"
+          - name: tibber_price_preview_week_short_state
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.no-padding > div > div > div > div > div > p:nth-child(2)"
+          - name: tibber_price_preview_header_country
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.Blocks.py-xl > div > div > div > h2 > div > h2"
+          - name: tibber_price_preview_text_prices
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.Blocks.py-xl > div > div > div > p:nth-child(2)"
+          - name: tibber_price_preview_text_background_1
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.Blocks.py-xl > div > div > div > p:nth-child(3)"
+          - name: tibber_price_preview_text_background_2
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.Blocks.py-xl > div > div > div > p:nth-child(4)"
+          - name: tibber_price_preview_text_summary
+            select: "#app-root > div.jsx-850a60188453b536.app-container > div > section > div > div:nth-child(2) > div > div > div > div.Blocks.py-xl > div > div > div > p:nth-child(5)"
+#
+# ########## End: Multiscrape Sensors ##########
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+# - for Persistent Template Sensor states after HA restart
+#
+
+#
+# input_number.tibber_grundpreis_je_monat
+# input_number.tibber_netznutzungsgebuhr_je_tag
+# input_number.tibber_messtellengebuhr_je_tag
+# input_number.tibber_mehrwertsteuersatz
+#
+
+template:
+  - trigger:
+
+      - platform: state
+        entity_id:
+          - sensor.power_meter_consumption_energy_hourly
+          - sensor.tibber_prices
+          - sensor.tibber_hourly_cost
+          - sensor.tibber_daily_cost
+          - sensor.tibber_monthly_cost
+          - sensor.tibber_yearly_cost
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          feeActual: >
+            {% from '032-tibber-billing.jinja' import feeActual %}
+            {{ feeActual()|from_json }}
+          current_hour_consumption: "{{ states('sensor.power_meter_consumption_energy_hourly')|float(0) }}"
+          current_hour_price: "{{ state_attr('sensor.tibber_prices', 'current') }}"
+          hourly_cost: "{{ state_attr('sensor.tibber_hourly_cost', 'nodes') }}"
+          hourly_cost_total: "{{ state_attr('sensor.tibber_hourly_cost_total', 'nodes') }}"
+          hourly_cost_state: >-
+            {% from '032-tibber-billing.jinja' import actualState %}
+            {{ actualState(hourly_cost_total, 'totalCost') }}
+          hourly_consumption_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(hourly_cost_total, 'consumption')|from_json }}
+          hourly_totalCost_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(hourly_cost_total, 'totalCost')|from_json }}
+          hourly_unitPrice_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(hourly_cost_total, 'unitPrice')|from_json }}
+          daily_cost: "{{ state_attr('sensor.tibber_daily_cost', 'nodes') }}"
+          daily_cost_total: "{{ state_attr('sensor.tibber_daily_cost_total', 'nodes') }}"
+          daily_cost_state: >-
+            {% from '032-tibber-billing.jinja' import actualState %}
+            {{ actualState(daily_cost_total, 'totalCost') }}
+          daily_consumption_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(daily_cost_total, 'consumption')|from_json }}
+          daily_totalCost_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(daily_cost_total, 'totalCost')|from_json }}
+          daily_unitPrice_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(daily_cost_total, 'unitPrice')|from_json }}
+          monthly_cost: "{{ state_attr('sensor.tibber_monthly_cost', 'nodes') }}"
+          monthly_cost_total: "{{ state_attr('sensor.tibber_monthly_cost_total', 'nodes') }}"
+          monthly_cost_state: >-
+            {% from '032-tibber-billing.jinja' import actualState %}
+            {{ actualState(monthly_cost_total, 'totalCost') }}
+          monthly_consumption_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(monthly_cost_total, 'consumption')|from_json }}
+          monthly_totalCost_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(monthly_cost_total, 'totalCost')|from_json }}
+          monthly_unitPrice_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(monthly_cost_total, 'unitPrice')|from_json }}
+          yearly_cost: "{{ state_attr('sensor.tibber_yearly_cost', 'nodes') }}"
+          yearly_cost_total: "{{ state_attr('sensor.tibber_yearly_cost_total', 'nodes') }}"
+          yearly_cost_state: >-
+            {% from '032-tibber-billing.jinja' import actualState %}
+            {{ actualState(yearly_cost_total, 'totalCost') }}
+          yearly_consumption_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(yearly_cost_total, 'consumption')|from_json }}
+          yearly_totalCost_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(yearly_cost_total, 'totalCost')|from_json }}
+          yearly_unitPrice_statistics: >-
+            {% from '032-tibber-billing.jinja' import statistics %}
+            {{ statistics(yearly_cost_total, 'unitPrice')|from_json }}
+    sensor:
+      #
+      # Tibber - Total Hourly Cost
+      #
+      - name: tibber_hourly_cost_total
+        unique_id: tibber_hourly_cost_total
+        #friendly_name: "tibber_hourly_cost_total"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ hourly_cost_state }}"
+        attributes:
+          nodes: >-
+            {% set var = namespace(nodes = []) %}
+
+            {%- for record in hourly_cost %}
+              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% set var.nodes = var.nodes + [billingNode(record, hourly_cost_total, feeActual, 'hourly')|from_json] %}
+            {%- endfor %}
+
+            {% from '032-tibber-billing.jinja' import costCurrentHour %}
+            {% set costCurrentHour = costCurrentHour(current_hour_consumption, current_hour_price)|from_json %}
+            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% set var.nodes = var.nodes + [billingNode(costCurrentHour, hourly_cost_total, feeActual, 'hourly')|from_json] %}
+
+            {{ var.nodes }}
+          last_update: "{{ t }}"
+      #
+      # Tibber - Statistics Hourly Cost
+      #
+      - name: tibber_hourly_cost_statistics
+        unique_id: tibber_hourly_cost_statistics
+        #friendly_name: "tibber_hourly_cost_statistics"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ hourly_cost_state }}"
+        attributes:
+          consumptionAvg: "{{ hourly_consumption_statistics.avg }}"
+          consumptionMin: "{{ hourly_consumption_statistics.min }}"
+          consumptionMax: "{{ hourly_consumption_statistics.max }}"
+          consumptionRange: "{{ hourly_consumption_statistics.range }}"
+          totalCostAvg: "{{ hourly_totalCost_statistics.avg }}"
+          totalCostMin: "{{ hourly_totalCost_statistics.min }}"
+          totalCostMax: "{{hourly_totalCost_statistics.max }}"
+          totalCostRange: "{{ hourly_totalCost_statistics.range }}"
+          unitPriceAvg: "{{ hourly_unitPrice_statistics.avg * 100 }}"
+          unitPriceMin: "{{ hourly_unitPrice_statistics.min * 100 }}"
+          unitPriceMax: "{{ hourly_unitPrice_statistics.max * 100 }}"
+          unitPriceRange: "{{ hourly_unitPrice_statistics.range * 100 }}"
+          last_update: "{{ t }}"
+      #
+      # Tibber - Total Daily Cost
+      #
+      - name: tibber_daily_cost_total
+        unique_id: tibber_daily_cost_total
+        #friendly_name: "tibber_daily_cost_total"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ daily_cost_state }}"
+        attributes:
+          nodes: >-
+            {% set var = namespace(nodes = []) %}
+
+            {%- for record in daily_cost %}
+              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% set var.nodes = var.nodes + [billingNode(record, daily_cost_total, feeActual, 'daily')|from_json] %}
+            {%- endfor %}
+
+            {% from '032-tibber-billing.jinja' import costCurrentDay %}
+            {% set costCurrentDay = costCurrentDay(hourly_cost_total)|from_json %}
+            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% set var.nodes = var.nodes + [billingNode(costCurrentDay, daily_cost_total, feeActual, 'daily')|from_json] %}
+
+            {{ var.nodes }}
+          last_update: "{{ t }}"
+      #
+      # Tibber - Statistics Daily Cost
+      #
+      - name: tibber_daily_cost_statistics
+        unique_id: tibber_daily_cost_statistics
+        #friendly_name: "tibber_daily_cost_statistics"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ daily_cost_state }}"
+        attributes:
+          consumptionAvg: "{{ daily_consumption_statistics.avg }}"
+          consumptionMin: "{{ daily_consumption_statistics.min }}"
+          consumptionMax: "{{ daily_consumption_statistics.max }}"
+          consumptionRange: "{{ daily_consumption_statistics.range }}"
+          totalCostAvg: "{{ daily_totalCost_statistics.avg }}"
+          totalCostMin: "{{ daily_totalCost_statistics.min }}"
+          totalCostMax: "{{daily_totalCost_statistics.max }}"
+          totalCostRange: "{{ daily_totalCost_statistics.range }}"
+          unitPriceAvg: "{{ daily_unitPrice_statistics.avg * 100 }}"
+          unitPriceMin: "{{ daily_unitPrice_statistics.min * 100 }}"
+          unitPriceMax: "{{ daily_unitPrice_statistics.max * 100 }}"
+          unitPriceRange: "{{ daily_unitPrice_statistics.range * 100 }}"
+          last_update: "{{ t }}"
+      #
+      # Tibber - Total Monthly Cost
+      #
+      - name: tibber_monthly_cost_total
+        unique_id: tibber_monthly_cost_total
+        #friendly_name: "tibber_monthly_cost_total"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ monthly_cost_state }}"
+        attributes:
+          nodes: >-
+            {% set var = namespace(nodes = []) %}
+
+            {%- for record in monthly_cost %}
+              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% set var.nodes = var.nodes + [billingNode(record, monthly_cost_total, feeActual, 'monthly')|from_json] %}
+            {%- endfor %}
+
+            {% from '032-tibber-billing.jinja' import costCurrentMonth %}
+            {% set costCurrentMonth = costCurrentMonth(daily_cost_total)|from_json %}
+            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% set var.nodes = var.nodes + [billingNode(costCurrentMonth, monthly_cost_total, feeActual, 'monthly')|from_json] %}
+
+            {{ var.nodes }}
+          last_update: "{{ t }}"
+      #
+      # Tibber - Statistics Monthly Cost
+      #
+      - name: tibber_monthly_cost_statistics
+        unique_id: tibber_monthly_cost_statistics
+        #friendly_name: "tibber_monthly_cost_statistics"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ monthly_cost_state }}"
+        attributes:
+          consumptionAvg: "{{ monthly_consumption_statistics.avg }}"
+          consumptionMin: "{{ monthly_consumption_statistics.min }}"
+          consumptionMax: "{{ monthly_consumption_statistics.max }}"
+          consumptionRange: "{{ monthly_consumption_statistics.range }}"
+          totalCostAvg: "{{ monthly_totalCost_statistics.avg }}"
+          totalCostMin: "{{ monthly_totalCost_statistics.min }}"
+          totalCostMax: "{{monthly_totalCost_statistics.max }}"
+          totalCostRange: "{{ monthly_totalCost_statistics.range }}"
+          unitPriceAvg: "{{ monthly_unitPrice_statistics.avg * 100 }}"
+          unitPriceMin: "{{ monthly_unitPrice_statistics.min * 100 }}"
+          unitPriceMax: "{{ monthly_unitPrice_statistics.max * 100 }}"
+          unitPriceRange: "{{ monthly_unitPrice_statistics.range * 100 }}"
+          last_update: "{{ t }}"
+      #
+      # Tibber - Total Yearly Cost
+      #
+      - name: tibber_yearly_cost_total
+        unique_id: tibber_yearly_cost_total
+        #friendly_name: "tibber_yearly_cost_total"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ yearly_cost_state }}"
+        attributes:
+          nodes: >-
+            {% set var = namespace(nodes = []) %}
+
+            {%- for record in yearly_cost %}
+              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% set var.nodes = var.nodes + [billingNode(record, yearly_cost_total, feeActual, 'yearly')|from_json] %}
+            {%- endfor %}
+
+            {% from '032-tibber-billing.jinja' import costDummyYear %}
+            {% set costDummyYear = costDummyYear()|from_json %}
+            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% set var.nodes = var.nodes + [billingNode(costDummyYear, yearly_cost_total, feeActual, '')|from_json] %}
+
+            {% from '032-tibber-billing.jinja' import costCurrentYear %}
+            {% set costCurrentYear = costCurrentYear(monthly_cost_total)|from_json %}
+            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% set var.nodes = var.nodes + [billingNode(costCurrentYear, yearly_cost_total, feeActual, '')|from_json] %}
+
+            {{ var.nodes }}
+          last_update: "{{ t }}"
+      #
+      # Tibber - Statistics Yearly Cost
+      #
+      - name: tibber_yearly_cost_statistics
+        unique_id: tibber_yearly_cost_statistics
+        #friendly_name: "tibber_yearly_cost_statistics"
+        unit_of_measurement: EUR
+        device_class: monetary
+        state_class: total
+        icon: mdi:cash
+        state: "{{ yearly_cost_state }}"
+        attributes:
+          consumptionAvg: "{{ yearly_consumption_statistics.avg }}"
+          consumptionMin: "{{ yearly_consumption_statistics.min }}"
+          consumptionMax: "{{ yearly_consumption_statistics.max }}"
+          consumptionRange: "{{ yearly_consumption_statistics.range }}"
+          totalCostAvg: "{{ yearly_totalCost_statistics.avg }}"
+          totalCostMin: "{{ yearly_totalCost_statistics.min }}"
+          totalCostMax: "{{yearly_totalCost_statistics.max }}"
+          totalCostRange: "{{ yearly_totalCost_statistics.range }}"
+          unitPriceAvg: "{{ yearly_unitPrice_statistics.avg * 100 }}"
+          unitPriceMin: "{{ yearly_unitPrice_statistics.min * 100 }}"
+          unitPriceMax: "{{ yearly_unitPrice_statistics.max * 100 }}"
+          unitPriceRange: "{{ yearly_unitPrice_statistics.range * 100 }}"
+          last_update: "{{ t }}"
+#
+# ########## End: Persistent Template Sensors ##########

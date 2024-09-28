@@ -1,0 +1,321 @@
+# ########## Huawei Solar Integration ##########
+#
+# huawei-solar-diagnostic-package.yaml
+#
+# - sensor.inverter_pv_1_power
+# - sensor.inverter_pv_2_power
+# - sensor.inverter_pv_power
+#
+# - sensor.inverter_total_solar_yield
+# - sensor.inverter_total_efficiency
+#
+# - sensor.inverter_daily_solar_yield
+# - sensor.inverter_daily_efficiency
+#
+# - sensor.pv_yield_strings
+#
+# - sensor.pv_yield_strings_quarter_hourly
+# - sensor.pv_yield_strings_hourly
+# - sensor.pv_yield_strings_daily
+#
+# - sensor.pv_yield_quarter_hourly
+# - sensor.pv_yield_hourly
+#
+# - sensor.solar_yield_quarter_hourly
+# - sensor.solar_yield_hourly
+#
+# - sensor.inverter_yield_quarter_hourly
+# - sensor.inverter_yield_hourly
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+template:
+  #
+  # PV Strings Power (without Loss/Correction)
+  #
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.inverter_pv_1_voltage
+          - sensor.inverter_pv_2_voltage
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          pv_1_current: "{{ states(var.pv_1_current)|float(0) }}"
+          pv_1_voltage: "{{ states(var.pv_1_voltage)|float(0) }}"
+          pv_1_power: "{{ (pv_1_current * pv_1_voltage) }}"
+          pv_2_current: "{{ states(var.pv_2_current)|float(0) }}"
+          pv_2_voltage: "{{ states(var.pv_2_voltage)|float(0) }}"
+          pv_2_power: "{{ (pv_2_current * pv_2_voltage) }}"
+          pv_power: "{{ (pv_1_power + pv_2_power) }}"
+    sensor:
+      - name: inverter_pv_1_power
+        unique_id: inverter_pv_1_power
+        #friendly_name: 'Inverter PV 1 Power'
+        state_class: "measurement"
+        device_class: power
+        unit_of_measurement: "W"
+        icon: mdi:solar-power
+        state: "{{ pv_1_power }}"
+
+      - name: inverter_pv_2_power
+        unique_id: inverter_pv_2_power
+        #friendly_name: "Inverter PV 2 Power"
+        state_class: "measurement"
+        device_class: power
+        unit_of_measurement: "W"
+        icon: mdi:solar-power
+        state: "{{ pv_2_power }}"
+
+      - name: inverter_pv_power
+        unique_id: inverter_pv_power
+        #friendly_name: "Inverter PV Sum Power"
+        state_class: "measurement"
+        device_class: power
+        unit_of_measurement: "W"
+        icon: mdi:solar-power
+        state: "{{ pv_power }}"
+  #
+  # FusionSolar: PV Yield
+  #
+  # - only for monitoring purpose and as an evidence about the poor quality of FusionSolar Portal ...
+  #
+  # Log Errors: state class total_increasing, but its state is negative
+  #
+  # - Energy consumed by the inverter is missing
+  # - Includes also battery charge from the grid
+  # - Energy left in the battery from yesterday
+  #
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.inverter_total_yield
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          pv_yield_total: "{{ states(var.pv_yield_total)|float(0) }}"
+          inv_out_total: "{{ states(var.inv_out_total)|float(0) }}"
+          bat_in_total: "{{ states(var.bat_in_total)|float(0) }}"
+          bat_out_total: "{{ states(var.bat_out_total)|float(0) }}"
+          inv_yield_total: "{{ pv_yield_total + bat_out_total - bat_in_total }}"
+          inv_loss_total: "{{ pv_yield_total + bat_out_total - bat_in_total - inv_out_total }}"
+          fusionsolar_yield_total: "{{ max(0, (inv_out_total - bat_out_total + bat_in_total)) }}"
+          inv_efficiency_total: "{{ inv_out_total / inv_yield_total * 100 }}"
+    sensor:
+      - name: inverter_total_solar_yield
+        unique_id: inverter_total_solar_yield
+        #friendly_name: "FusionSolar Ertrag Solar excl. Batterie (Lifetime)"
+        state_class: "total"
+        device_class: "energy"
+        unit_of_measurement: "kWh"
+        icon: "mdi:solar-power"
+        state: "{{ fusionsolar_yield_total }}"
+
+      - name: inverter_total_efficiency
+        unique_id: inverter_total_efficiency
+        #friendly_name: "inverter_total_efficiency"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        icon: "icon: mdi:eye"
+        state: "{{ inv_efficiency_total }}"
+        attributes:
+          pv_yield: "{{ pv_yield_total }}"
+          inv_yield: "{{ inv_yield_total }}"
+          fusionsolar_yield: "{{ fusionsolar_yield_total }}"
+          bat_in: "{{ bat_in_total }}"
+          bat_out: "{{ bat_out_total }}"
+          inv_out: "{{ inv_out_total }}"
+          inv_loss: "{{ inv_loss_total }}"
+          inv_efficiency: "{{ inv_efficiency_total }}"
+
+  - trigger:
+      - platform: state
+        entity_id:
+          - sensor.inverter_daily_yield
+        not_from:
+          - "unknown"
+          - "unavailable"
+          - "none"
+        not_to:
+          - "unknown"
+          - "unavailable"
+          - "none"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          pv_yield: "{{ states(var.pv_yield)|float(0) }}"
+          solar_yield: "{{ states(var.solar_yield)|float(0) }}"
+          inv_out: "{{ states(var.inv_out)|float(0) }}"
+          bat_in: "{{ states(var.bat_in)|float(0) }}"
+          bat_out: "{{ states(var.bat_out)|float(0) }}"
+          inv_yield: "{{ pv_yield + bat_out - bat_in }}"
+          pv_loss: "{{ pv_yield - solar_yield }}"
+          bat_loss: "{{ solar_yield + bat_out - bat_in - inv_out }}"
+          inv_loss: "{{ pv_yield + bat_out - bat_in - inv_out }}"
+          fusionsolar_yield: "{{ max(0, (inv_out - bat_out + bat_in)) }}"
+          pv_efficiency: "{{ solar_yield / pv_yield * 100 }}"
+          bat_efficiency: "{{ (1 - bat_loss / inv_out) * 100 }}"
+          inv_efficiency: "{{ inv_out / (pv_yield + bat_out - bat_in) * 100 }}"
+          inv_efficien_1: "{{ pv_efficiency / 100 * bat_efficiency }}"
+    sensor:
+      - name: inverter_daily_solar_yield
+        unique_id: inverter_daily_solar_yield
+        #friendly_name: "FusionSolar Tagesertrag Solar excl. Batterie"
+        state_class: "total"
+        device_class: "energy"
+        unit_of_measurement: "kWh"
+        icon: "mdi:solar-power"
+        state: "{{ fusionsolar_yield }}"
+
+      - name: inverter_daily_efficiency
+        unique_id: inverter_daily_efficiency
+        #friendly_name: "inverter_daily_efficiency"
+        state_class: "measurement"
+        unit_of_measurement: "%"
+        icon: "icon: mdi:eye"
+        state: "{{ inv_efficiency }}"
+        attributes:
+          pv_yield: "{{ pv_yield }}"
+          solar_yield: "{{ solar_yield }}"
+          inv_yield: "{{ inv_yield }}"
+          fusionsolar_yield: "{{ fusionsolar_yield }}"
+          bat_in: "{{ bat_in }}"
+          bat_out: "{{ bat_out }}"
+          inv_out: "{{ inv_out }}"
+          pv_loss: "{{ pv_loss }}"
+          bat_loss: "{{ bat_loss }}"
+          inv_loss: "{{ inv_loss }}"
+          pv_efficiency: "{{ pv_efficiency }}"
+          bat_efficiency: "{{ bat_efficiency }}"
+          inv_efficiency: "{{ inv_efficiency }}"
+          inv_efficien_1: "{{ inv_efficien_1 }}"
+#
+# ########## End: Template Sensors ##########
+#
+# ########## Start: Integration Sensors ##########
+#
+sensor:
+  #
+  # PV Strings Yield (without Loss/Correction)
+  #
+  # - Only for diagnostic and only used in the diagnostic cards
+  #
+  - platform: integration
+    name: pv_yield_strings
+    unique_id: pv_yield_strings
+    source: sensor.inverter_pv_power
+    unit_prefix: k
+    method: left
+#
+# ########## End: Integration Sensors ##########
+#
+# ########## Start: Utility Meter Sensors ##########
+#
+utility_meter:
+  #
+  # PV Strings Yield (without Loss/Correction)
+  #
+  # - Only for diagnostic and only used in the diagnostic cards
+  #
+  pv_yield_strings_quarter_hourly:
+    unique_id: "pv_yield_strings_quarter_hourly"
+    name: "pv_yield_strings_quarter_hourly"
+    # friendly_name: 'pv_yield_strings - Energy quarter_hourly'
+    source: sensor.pv_yield_strings
+    cycle: quarter-hourly
+
+  pv_yield_strings_hourly:
+    unique_id: "pv_yield_strings_hourly"
+    name: "pv_yield_strings_hourly"
+    # friendly_name: 'pv_yield_strings - Energy hourly'
+    source: sensor.pv_yield_strings
+    cycle: hourly
+
+  pv_yield_strings_daily:
+    unique_id: "pv_yield_strings_daily"
+    name: "pv_yield_strings_daily"
+    # friendly_name: 'pv_yield_strings - Energy daily'
+    source: sensor.pv_yield_strings
+    cycle: daily
+  #
+  # PV Yield (New Inverter Register 32108 without Loss/Correction)
+  #
+  # - Only for diagnostic and only used in the diagnostic cards
+  #
+  pv_yield_quarter_hourly:
+    unique_id: "pv_yield_quarter_hourly"
+    name: "pv_yield_quarter_hourly"
+    # friendly_name: 'pv_yield - Energy quarter-hourly'
+    source: sensor.inverter_total_dc_input_energy
+    cycle: quarter-hourly
+
+  pv_yield_hourly:
+    unique_id: "pv_yield_hourly"
+    name: "pv_yield_hourly"
+    # friendly_name: 'pv_yield - Energy hourly'
+    source: sensor.inverter_total_dc_input_energy
+    cycle: hourly
+  #
+  # Solar Yield (with Loss/Correction)
+  #
+  # - Only for diagnostic and only used in the diagnostic cards
+  # - For Calibration of sensor.solar_yield
+  #
+  solar_yield_quarter_hourly:
+    unique_id: "solar_yield_quarter_hourly"
+    name: "solar_yield_quarter_hourly"
+    # friendly_name: 'solar_yield - Energy quarter-hourly'
+    source: sensor.solar_yield
+    cycle: quarter-hourly
+
+  solar_yield_hourly:
+    unique_id: "solar_yield_hourly"
+    name: "solar_yield_hourly"
+    # friendly_name: 'solar_yield - Energy hourly'
+    source: sensor.solar_yield
+    cycle: hourly
+  #
+  # Inverter Output Yield (with Loss/Correction)
+  #
+  # - Only for diagnostic and only used in the diagnostic cards
+  #
+  inverter_yield_quarter_hourly:
+    unique_id: inverter_yield_quarter_hourly
+    name: "inverter_yield_quarter_hourly"
+    # friendly_name: ' inverter_yield - Energy quarter-hourly'
+    source: sensor.inverter_total_yield
+    cycle: quarter-hourly
+
+  inverter_yield_hourly:
+    unique_id: inverter_yield_hourly
+    name: "inverter_yield_hourly"
+    # friendly_name: ' inverter_yield - Energy hourly'
+    source: sensor.inverter_total_yield
+    cycle: hourly
+#
+# ########## Endt: Utility Meter Sensors ##########

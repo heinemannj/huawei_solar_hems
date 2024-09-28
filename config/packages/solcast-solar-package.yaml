@@ -1,0 +1,76 @@
+# ########## SolCast PV Forecast Integration ##########
+#
+# solcast-solar-package.yaml
+#
+# - sensor.solcast_pv_forecast_api_update
+#
+# ########## Start: Template Sensor ##########
+#
+template:
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          sunrise: "{{ state_attr(var.sun_rising_time,'today')|as_datetime|as_local }}"
+          sunrise_tomorrow: "{{ state_attr(var.sun_rising_time,'tomorrow')|as_datetime|as_local }}"
+          sunset: "{{ state_attr(var.sun_setting_time,'today')|as_datetime|as_local }}"
+          last_poll_time: "{{ states(var.solcast_last_poll_time)|as_datetime|as_local }}"
+          api_request_limit: "{{ states(var.solcast_api_request_limit)|int(0) }}"
+          api_request_used: "{{ states(var.solcast_api_request_used)|int(0) }}"
+          api_request_free: "{{ (api_request_limit - api_request_used)|int(0) }}"
+          next_poll_time: >-
+            {% if last_poll_time < sunrise %}
+                {{ sunrise }}
+            {% elif api_request_free >= 1 %}
+                {% set ts_difference = (sunset|as_timestamp - last_poll_time|as_timestamp)|float(0) %}
+                {% set ts_interval = (ts_difference / api_request_free)|float(0) %}
+                {{ (last_poll_time|as_timestamp + ts_interval)|as_datetime|as_local }}
+            {% else %}
+                {{ sunrise_tomorrow }}
+            {% endif %}
+    sensor:
+      - name: solcast_pv_forecast_api_update
+        unique_id: solcast_pv_forecast_api_update
+        state: "{{ next_poll_time }}"
+        attributes:
+          last_updated: "{{ t }}"
+#
+# ########## End: Template Sensor ##########
+
+#rest:
+#  - resource: https://api.solcast.com.au/rooftop_sites/***YOUR-Side-ID***/forecasts?format=json&api_key=***Your-API-Key***&hours=120
+#    scan_interval: '01:30:00'
+#    sensor:
+#      - name: "Solcast Forecast Data"
+#        unique_id: solcast_pv_estimate
+#        force_update: true
+#        value_template: "{{ value_json.forecasts[0].pv_estimate|round(1) }}"
+#        unit_of_measurement: kW
+#        device_class: power
+#        state_class: measurement
+#        json_attributes:
+#        - forecasts
+#        icon: mdi:solar-power
+#    
+#      - name: "Solcast Forecast 10"
+#        unique_id: solcast_pv_estimate10
+#        force_update: true
+#        value_template: "{{ value_json.forecasts[0].pv_estimate10|round(1) }}"
+#        unit_of_measurement: kW
+#        device_class: power
+#        state_class: measurement
+#        icon: mdi:solar-power
+#        
+#      - name: "Solcast Forecast 90"
+#        unique_id: solcast_pv_estimate90
+#        force_update: true
+#        value_template: "{{ value_json.forecasts[0].pv_estimate90|round(1) }}"
+#        unit_of_measurement: kW
+#        device_class: power
+#        state_class: measurement
+#        icon: mdi:solar-power
