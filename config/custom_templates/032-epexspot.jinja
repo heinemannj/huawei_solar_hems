@@ -1,0 +1,38 @@
+{%- macro redundantSensor(list) %}
+    {%- set var = namespace(sensor = []) %}
+    {% for i in list if has_value(i) %}
+        {% set var.sensor = var.sensor + [i] %}
+    {% endfor %}
+    {{ var.sensor|first }}
+{%- endmacro %}
+
+{%- macro APIUpdate(tomorrow_data_available, last_update, next_poll_time, data) %}
+    {%- set t = now() %}
+
+    {%- set last_data = data|map(attribute='start_time')|list|last %}
+    {%- set last_data_ts = last_data|as_timestamp %}
+    {%- set tomorrow_ts = (t + timedelta( days = 1)).timestamp() %}
+
+    {% if last_data_ts >= tomorrow_ts %}
+        {% if not tomorrow_data_available %}
+            {%- set last_update = t.replace(microsecond=0) %}
+        {% endif %}
+        {% set tomorrow_data_available = true %}
+        {%- set next_poll_time = today_at("13:00:00") + timedelta( days = 1) %}
+    {% elif t <= t.replace(hour=13).replace(minute=0).replace(second=0).replace(microsecond=0) %}
+        {% set tomorrow_data_available = false %}
+        {%- set next_poll_time = t.replace(hour=13).replace(minute=0).replace(second=0).replace(microsecond=0) %}
+    {% elif t >= as_datetime(next_poll_time, t)|as_local %}
+        {% set tomorrow_data_available = false %}
+        {%- set next_poll_time = as_datetime(next_poll_time, t).replace(microsecond=0)|as_local + timedelta(minutes = 5) %}
+    {% else %}
+        {% set tomorrow_data_available = false %}
+    {% endif %}
+
+    {{- {
+            'tomorrow_data_available': tomorrow_data_available,
+            'last_data': last_data,
+            'last_update': (as_datetime(last_update, t).replace(microsecond=0)|as_local).isoformat(),
+            'next_poll_time': (as_datetime(next_poll_time,t).replace(microsecond=0)|as_local).isoformat()
+        }|to_json -}}
+{%- endmacro %}

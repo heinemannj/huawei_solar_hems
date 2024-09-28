@@ -1,0 +1,259 @@
+{%- macro daysMonth(start_time) %}
+    {%- set period = as_datetime(start_time, default) %}
+    {%- set daysMonth = 31 if period.month == 12 else (period.replace(month=period.month+1, day=1) - timedelta(days=1)).day %}
+    {{- daysMonth -}}
+{%- endmacro %}
+
+{%- macro feeActual() %}
+    {% set tibber = states('input_number.tibber_grundpreis_je_monat')|float(0) %}
+    {% set nng = states('input_number.tibber_netznutzungsgebuhr_je_tag')|float(0) %}
+    {% set msg = states('input_number.tibber_messtellengebuhr_je_tag')|float(0) %}
+    {% set vat = states('input_number.tibber_mehrwertsteuersatz')|float(0) %}
+    {{- {
+            'tibber': tibber,
+            'nng': nng,
+            'msg': msg,
+            'vat': vat
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro actualState(node, value) %}
+    {% if node %}
+        {{- node[-1][value]|float(0) -}}
+    {% else %}
+        {{- 0 -}}
+    {% endif %}
+{%- endmacro %}
+
+{%- macro statistics(node, value) %}
+    {%- set var = namespace(data = []) %}
+    {% if node %}
+        {%- for record in node if record.totalCost != 0 %}
+            {%- set var.data = var.data + [record[value]] %}
+        {%- endfor %}
+        {%- set min = var.data|min|float(0) %}
+        {%- set max = var.data|max|float(0) %}
+        {%- set sum = var.data|sum|float(0) %}
+        {%- set len = var.data|list|length|float(0) %}
+        {{- {
+                'min': min,
+                'max': max,
+                'avg': (sum / len)|float(0),
+                'range': (max - min)|float(0)
+            }|to_json -}}
+    {% else %}
+        {{- {
+                'min': 'n/a',
+                'max': 'n/a',
+                'avg': 'n/a',
+                'range': 'n/a'
+            }|to_json -}}
+    {% endif %}
+{%- endmacro %}
+
+{%- macro costDummyYear() %}
+    {% set from = now().replace(year=now().year-1).replace(month=1).replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0).isoformat() %}
+    {% set to = now().replace(month=1).replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0).isoformat() %}
+    {{- {
+            'consumption': 0,
+            'cost': 0,
+            'totalFee': 0,
+            'unitPrice': 0,
+            'unitPriceVAT': 0,
+            'from': from,
+            'to': to
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro costCurrentYear(cost_total) %}
+    {% set var = namespace() %}
+
+    {% set var.cost = 0 %}
+    {% set var.consumption = 0 %}
+    {% set var.totalFee = 0 %}
+
+    {%- for record in cost_total if record.from|as_timestamp >= now().replace(month=1).replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0)|as_timestamp %}
+        {% set var.cost = var.cost + record.cost %}
+        {% set var.consumption = var.consumption + record.consumption %}
+        {% set var.totalFee = var.totalFee + record.totalFee %}
+    {%- endfor %}
+
+    {% if var.consumption > 0 %}
+        {% set unitPrice = (var.cost / var.consumption)|float(0) %}
+        {% set unitPriceVAT = (unitPrice / 1.19 * -1 + unitPrice)|float(0) %}
+    {% else %}
+        {% set unitPrice = 0 %}
+        {% set unitPriceVAT = 0 %}
+    {% endif %}
+    {% set from = now().replace(month=1).replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0).isoformat() %}
+    {% set to = now().isoformat() %}
+    {{- {
+            'consumption': var.consumption,
+            'cost': var.cost,
+            'totalFee': var.totalFee,
+            'unitPrice': unitPrice,
+            'unitPriceVAT': unitPriceVAT,
+            'from': from,
+            'to': to
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro costCurrentMonth(cost_total) %}
+    {% set var = namespace() %}
+
+    {% set var.cost = 0 %}
+    {% set var.consumption = 0 %}
+    {% set var.totalFee = 0 %}
+
+    {%- for record in cost_total if record.from|as_timestamp >= now().replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0)|as_timestamp %}
+        {% set var.cost = var.cost + record.cost %}
+        {% set var.consumption = var.consumption + record.consumption %}
+        {% set var.totalFee = var.totalFee + record.totalFee %}
+    {%- endfor %}
+
+    {% if var.consumption > 0 %}
+        {% set unitPrice = (var.cost / var.consumption)|float(0) %}
+        {% set unitPriceVAT = (unitPrice / 1.19 * -1 + unitPrice)|float(0) %}
+    {% else %}
+        {% set unitPrice = 0 %}
+        {% set unitPriceVAT = 0 %}
+    {% endif %}
+    {% set from = now().replace(day=1).replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0).isoformat() %}
+    {% set to = now().isoformat() %}
+    {{- {
+            'consumption': var.consumption,
+            'cost': var.cost,
+            'totalFee': var.totalFee,
+            'unitPrice': unitPrice,
+            'unitPriceVAT': unitPriceVAT,
+            'from': from,
+            'to': to
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro costCurrentDay(cost_total) %}
+    {% set var = namespace() %}
+
+    {% set var.cost = 0 %}
+    {% set var.consumption = 0 %}
+    {% set var.totalFee = 0 %}
+
+    {%- for record in cost_total if record.from|as_timestamp >= now().replace(hour=0).replace(minute=0).replace(second=0).replace(microsecond=0)|as_timestamp %}
+        {% set var.cost = var.cost + record.cost %}
+        {% set var.consumption = var.consumption + record.consumption %}
+        {% set var.totalFee = var.totalFee + record.totalFee %}
+    {%- endfor %}
+
+    {% if var.consumption > 0 %}
+        {% set unitPrice = (var.cost / var.consumption)|float(0) %}
+        {% set unitPriceVAT = (unitPrice / 1.19 * -1 + unitPrice)|float(0) %}
+    {% else %}
+        {% set unitPrice = 0 %}
+        {% set unitPriceVAT = 0 %}
+    {% endif %}
+    {% set from = today_at("00:00").isoformat() %}
+    {% set to = now().isoformat() %}
+    {{- {
+            'consumption': var.consumption,
+            'cost': var.cost,
+            'totalFee': var.totalFee,
+            'unitPrice': unitPrice,
+            'unitPriceVAT': unitPriceVAT,
+            'from': from,
+            'to': to
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro costCurrentHour(consumption, price) %}
+    {% set unitPrice = price.total|float(0) %}
+    {% if unitPrice != 0 %}
+        {% set unitPriceVAT = (unitPrice / 1.19 * -1 + unitPrice) %}
+    {% else %}
+        {% set unitPriceVAT = 0 %}
+    {% endif %}
+    {% set cost = (consumption * unitPrice)|float(0) %}
+    {% set from = price.startsAt %}
+    {% set to = now().isoformat() %}
+    {{- {
+            'consumption': consumption,
+            'cost': cost,
+            'unitPrice': unitPrice,
+            'unitPriceVAT': unitPriceVAT,
+            'from': from,
+            'to': to
+        }|to_json -}}
+{%- endmacro %}
+
+{%- macro billingNode(record, cost_total, feeActual, period) %}
+    {% set fee = namespace() %}
+
+    {% set start_time = record.from %}
+
+    {% set fee.tibber = 0 %}
+    {% set fee.nng = 0 %}
+    {% set fee.msg = 0 %}
+    {% set fee.vat = 0 %}
+    {% set fee.daysMonth = 0 %}
+
+    {% if cost_total %}
+        {%- for record in cost_total if record.from|as_timestamp == start_time|as_timestamp %}
+            {%- set fee.tibber = record.tibberFeeMonthly|float(0) %}
+            {%- set fee.nng = record.netznutzungsgebuehrDaily|float(0) %}
+            {%- set fee.msg = record.messtellengebuehrDaily|float(0) %}
+            {%- set fee.vat = record.VAT|float(0) %}
+            {%- set fee.daysMonth = record.daysMonth|float(0) %}
+        {%- endfor %}
+    {% endif %}
+
+    {% if fee.tibber == 0 %}
+        {% set fee.tibber = feeActual.tibber %}
+    {% endif %}
+
+    {% if fee.nng == 0 %}
+        {% set fee.nng = feeActual.nng %}
+    {% endif %}
+
+    {% if fee.msg == 0 %}
+        {% set fee.msg = feeActual.msg %}
+    {% endif %}
+
+    {% if fee.vat == 0 %}
+        {% set fee.vat = feeActual.vat %}
+    {% endif %}
+
+    {% if fee.daysMonth == 0 %}
+        {% from '032-tibber-billing.jinja' import daysMonth %}
+        {% set fee.daysMonth = daysMonth(start_time)|float(0) %}
+    {% endif %}
+
+    {% if period == 'hourly' %}
+        {% set fee.total = ((fee.tibber /30/24)|round(2, "ceil", 0) + (fee.nng /24)|round(2, "ceil", 0) + (fee.msg /24)|round(2, "ceil", 0)) * (1 + fee.vat) %}
+    {% elif period == 'daily' %}
+        {% set fee.total = ((fee.tibber /30)|round(2, "ceil", 0) + fee.nng|round(2, "ceil", 0) + fee.msg|round(2, "ceil", 0)) * (1 + fee.vat) %}
+    {% elif period == 'monthly' %}
+        {% set fee.total = (fee.tibber|round(2, "ceil", 0) + (fee.nng * fee.daysMonth)|round(2, "ceil", 0) + (fee.msg * fee.daysMonth)|round(2, "ceil", 0)) * (1 + fee.vat) %}
+    {% elif period == 'yearly' %}
+        {% set fee.total = ((fee.tibber * 12)|round(2, "ceil", 0) + (fee.nng * 365)|round(2, "ceil", 0) + (fee.msg * 365)|round(2, "ceil", 0)) * (1 + fee.vat) %}
+    {% else %}
+        {% set fee.total = record.totalFee|float(0)|round(2, "ceil", 0) %}
+    {% endif %}
+
+    {% set costTotal = (record.cost|float(0) + fee.total)|round(2, "ceil", 0) %}
+
+    {{- {
+            'consumption': record.consumption|float(0),
+            'cost': record.cost|float(0),
+            'totalCost': costTotal,
+            'unitPrice': record.unitPrice|float(0),
+            'unitPriceVAT': record.unitPriceVAT|float(0),
+            'tibberFeeMonthly': fee.tibber,
+            'netznutzungsgebuehrDaily': fee.nng,
+            'messtellengebuehrDaily': fee.msg,
+            'daysMonth': fee.daysMonth,
+            'totalFee': fee.total,
+            'VAT': fee.vat,
+            'from': record.from,
+            'to': record.to
+        }|to_json -}}
+
+{%- endmacro %}
