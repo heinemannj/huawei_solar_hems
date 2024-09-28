@@ -1,0 +1,171 @@
+type: picture-elements
+title: Huawei Sun2000-6KTL-M1 (High Current Version)
+image: /local/images/huawei-solar/sun2000-luna2000-power-energy-flows.png
+elements:
+  - entity: sensor.batteries_state_of_capacity
+    style:
+      left: 17%
+      top: 9%
+    type: state-label
+  - entity: sensor.inverter_loss_daily
+    style:
+      left: 55.3%
+      top: 9%
+    type: state-label
+  - entity: sensor.batteries_total_charge
+    style:
+      left: 15.7%
+      top: 20.8%
+    type: state-label
+  - entity: sensor.batteries_day_charge
+    style:
+      left: 29.7%
+      top: 20.7%
+    type: state-label
+  - entity: sensor.batteries_day_charge_with_loss
+    style:
+      left: 52.6%
+      top: 20.8%
+    type: state-label
+  - entity: sensor.power_meter_consumption
+    prefix: "T: "
+    style:
+      left: 76.2%
+      top: 22.6%
+    type: state-label
+  - entity: sensor.power_meter_consumption_energy_daily
+    prefix: "D: "
+    style:
+      left: 76.2%
+      top: 24.6%
+    type: state-label
+  - entity: sensor.power_meter_exported
+    prefix: "T: "
+    style:
+      left: 94.7%
+      top: 22.6%
+    type: state-label
+  - entity: sensor.power_meter_exported_energy_daily
+    prefix: "D: "
+    style:
+      left: 94.7%
+      top: 24.6%
+    type: state-label
+  - entity: sensor.batteries_total_discharge
+    style:
+      left: 15.7%
+      top: 27%
+    type: state-label
+  - entity: sensor.batteries_day_discharge
+    style:
+      left: 29.7%
+      top: 27%
+    type: state-label
+  - entity: sensor.batteries_day_discharge_with_loss
+    style:
+      left: 52.6%
+      top: 27%
+    type: state-label
+  - entity: sensor.power_meter_active_power
+    style:
+      left: 91.5%
+      top: 32.5%
+    type: state-label
+  - entity: sensor.batteries_charge_discharge_power
+    style:
+      left: 14.4%
+      top: 35.8%
+    type: state-label
+  - entity: sensor.batteries_active_power
+    style:
+      left: 39%
+      top: 36.2%
+    type: state-label
+  - entity: sensor.inverter_active_power
+    style:
+      left: 69.5%
+      top: 47%
+    type: state-label
+  - entity: sensor.inverter_daily_yield
+    style:
+      left: 59%
+      top: 57%
+    type: state-label
+  - entity: sensor.inverter_total_yield
+    style:
+      left: 76.3%
+      top: 57%
+    type: state-label
+  - entity: sensor.inverter_internal_temperature
+    style:
+      left: 44%
+      top: 60%
+    type: state-label
+  - entity: sensor.inverter_input_power
+    style:
+      left: 14.8%
+      top: 54.4%
+    type: state-label
+  - entity: sensor.house_consumption_power
+    style:
+      left: 96.5%
+      top: 72.8%
+    type: state-label
+  - entity: sensor.solar_yield_daily
+    prefix: "D: "
+    style:
+      left: 24%
+      top: 69.5%
+    type: state-label
+  - entity: sensor.solar_yield
+    prefix: "T: "
+    style:
+      left: 24%
+      top: 71.5%
+    type: state-label
+  - entity: sensor.inverter_daily_solar_yield
+    style:
+      left: 57%
+      top: 69.5%
+    type: state-label
+  - entity: sensor.inverter_total_solar_yield
+    style:
+      left: 75%
+      top: 69.5%
+    type: state-label
+  - entity: sensor.inverter_yield_self_use_total
+    prefix: "T: "
+    style:
+      left: 23%
+      top: 95.5%
+    type: state-label
+  - entity: sensor.inverter_yield_self_use_daily
+    prefix: "D: "
+    style:
+      left: 23%
+      top: 97.5%
+    type: state-label
+  - entity: sensor.house_self_sufficiency_total
+    prefix: "T: "
+    style:
+      left: 43%
+      top: 98%
+    type: state-label
+  - entity: sensor.house_self_sufficiency_daily
+    prefix: "D: "
+    style:
+      left: 43%
+      top: 100%
+    type: state-label
+  - entity: sensor.house_consumption_energy_total
+    prefix: "T: "
+    style:
+      left: 73%
+      top: 95.5%
+    type: state-label
+  - entity: sensor.house_consumption_energy_daily
+    prefix: "D: "
+    style:
+      left: 73%
+      top: 97.5%
+    type: state-label

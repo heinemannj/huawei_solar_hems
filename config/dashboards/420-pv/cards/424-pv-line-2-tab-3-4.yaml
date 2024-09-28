@@ -1,0 +1,117 @@
+type: vertical-stack
+cards:
+  - type: custom:apexcharts-card
+    config_templates: tibber_consumption_chart_yearly
+    all_series_config:
+      unit: EUR
+    series:
+      - entity: sensor.tibber_yearly_cost_total
+        yaxis_id: costEUR
+        name: Fees charged
+        color: '#3498db'
+        show:
+          in_header: false
+          in_chart: true
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.from).getTime(), entry.totalFee];
+          });
+      - entity: sensor.tibber_yearly_cost_total
+        yaxis_id: costEUR
+        name: Electricity costs
+        color: 'var(--accent-color)'
+        show:
+          in_header: false
+          in_chart: true
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.from).getTime(), entry.cost];
+          });
+      - entity: sensor.tibber_yearly_cost_total
+        opacity: 0
+        yaxis_id: costEUR
+        name: Total costs
+        show:
+          in_chart: true
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.from).getTime(), entry.totalCost];
+          });
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: totalCostAvg
+        name: Ø
+        yaxis_id: header_only
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: totalCostMin
+        name: Min
+        yaxis_id: header_only
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: totalCostMax
+        name: Max
+        yaxis_id: header_only
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: totalCostRange
+        name: Range
+        yaxis_id: header_only
+    card_mod:
+      class: tibber-chart-full-width
+  - type: custom:apexcharts-card
+    config_templates: tibber_consumption_chart_yearly
+    all_series_config:
+      unit: kWh
+    series:
+      - entity: sensor.tibber_yearly_cost_total
+        yaxis_id: costKWH
+        name: Consumption
+        color: 'var(--accent-color)'
+        show:
+          in_chart: true
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.from).getTime(), entry.consumption];
+          });
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: consumptionAvg
+        name: Ø
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: consumptionMin
+        name: Min
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: consumptionMax
+        name: Max
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: consumptionRange
+        name: Range
+    card_mod:
+      class: tibber-chart-full-width
+  - type: custom:apexcharts-card
+    config_templates: tibber_consumption_chart_yearly
+    all_series_config:
+      unit: ct/kWh
+    experimental:
+      color_threshold: true
+    series:
+      - entity: sensor.tibber_yearly_cost_total
+        yaxis_id: costCentKWH
+        name: Electricity spot price
+        unit: ct/kWh
+        show:
+          in_chart: true
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.from).getTime(), entry.unitPrice * 100];
+          });
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: unitPriceAvg
+        name: Ø
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: unitPriceMin
+        name: Min
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: unitPriceMax
+        name: Max
+      - entity: sensor.tibber_yearly_cost_statistics
+        attribute: unitPriceRange
+        name: Range
+    card_mod:
+      class: tibber-chart-full-width

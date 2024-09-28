@@ -1,0 +1,295 @@
+type: vertical-stack
+cards:
+  - type: custom:apexcharts-card
+    config_templates: pv_solar_forecast_chart
+    now:
+      show: true
+    experimental:
+      color_threshold: true
+    apex_config:
+      chart:
+        height: 270px
+    graph_span: 6d
+    series:
+      # EPEXspot Data Integration
+      - entity: sensor.epex_spot_data_price
+        name: EPEXspot
+        float_precision: 2
+        yaxis_id: epex_price
+        unit: ct/kWh
+        type: line
+        curve: stepline
+        opacity: 1.4
+        stroke_width: 1.0
+        show:
+          in_header: false
+          in_chart: true
+          legend_value: false
+        data_generator: |
+          return entity.attributes.data.map((entry) => {
+            return [new Date(entry.start_time).getTime(), entry.price_ct_per_kwh];
+          });
+      # EPEXspot Data Integration
+      - entity: sensor.epex_spot_data_net_price
+        name: EPEXspot (Net)
+        float_precision: 3
+        yaxis_id: epex_price
+        unit: ct/kWh
+        type: area
+        curve: stepline
+        opacity: 0.6
+        stroke_width: 0
+        color_threshold: # https://developer.tibber.com/docs/reference
+          - value: -130
+            color: "#FF00FF" # !!! ATTENTION !!! => magenta
+          - value: -30
+            color: "#FF0000" # !!! ATTENTION !!! => red
+          - value: -20
+            color: "#FFA500" # !!! ATTENTION !!! => orange
+          - value: -10
+            color: "#FFFF00" # !!! ATTENTION !!! => yellow
+          - value: -5
+            color: "#04822e"
+          - value: 0
+            color: "#04822e" # VERY_VERY_CHEAP
+          - value: 5
+            color: "#04822e"
+          - value: 10
+            color: "#04822e"
+          - value: 15
+            color: "#04822e" # VERY_CHEAP
+          - value: 16.25
+            color: "#1e8a2e"
+          - value: 17.5
+            color: "#2e932e"
+          - value: 18.75
+            color: "#3d9b2d"
+          - value: 20
+            color: "#4ba32c" # CHEAP
+          - value: 21.25
+            color: "#59ab2b"
+          - value: 22.5
+            color: "#66b329"
+          - value: 23.75
+            color: "#74bb27"
+          - value: 25
+            color: "#82c325"
+          - value: 26.25
+            color: "#90cb22"
+          - value: 27.5
+            color: "#9fd31f" # NORMAL
+          - value: 28.75
+            color: "#aeda1b"
+          - value: 30
+            color: "#bee216"
+          - value: 31.25
+            color: "#cee911"
+          - value: 32.5
+            color: "#def10b"
+          - value: 33.75
+            color: "#eef805"
+          - value: 35
+            color: "#FFFF00" # EXPENSIVE => yellow
+          - value: 36.25
+            color: "#ffe800"
+          - value: 37.5
+            color: "#ffd100"
+          - value: 38.75
+            color: "#ffbb00"
+          - value: 40
+            color: "#FFA500" # VERY_EXPENSIVE => orange
+          - value: 41.25
+            color: "#ff8b00"
+          - value: 42.5
+            color: "#ff6f00"
+          - value: 43.75
+            color: "#ff4c00"
+          - value: 45
+            color: "#FF0000" # VERY_VERY_EXPENSIVE => red
+          - value: 46.25
+            color: "#ff0046"
+          - value: 47.5
+            color: "#ff0080"
+          - value: 48.75
+            color: "#ff00bf"
+          - value: 50
+            color: "#FF00FF" # !!! ATTENTION !!! => magenta
+        show:
+          legend_value: false
+          in_header: false
+          extremas: false
+        data_generator: |
+          return entity.attributes.data.map((entry) => {
+            return [new Date(entry.start_time).getTime(), entry.price_ct_per_kwh];
+          });
+      # EPEXspot Data Integration
+      - entity: sensor.emhass_forecast_data
+        name: EPEXspot (Net) FCST
+        float_precision: 3
+        yaxis_id: epex_price
+        unit: ct/kWh
+        type: line
+        curve: stepline
+        opacity: 1
+        stroke_width: 1
+        color_threshold: # https://developer.tibber.com/docs/reference
+          - value: -130
+            color: "#FF00FF" # !!! ATTENTION !!! => magenta
+          - value: -30
+            color: "#FF0000" # !!! ATTENTION !!! => red
+          - value: -20
+            color: "#FFA500" # !!! ATTENTION !!! => orange
+          - value: -10
+            color: "#FFFF00" # !!! ATTENTION !!! => yellow
+          - value: -5
+            color: "#04822e"
+          - value: 0
+            color: "#04822e" # VERY_VERY_CHEAP
+          - value: 5
+            color: "#04822e"
+          - value: 10
+            color: "#04822e"
+          - value: 15
+            color: "#04822e" # VERY_CHEAP
+          - value: 16.25
+            color: "#1e8a2e"
+          - value: 17.5
+            color: "#2e932e"
+          - value: 18.75
+            color: "#3d9b2d"
+          - value: 20
+            color: "#4ba32c" # CHEAP
+          - value: 21.25
+            color: "#59ab2b"
+          - value: 22.5
+            color: "#66b329"
+          - value: 23.75
+            color: "#74bb27"
+          - value: 25
+            color: "#82c325"
+          - value: 26.25
+            color: "#90cb22"
+          - value: 27.5
+            color: "#9fd31f" # NORMAL
+          - value: 28.75
+            color: "#aeda1b"
+          - value: 30
+            color: "#bee216"
+          - value: 31.25
+            color: "#cee911"
+          - value: 32.5
+            color: "#def10b"
+          - value: 33.75
+            color: "#eef805"
+          - value: 35
+            color: "#FFFF00" # EXPENSIVE => yellow
+          - value: 36.25
+            color: "#ffe800"
+          - value: 37.5
+            color: "#ffd100"
+          - value: 38.75
+            color: "#ffbb00"
+          - value: 40
+            color: "#FFA500" # VERY_EXPENSIVE => orange
+          - value: 41.25
+            color: "#ff8b00"
+          - value: 42.5
+            color: "#ff6f00"
+          - value: 43.75
+            color: "#ff4c00"
+          - value: 45
+            color: "#FF0000" # VERY_VERY_EXPENSIVE => red
+          - value: 46.25
+            color: "#ff0046"
+          - value: 47.5
+            color: "#ff0080"
+          - value: 48.75
+            color: "#ff00bf"
+          - value: 50
+            color: "#FF00FF" # !!! ATTENTION !!! => magenta
+        show:
+          legend_value: false
+          in_header: false
+          extremas: true
+        data_generator: |
+          return entity.attributes.data.map((entry) => {
+            return [new Date(entry.start_time).getTime(), entry.epexspot_price_eur_per_kwh*100];
+          });
+      # EPEXspot Data Integration
+      - entity: sensor.epex_spot_data_price
+        name: EPEXspot
+        float_precision: 3
+        yaxis_id: header_only
+        unit: ct/kWh
+        transform: return x/10;
+        show:
+          in_header: true
+          in_chart: false
+          header_color_threshold: true
+      # EPEXspot Data Integration
+      - entity: sensor.epex_spot_data_net_price
+        name: EPEXspot (Net)
+        float_precision: 2
+        yaxis_id: header_only
+        unit: ct/kWh
+        show:
+          in_header: true
+          in_chart: false
+          header_color_threshold: true
+      # Template Sensor
+      - entity: sensor.epex_spot_data_quantile
+        float_precision: 3
+        yaxis_id: header_only
+        unit: ""
+        name: EPEXspot Quantile
+        color: "#f06292"
+        show:
+          in_header: true
+          in_chart: false
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_min_price
+        unit: ct/kWh
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: true
+        name: Min
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_max_price
+        unit: ct/kWh
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: true
+        name: Max
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_avg_price
+        unit: ct/kWh
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: true
+        name: Ø
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_price_range
+        unit: ct/kWh
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Range
+        yaxis_id: header_only
+        color: grey
+    card_mod:
+      class: solar-forecast-chart-full-width

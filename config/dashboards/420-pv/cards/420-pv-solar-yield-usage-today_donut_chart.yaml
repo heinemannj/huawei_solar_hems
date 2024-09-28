@@ -1,0 +1,26 @@
+type: custom:apexcharts-card
+config_templates: pv_donut_chart
+header:
+  title: Solar Yield - Usage (Today)
+series:
+  - entity: sensor.solar_yield_daily
+    name: Solar
+    color: "#ff9800"
+    show:
+      in_chart: false
+  - entity: sensor.batteries_charge_from_grid_energy_daily
+    name: Import
+    color: "#ff9800"
+    show:
+      in_chart: false
+  - entity: sensor.power_meter_exported_energy_daily
+    name: Export
+    color: "#488fc2"
+  - entity: sensor.house_consumption_solar_energy_daily
+    name: House
+    color: MediumAquaMarine
+  - entity: sensor.batteries_day_charge_with_loss
+    name: Bat-In
+    color: "#f06292"
+card_mod:
+  class: donut-chart-large-width

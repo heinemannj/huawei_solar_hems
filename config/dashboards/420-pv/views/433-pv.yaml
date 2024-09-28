@@ -1,0 +1,19 @@
+title: 433-PV
+theme: dashboards
+path: 433-pv
+icon: mdi:solar-power-variant
+type: custom:grid-layout
+badges: []
+cards:
+  - type: custom:layout-card
+    layout_type: custom:grid-layout
+    cards:
+      - !include /config/dashboards/420-pv/cards/433-pv-col-1.yaml
+      - type: vertical-stack
+        cards:
+          - !include /config/dashboards/420-pv/cards/420-pv-power-flow-card.yaml
+          - !include /config/dashboards/420-pv/cards/420-pv-energy-flow-card.yaml
+    layout:
+      grid-template-columns: 1280px 365px
+      margin: 0px;
+      padding: 0px;

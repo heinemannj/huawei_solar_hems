@@ -1,0 +1,21 @@
+type: custom:apexcharts-card
+config_templates: pv_donut_chart
+header:
+  title: House - Consumption (Today)
+series:
+  - entity: sensor.house_consumption_energy_daily
+    name: Load
+    color: MediumAquaMarine
+    show:
+      in_chart: false
+  - entity: sensor.power_meter_consumption_energy_daily
+    name: Import
+    color: "#488fc2"
+  - entity: sensor.house_consumption_solar_energy_daily
+    name: Solar
+    color: "#ff9800"
+  - entity: sensor.batteries_day_discharge_with_loss
+    name: Bat-Out
+    color: "#f06292"
+card_mod:
+  class: donut-chart

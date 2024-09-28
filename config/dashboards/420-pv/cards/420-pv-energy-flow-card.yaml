@@ -1,0 +1,48 @@
+type: custom:energy-flow-card-plus
+title: Energy Flows (Today)
+min_flow_rate: 3
+max_flow_rate: 10
+wh_kwh_threshold: 0
+kwh_decimals: 2
+wh_decimals: 2
+energy_date_selection: false
+clickable_entities: true
+entities:
+  home:
+    entity: sensor.house_consumption_energy_daily
+    override_state: false
+  solar:
+    entity: sensor.solar_yield_daily
+  battery:
+    name: Batteries
+    entity:
+      consumption: sensor.batteries_day_discharge_with_loss
+      production: sensor.batteries_day_charge_with_loss
+    state_of_charge: sensor.batteries_state_of_capacity
+    color_circle: true
+  individual1:
+    entity: sensor.heating_energy_daily
+    icon: mdi:heat-pump-outline
+    name: Heating
+    display_zero: true
+    color: "#964cb5"
+  individual2:
+    entity: sensor.washing_energy_daily
+    icon: mdi:washing-machine
+    name: Washing
+    display_zero: true
+    color: "#d0cc5b"
+  grid:
+    entity:
+      consumption: sensor.power_meter_consumption_energy_daily
+      production: sensor.power_meter_exported_energy_daily
+  fossil_fuel_percentage:
+    entity: sensor.co2_signal_grid_fossil_fuel_percentage
+    icon: mdi:pine-tree
+    color_icon: true
+    display_zero: true
+    name: Low-carbon
+    state_type: kWh
+    show: true
+card_mod:
+  class: power-energy-flow-card

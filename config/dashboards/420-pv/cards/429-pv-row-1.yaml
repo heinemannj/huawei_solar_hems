@@ -1,0 +1,30 @@
+type: custom:apexcharts-card
+config_templates: pv_diagnostic_chart
+header:
+  title: House - Load Monitoring (1h)
+apex_config:
+  chart:
+    height: 400px;
+all_series_config:
+  type: line
+  float_precision: 3
+  yaxis_id: kWh
+  group_by:
+    func: last
+    duration: 5m
+    fill: last
+graph_span: 1h
+series:
+  - entity: sensor.house_consumption_energy_daily
+    name: House-Real-Load
+    color: grey
+  - entity: sensor.house_consumption_energy_daily_control
+    name: House-Load-Check
+    color: "#ff9800"
+yaxis:
+  - id: kWh
+    show: true
+    opposite: false
+    decimals: 2
+    min: auto
+    max: auto

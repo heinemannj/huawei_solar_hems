@@ -1,0 +1,32 @@
+type: custom:apexcharts-card
+config_templates: pv_diagnostic_chart
+header:
+  title: Inverter Input Energy by quarterly Utility-Meter (By corrected Input-Power) (6h)
+apex_config:
+  chart:
+    height: 575px;
+all_series_config:
+  type: line
+  float_precision: 3
+  yaxis_id: kWh
+  group_by:
+    func: last
+    duration: 1m
+    fill: last
+graph_span: 6h
+series:
+  - entity: sensor.solar_yield_quarter_hourly
+    name: Inv-In (with correction)
+    color: "#ff9800"
+  - entity: sensor.pv_yield_quarter_hourly
+    name: Inv-In (Register 32108)
+  - entity: sensor.inverter_yield_quarter_hourly
+    name: Inv-Out
+    color: grey
+yaxis:
+  - id: kWh
+    show: true
+    opposite: false
+    decimals: 2
+    min: auto
+    max: auto

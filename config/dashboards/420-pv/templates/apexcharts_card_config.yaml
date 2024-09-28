@@ -1,0 +1,436 @@
+defaults:
+  header:
+    show: true
+    standard_format: true
+    show_states: true
+    colorize_states: true
+    floating: false
+  cache: true
+  stacked: false
+  apex_config:
+    tooltip:
+      enabled: true
+      shared: true
+      marker:
+        show: true
+      followCursor: true
+      hideEmptySeries: false
+      onDatasetHover:
+        highlightDataSeries: true
+      x:
+        show: true
+      fixed:
+        enabled: false
+        position: topRight
+    xaxis:
+      tooltip:
+        enabled: false
+  now:
+    show: true
+    color: grey
+    label: ""
+  all_series_config:
+    opacity: 0.3
+    stroke_width: 0
+    extend_to: false
+    show:
+      in_header: true
+      in_chart: true
+      legend_value: false
+
+colorThreshold:
+  all_series_config:
+    color_threshold: # https://developer.tibber.com/docs/reference
+      - value: -130
+        color: "#FF00FF" # !!! ATTENTION !!! => magenta
+      - value: -30
+        color: "#FF0000" # !!! ATTENTION !!! => red
+      - value: -20
+        color: "#FFA500" # !!! ATTENTION !!! => orange
+      - value: -10
+        color: "#FFFF00" # !!! ATTENTION !!! => yellow
+      - value: -5
+        color: "#04822e"
+      - value: 0
+        color: "#04822e" # VERY_VERY_CHEAP
+      - value: 5
+        color: "#04822e"
+      - value: 10
+        color: "#04822e"
+      - value: 15
+        color: "#04822e" # VERY_CHEAP
+      - value: 16.25
+        color: "#1e8a2e"
+      - value: 17.5
+        color: "#2e932e"
+      - value: 18.75
+        color: "#3d9b2d"
+      - value: 20
+        color: "#4ba32c" # CHEAP
+      - value: 21.25
+        color: "#59ab2b"
+      - value: 22.5
+        color: "#66b329"
+      - value: 23.75
+        color: "#74bb27"
+      - value: 25
+        color: "#82c325"
+      - value: 26.25
+        color: "#90cb22"
+      - value: 27.5
+        color: "#9fd31f" # NORMAL
+      - value: 28.75
+        color: "#aeda1b"
+      - value: 30
+        color: "#bee216"
+      - value: 31.25
+        color: "#cee911"
+      - value: 32.5
+        color: "#def10b"
+      - value: 33.75
+        color: "#eef805"
+      - value: 35
+        color: "#FFFF00" # EXPENSIVE => yellow
+      - value: 36.25
+        color: "#ffe800"
+      - value: 37.5
+        color: "#ffd100"
+      - value: 38.75
+        color: "#ffbb00"
+      - value: 40
+        color: "#FFA500" # VERY_EXPENSIVE => orange
+      - value: 41.25
+        color: "#ff8b00"
+      - value: 42.5
+        color: "#ff6f00"
+      - value: 43.75
+        color: "#ff4c00"
+      - value: 45
+        color: "#FF0000" # VERY_VERY_EXPENSIVE => red
+      - value: 46.25
+        color: "#ff0046"
+      - value: 47.5
+        color: "#ff0080"
+      - value: 48.75
+        color: "#ff00bf"
+      - value: 50
+        color: "#FF00FF" # !!! ATTENTION !!! => magenta
+
+pv_solar_forecast_chart:
+  config_templates: defaults
+  apex_config:
+    chart:
+      height: 220px
+  span:
+    start: day
+    offset: "-1day"
+  update_interval: 60s
+  all_series_config:
+    type: area
+    float_precision: 3
+    color: grey
+    yaxis_id: kW
+    unit: kW
+    show:
+      legend_value: true
+  yaxis:
+    - id: capacity
+      show: true
+      opposite: true
+      decimals: 0
+      max: 100
+      min: 0
+      apex_config:
+        tickAmount: 5
+    #        title:
+    #          text: Capacity [%]
+    #          rotate: 90
+    - id: capacity_2
+      show: true
+      opposite: true
+      decimals: 0
+      max: 100
+      min: -100
+      apex_config:
+        tickAmount: 10
+    #        title:
+    #          text: Capacity [%]
+    #          rotate: 90
+    - id: elevation
+      show: false
+      opposite: true
+      decimals: 0
+      max: 75
+      min: -75
+      apex_config:
+        tickAmount: 1
+    - id: kW
+      show: true
+      decimals: 3
+      min: ~0
+      apex_config:
+        tickAmount: 6
+        forceNiceScale: false
+    #        title:
+    #          text: Power [kW]
+    - id: kW_2
+      show: true
+      decimals: 3
+      max: 10
+      min: -10
+      apex_config:
+        tickAmount: 10
+        forceNiceScale: false
+    #        title:
+    #          text: Power [kW]
+    - id: epex_price
+      show: true
+      decimals: 2
+      # max: 40
+      # min: 0
+      apex_config:
+        #    title:
+        #      text: ct/kWh
+        tickAmount: 5
+    - id: epex_price_show_no_yaxis
+      show: false
+      decimals: 2
+      max: 80
+      min: 0
+      apex_config:
+        #    title:
+        #      text: ct/kWh
+        tickAmount: 5
+    - id: quantile
+      show: true
+      opposite: true
+      decimals: 2
+      max: 1
+      min: 0
+      apex_config:
+        tickAmount: 5
+    #        title:
+    #          text: Capacity [%]
+    #          rotate: 90
+    - id: quantile_show_no_yaxis
+      show: false
+      opposite: true
+      decimals: 2
+      max: 1
+      min: 0
+      apex_config:
+        tickAmount: 5
+    #        title:
+    #          text: Capacity [%]
+    #          rotate: 90
+    - id: header_only
+      show: false
+
+pv_diagnostic_chart:
+  config_templates:
+    - defaults
+  header:
+    show_states: false
+  apex_config:
+    chart:
+      height: 220px
+  update_interval: 30s
+  now:
+    show: false
+  all_series_config:
+    type: area
+    float_precision: 0
+    opacity: 1
+    stroke_width: 1
+    show:
+      legend_value: true
+    group_by:
+      func: avg
+      duration: 5m
+  yaxis:
+    - id: capacity
+      show: true
+      opposite: true
+      decimals: 0
+      max: 100
+      min: 0
+      apex_config:
+        tickAmount: 5
+    #        title:
+    #          text: Capacity [%]
+    #          rotate: 90
+    - id: watts
+      show: true
+      decimals: 0
+      align_to: 250
+    - id: kWh
+      show: true
+      opposite: false
+      decimals: 2
+      min: 0
+    - id: voltage
+      show: true
+      opposite: true
+      decimals: 0
+      max: 450
+      min: 0
+    - id: current
+      show: true
+      decimals: 0
+      max: 19
+      min: 0
+
+tibber_chart:
+  config_templates:
+    - defaults
+    - colorThreshold
+  apex_config:
+    chart:
+      height: 200px
+    legend:
+      show: false
+  all_series_config:
+    float_precision: 3
+  yaxis:
+    - id: KostenKWH-Left
+      #min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 0
+    - id: costCent
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 0
+    - id: capacity
+      show: true
+      decimals: 0
+      max: 100
+      min: 0
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: false
+    - id: header_only
+      show: false
+
+tibber_consumption_chart:
+  config_templates:
+    - defaults
+    - colorThreshold
+  stacked: true
+  now:
+    show: false
+  apex_config:
+    chart:
+      height: 200px
+    legend:
+      show: false
+  all_series_config:
+    type: column
+    color: grey
+    opacity: 0.4
+    float_precision: 3
+    yaxis_id: header_only
+    show:
+      in_header: true
+      in_chart: false
+  yaxis:
+    - id: costWH
+      min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 3
+    - id: costKWH
+      min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 0
+    - id: costEUR
+      min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 0
+    - id: costEUR2
+      min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 2
+    - id: costCentKWH
+      min: 0
+      opposite: false
+      apex_config:
+        tickAmount: 5
+        forceNiceScale: true
+        decimalsInFloat: 0
+    - id: header_only
+      show: false
+
+tibber_consumption_chart_hourly:
+  config_templates: tibber_consumption_chart
+  graph_span: 73h
+
+tibber_consumption_chart_daily:
+  config_templates: tibber_consumption_chart
+  graph_span: 91d
+
+tibber_consumption_chart_monthly:
+  config_templates: tibber_consumption_chart
+  graph_span: 24month
+
+tibber_consumption_chart_yearly:
+  config_templates: tibber_consumption_chart
+  graph_span: 10year
+
+pv_radial_chart:
+  chart_type: radialBar
+  update_interval: 30s
+  header:
+    show: true
+    show_states: true
+    colorize_states: true
+  apex_config:
+    chart:
+      height: 245px
+    legend:
+      show: false
+    dataLabels:
+      enabled: true
+      formatter: |
+        EVAL:function(value) {
+          return value.toFixed(1) + "%";
+        }
+  all_series_config:
+    unit: "%"
+    float_precision: 1
+
+pv_donut_chart:
+  chart_type: donut
+  update_interval: 30s
+  header:
+    show: true
+    show_states: true
+    colorize_states: true
+  apex_config:
+    chart:
+      height: 230px
+    legend:
+      show: false
+    dataLabels:
+      enabled: true
+      formatter: |
+        EVAL:function(value) {
+          return value.toFixed(1) + "%";
+        }
+  all_series_config:
+    float_precision: 2

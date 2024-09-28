@@ -1,0 +1,18 @@
+type: custom:apexcharts-card
+config_templates: pv_donut_chart
+header:
+  title: Inverter - Loss (Today)
+series:
+  - entity: sensor.inverter_loss_daily
+    name: Total
+    color: "#ff9800"
+    show:
+      in_chart: false
+  - entity: sensor.batteries_charge_loss_daily
+    name: Bat-In
+    color: "#f06292"
+  - entity: sensor.batteries_discharge_loss_daily
+    name: Bat-Out
+    color: MediumAquaMarine
+card_mod:
+  class: donut-chart

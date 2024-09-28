@@ -1,0 +1,894 @@
+title: Energy Management
+type: entities
+state_color: true
+show_header_toggle: true
+show_state: true
+entities:
+  - entities:
+      - entity: switch.inverter_inverter_on_off
+        name: Inverter
+        entities:
+          - entity: sensor.inverter_active_power
+            name: ActivePower
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: sensor.power_meter_meter_status
+        name: Power meter
+        entities:
+          - entity: sensor.power_meter_active_power
+            name: ActivePower
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+        style: |
+          :host {
+            {% if states('sensor.power_meter_meter_status') == 'Normal' %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: sensor.batteries_status
+        name: Batteries
+        entities:
+          - entity: sensor.batteries_state_of_capacity
+            name: SOC
+            format: precision0
+          - entity: sensor.batteries_charge_discharge_power
+            name: ChargeDischarge
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        icon: mdi:home-battery-outline
+        show_state: true
+        state_color: true
+        toggle: false
+        style: |
+          :host {
+            {% if states('sensor.batteries_status') == 'Running' %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: automation.inverter_fan_control
+        name: Ventilation
+        entities:
+          - entity: sensor.battery_2_temperature
+            name: Bat2
+            format: precision1
+          - entity: sensor.battery_1_temperature
+            name: Bat1
+            format: precision1
+          - entity: sensor.inverter_internal_temperature
+            name: Inverter
+            format: precision1
+          - entity: fan.xiaomi_smart_fan
+            icon: mdi:fan
+            show_state: false
+            state_color: true
+            name: " "
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        icon: mdi:fan
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: automation.heating_room_venting_control
+        name: Venting
+        entities:
+          - entity: sensor.hm_tc_it_wm_w_eu_oeq1676193_humidity
+            name: Humidity
+            format: precision1
+          - entity: sensor.hm_tc_it_wm_w_eu_oeq1676193_temperature
+            name: Temp
+            format: precision1
+          - entity: switch.401_heizungsraum_luefter
+            icon: mdi:hvac
+            show_state: false
+            state_color: true
+            name: " "
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        icon: mdi:hvac
+        show_state: true
+        state_color: true
+        toggle: false
+    type: custom:fold-entity-row
+    head:
+      entity: sensor.inverter_inverter_state
+      name: PV system monitoring
+      secondary_info: last-changed
+      show_state: true
+      state_color: true
+      icon: mdi:solar-power-variant-outline
+      style: |
+        :host {
+          {% if states('sensor.inverter_inverter_state') == 'Grid-Connected, Grid-Connected normally' %}
+            --paper-item-icon-color: #fdd835;
+          {% endif %}
+        }
+  - entities:
+      - entity: switch.heizung_away_mode
+        name: Away Mode
+        entities:
+          - entity: switch.heizung_away_mode
+            type: attribute
+            attribute: holiday_ongoing
+            name: Ongoing
+          - entity: switch.heizung_away_mode
+            type: attribute
+            attribute: holiday_remaining_seconds
+            name: Remaining
+          - entity: switch.heizung_away_mode
+            type: attribute
+            attribute: holiday_start_date_time
+            name: Start
+          - entity: switch.heizung_away_mode
+            type: attribute
+            attribute: holiday_end_date_time
+            name: End
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: binary_sensor.heizung_online_status
+        name: VR 921
+        entities:
+          - entity: sensor.heizung_firmware_version
+            name: Firmware
+          - entity: binary_sensor.heizung_firmware_update_enabled
+            name: AutoUpdate
+          - entity: binary_sensor.heizung_firmware_update_required
+            name: State
+          - entity: sensor.heizung_system_water_pressure
+            name: Water
+            format: precision1
+          - entity: sensor.heizung_heating_energy_efficiency
+            name: Efficiency
+            format: precision1
+          - entity: sensor.heizung_outdoor_temperature
+            name: Outdoor
+            format: precision1
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: switch.heizung_eebus
+        name: EEBus
+        entities:
+          - entity: binary_sensor.heizung_eebus_capable
+            name: Capable
+          - entity: binary_sensor.heizung_eebus_enabled
+            name: Enabled
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: binary_sensor.heizung_online_status
+        name: aroTHERM plus
+        entities:
+          - entity: sensor.heizung_device_0_arotherm_plus_operation_time
+            name: Operation
+          - entity: sensor.heizung_device_0_arotherm_plus_on_off_cycles
+            name: OnOff
+            format: precision0
+          - entity: sensor.heizung_device_0_arotherm_plus_heating_energy_efficiency
+            name: HeatingEfficiency
+            format: precision1
+          - entity: sensor.heizung_device_0_arotherm_plus_current_power
+            name: Power
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: binary_sensor.heizung_online_status
+        name: aroTHERM plus
+        entities:
+          - entity: sensor.heizung_device_0_arotherm_plus_heat_generated_heating
+            name: generated_heating
+          - entity: sensor.heizung_device_0_arotherm_plus_heat_generated_domestic_hot_water
+            name: generated_domestic_hot_water
+          - entity: sensor.heizung_device_0_arotherm_plus_earned_environment_energy_heating
+            name: earned_heating
+          - entity: sensor.heizung_device_0_arotherm_plus_earned_environment_energy_domestic_hot_water
+            name: earned_domestic_hot_water
+          - entity: sensor.heizung_device_0_arotherm_plus_consumed_electrical_energy_heating
+            name: consumed_heating
+          - entity: sensor.heizung_device_0_arotherm_plus_consumed_electrical_energy_domestic_hot_water
+            name: consumed_domestic_hot_water
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: binary_sensor.heizung_online_status
+        name: uniTower
+        entities:
+          - entity: sensor.heizung_device_1_unitower_operation_time
+            name: Operation
+          - entity: sensor.heizung_device_1_unitower_on_off_cycles
+            name: OnOff
+            format: precision0
+          - entity: sensor.heizung_device_1_unitower_heating_energy_efficiency
+            name: HeatingEfficiency
+            format: precision1
+          - entity: sensor.heizung_device_1_unitower_current_power
+            name: Power
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: binary_sensor.heizung_online_status
+        name: uniTower
+        entities:
+          - entity: sensor.heizung_device_1_unitower_heat_generated_heating
+            name: generated_heating
+          - entity: sensor.heizung_device_1_unitower_heat_generated_domestic_hot_water
+            name: generated_domestic_hot_water
+          - entity: sensor.heizung_device_1_unitower_consumed_electrical_energy_heating
+            name: consumed_heating
+          - entity: sensor.heizung_device_1_unitower_consumed_electrical_energy_domestic_hot_water
+            name: consumed_domestic_hot_water
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: sensor.heizung_circuit_0_state
+        name: Circuit 0
+        entities:
+          - entity: sensor.heizung_circuit_0_current_flow_temperature
+            name: Flow
+            format: precision2
+          - entity: sensor.heizung_circuit_0_heating_curve
+            name: HeatingCurve
+            format: precision2
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: heat_demand_limited_by_outside_temperature
+            name: OutsideSetpoint
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: heating_circuit_flow_setpoint
+            name: FlowSetpoint
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: heating_circuit_flow_setpoint_excess_offset
+            name: FlowSetpointExcessOffset
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: room_temperature_control_mode
+            name: RoomControl
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: epsilon
+            name: Epsilon
+            format: precision1
+          - entity: sensor.heizung_circuit_0_state
+            type: attribute
+            attribute: heating_circuit_type
+            name: Type
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+        icon: mdi:heating-coil
+        style: |
+          :host {
+            {% if states('sensor.heizung_circuit_0_state') != 'STANDBY' %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: sensor.heizung_circuit_1_state
+        name: Circuit 1
+        entities:
+          - entity: sensor.heizung_circuit_1_current_flow_temperature
+            name: Flow
+            format: precision2
+          - entity: sensor.heizung_circuit_1_heating_curve
+            name: HeatingCurve
+            format: precision2
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: heat_demand_limited_by_outside_temperature
+            name: OutsideSetpoint
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: heating_circuit_flow_setpoint
+            name: FlowSetpoint
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: heating_circuit_flow_setpoint_excess_offset
+            name: FlowSetpointExcessOffset
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: room_temperature_control_mode
+            name: RoomControl
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: epsilon
+            name: Epsilon
+            format: precision1
+          - entity: sensor.heizung_circuit_1_state
+            type: attribute
+            attribute: heating_circuit_type
+            name: Type
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+        icon: mdi:heating-coil
+        style: |
+          :host {
+            {% if states('sensor.heizung_circuit_1_state') != 'STANDBY' %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: binary_sensor.heizung_circuit_0_cooling_allowed
+        name: Circuit 0 - Cooling
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+      - entity: binary_sensor.heizung_circuit_1_cooling_allowed
+        name: Circuit 1 - Cooling
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        state_color: true
+        toggle: false
+    type: custom:fold-entity-row
+    head:
+      entity: binary_sensor.heizung_trouble_codes
+      name: Heat Pump monitoring
+      secondary_info: last-changed
+      show_state: true
+      state_color: true
+      icon: mdi:heat-pump-outline
+      style: |
+        :host {
+          {% if states('binary_sensor.heizung_trouble_codes') == 'off' %}
+            --paper-item-icon-color: #fdd835;
+          {% endif %}
+        }
+  - entities:
+      - entity: binary_sensor.epex_spot_data_update
+        attribute: last_update
+        name: Last update
+        format: datetime
+        entities:
+          - entity: sensor.epex_spot_data_quantile
+            name: Quantile
+            format: precision3
+          - entity: sensor.epex_spot_data_net_price
+            name: NetPrice
+            format: precision3
+          - entity: binary_sensor.epex_spot_data_update
+            type: attribute
+            attribute: next_poll_time
+            name: Next
+            format: time
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        toggle: false
+      - entity: binary_sensor.epex_spot_data_update
+        name: Data for tomorrow
+        entities:
+          - entity: binary_sensor.epex_spot_data_update
+            type: attribute
+            attribute: last_data
+            name: Last
+            format: datetime
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        toggle: false
+    type: custom:fold-entity-row
+    head:
+      entity: automation.epex_spot_fetch_data
+      name: EPEX Spot monitoring
+      secondary_info: last-changed
+  - entities:
+      - entity: sensor.solcast_pv_forecast_zuletzt_abgefragte_api
+        name: Last update
+        format: datetime
+        entities:
+          - entity: sensor.solcast_pv_forecast_power_now
+            name: State
+            format: precision0
+          - entity: sensor.solcast_pv_forecast_api_update
+            name: Next
+            format: time
+          - entity: sensor.solcast_pv_forecast_api_limit
+            name: Limit
+            format: precision0
+          - entity: sensor.solcast_pv_forecast_verwendete_api
+            name: Today
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        toggle: false
+        style: |
+          :host {
+            {% if states('sensor.solcast_pv_forecast_verwendete_api')|float(0) > 0 %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: sensor.hems_sun_elevation
+        name: Sun elevation for today
+        format: precision0
+        entities:
+          - entity: sensor.hems_sun_rising
+            name: Rising [0°]
+            format: time
+          - entity: sensor.hems_sun_pv_excess_start
+            name: PVExcessStart [15°]
+            format: time
+          - entity: sensor.hems_sun_solar_noon
+            name: SolarNoon [Max°]
+            format: time
+          - entity: sensor.hems_sun_prediction_end
+            name: PredictionHorizon [25°]
+            format: time
+          - entity: sensor.hems_sun_pv_excess_end
+            name: PVExcessEnd [15°]
+            format: time
+          - entity: sensor.hems_sun_setting
+            name: Setting [0°]
+            format: time
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        style: |
+          :host {
+            {% if states('sensor.hems_sun_elevation')|float(0) > 0 %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+      - entity: sensor.solcast_forecast_remaining_today_every_minute
+        name: Solar forecast for today
+        format: precision3
+        entities:
+          - entity: sensor.solcast_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: pv_excess_start_energy
+            name: PVExcessStart [15°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.solcast_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: solar_noon_energy
+            name: SolarNoon [Max°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.solcast_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: prediction_end_energy
+            name: PredictionHorizon [25°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.solcast_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: pv_excess_end_energy
+            name: PVExcessEnd [15°]
+            format: precision3
+            unit: kWh
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        style: |
+          :host {
+            {% if states('sensor.solcast_forecast_remaining_today_every_minute')|float(0) > 0 %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+    type: custom:fold-entity-row
+    head:
+      entity: automation.solcast_pv_forecast_api_update_2
+      name: Solcast PV forecast
+      secondary_info: last-changed
+  - entities:
+      - entity: sensor.optim_status
+        name: Latest optimization results
+        entities:
+          - entity: sensor.p_pv_forecast
+            name: Solar
+            format: precision0
+          - entity: sensor.p_load_forecast
+            name: House
+            format: precision0
+          - entity: sensor.p_deferrable0
+            name: Deferrable0
+            format: precision0
+          - entity: sensor.p_grid_forecast
+            name: Grid
+            format: precision0
+          - entity: sensor.p_batt_forecast
+            name: Batteries
+            format: precision0
+          - entity: sensor.soc_batt_forecast
+            name: SOC
+            format: precision2
+          - entity: sensor.p_hybrid_inverter
+            name: Inverter
+            format: precision0
+          - entity: sensor.p_pv_curtailment
+            name: Curtailment
+            format: precision0
+          - entity: sensor.unit_load_cost
+            name: Cost
+            format: precision2
+          - entity: sensor.unit_prod_price
+            name: Price
+            format: precision2
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: sensor.total_cost_fun_value
+        name: Cost profit
+        format: precision2
+        entities:
+          - entity: sensor.emhass_prediction_horizon
+            name: PredictionHorizon
+            format: precision0
+          - entity: sensor.emhass_prediction_horizon
+            type: attribute
+            attribute: prediction_end_time_tomorrow
+            name: End
+            format: datetime
+          - entity: sensor.epex_spot_data_net_price_1
+            name: Data
+            format: precision3
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: sensor.load_forecast_remaining_today_every_minute
+        name: Load forecast for today
+        format: precision3
+        entities:
+          - entity: sensor.load_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: pv_excess_start_energy
+            name: PVExcessStart [15°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.load_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: solar_noon_energy
+            name: SolarNoon [Max°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.load_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: prediction_end_energy
+            name: PredictionHorizon [25°]
+            format: precision3
+            unit: kWh
+          - entity: sensor.load_forecast_remaining_today_every_minute
+            type: attribute
+            attribute: pv_excess_end_energy
+            name: PVExcessEnd [15°]
+            format: precision3
+            unit: kWh
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+    type: custom:fold-entity-row
+    head:
+      entity: automation.emhass_naive_mpc_optim_forecast
+      name: EMHASS - naive MPC optimization
+      secondary_info: last-triggered
+  - entities:
+      - entity: binary_sensor.batteries_maximum_charging_power
+        name: Maximum charging power
+        entities:
+          - entity: sensor.batteries_state_of_capacity_remaining_charge_time
+            name: Remaining
+          - entity: sensor.batteries_state_of_capacity_remaining_charge_energy
+            name: Remaining
+            format: precision2
+          - entity: number.batteries_end_of_charge_soc
+            name: Max
+          - entity: sensor.batteries_state_of_capacity
+            name: State
+          - entity: sensor.batteries_state_of_capacity_energy
+            name: State
+          - entity: sensor.batteries_charge_power_average_last_30mins
+            name: Ø30mins
+            format: precision0
+          - entity: sensor.batteries_charge_power
+            name: State
+            format: precision0
+          - entity: number.batteries_maximum_charging_power
+            name: Max
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: binary_sensor.batteries_maximum_discharging_power
+        name: Maximum discharging power
+        entities:
+          - entity: sensor.batteries_state_of_capacity_remaining_discharge_time
+            name: Remaining
+            format: precision2
+          - entity: number.batteries_peak_shaving_soc
+            name: PeakShaving
+          - entity: number.batteries_backup_power_soc
+            name: BackupPower
+          - entity: number.batteries_end_of_discharge_soc
+            name: Min
+          - entity: sensor.batteries_state_of_capacity
+            name: State
+          - entity: sensor.batteries_state_of_capacity_energy
+            name: State
+          - entity: sensor.batteries_discharge_power_average_last_24h
+            name: Ø24h
+            format: precision0
+          - entity: sensor.batteries_discharge_power
+            name: State
+            format: precision0
+          - entity: number.batteries_maximum_discharging_power
+            name: Max
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: binary_sensor.batteries_forcible_charge
+        name: Forcible charge
+        entities:
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: mode
+            name: Mode
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: setting
+            name: Setting
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: charge_power
+            name: MaxCharge
+            unit: W
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: discharge_power
+            name: MaxDischarge
+            unit: W
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: target_soc
+            name: Max
+            unit: "%"
+          - entity: sensor.batteries_forcible_charge
+            type: attribute
+            attribute: duration
+            name: Duration
+            unit: min
+          - entity: sensor.batteries_forcible_charge
+            name: State
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: binary_sensor.batteries_charge_from_grid
+        name: Charge from Grid
+        entities:
+          - entity: number.batteries_grid_charge_maximum_power
+            name: MaxCharge
+          - entity: number.batteries_grid_charge_cutoff_soc
+            name: Max
+          - entity: switch.batteries_charge_from_grid
+            name: State
+          - entity: sensor.p_load_forecast
+            name: House
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: select.batteries_working_mode
+        name: Working Mode
+        entities:
+          - entity: sensor.batteries_capacity_control_periods
+            name: CapacityControlPeriods
+          - entity: sensor.batteries_fixed_charging_periods
+            name: FixedChargingPeriods
+          - entity: sensor.batteries_time_of_use_periods
+            name: TimeOfUsePeriods
+          - entity: select.batteries_excess_pv_energy_use_in_tou
+            name: ExcessPVEnergyUse
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: binary_sensor.batteries_maximum_charging_power
+        attribute: pv_excess_start_energy
+        name: Charging forecast for today
+        format: precision3
+        entities:
+          - entity: binary_sensor.batteries_maximum_charging_power
+            type: attribute
+            attribute: charge_energy_forecast_pv_excess_start
+            name: PVExcessStart [15°]
+            format: precision3
+            unit: kWh
+          - entity: binary_sensor.batteries_maximum_charging_power
+            type: attribute
+            attribute: charge_energy_forecast_solar_noon
+            name: SolarNoon [Max°]
+            format: precision3
+            unit: kWh
+          - entity: binary_sensor.batteries_maximum_charging_power
+            type: attribute
+            attribute: charge_energy_forecast_prediction_end
+            name: PredictionHorizon [25°]
+            format: precision3
+            unit: kWh
+          - entity: binary_sensor.batteries_maximum_charging_power
+            type: attribute
+            attribute: charge_energy_forecast_pv_excess_end
+            name: PVExcessEnd [15°]
+            format: precision3
+            unit: kWh
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+        style: |
+          :host {
+            {% if states('sensor.solcast_forecast_remaining_today_every_minute')|float(0) > 0 %}
+              --paper-item-icon-color: #fdd835;
+            {% endif %}
+          }
+    type: custom:fold-entity-row
+    head:
+      entity: automation.huawei_solar_batteries_maximum_charging_power
+      name: Batteries Charge-Discharge automation
+      secondary_info: last-triggered
+  - entities:
+      - entity: sensor.heizung_zone_eg_circuit_0_heating_state
+        name: Zone Eg (Circuit 0)
+        entities:
+          - entity: climate.heizung_zone_eg_circuit_0_climate
+            type: attribute
+            attribute: current_temperature
+            name: State
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_zone_eg_circuit_0_desired_temperature
+            name: Desired
+            format: precision1
+          - entity: climate.heizung_zone_eg_circuit_0_climate
+            type: attribute
+            attribute: preset_mode
+            name: PresetMode
+          - entity: climate.heizung_zone_eg_circuit_0_climate
+            name: HVACMode
+          - entity: climate.heizung_zone_eg_circuit_0_climate
+            type: attribute
+            attribute: hvac_action
+            name: Action
+          - entity: number.heizung_zone_eg_circuit_0_quick_veto_duration
+            name: QuickVetoDuration
+          - entity: sensor.heizung_zone_eg_circuit_0_current_special_function
+            name: SpecialFunction
+          - entity: sensor.heizung_zone_eg_circuit_0_heating_operating_mode
+            name: ZoneMode
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: sensor.heizung_zone_kg_dg_sg_circuit_1_heating_state
+        name: Zone Kg Dg Sg (Circuit 1)
+        entities:
+          - entity: climate.heizung_zone_kg_dg_sg_circuit_1_climate
+            type: attribute
+            attribute: current_temperature
+            name: State
+            unit: "°C"
+            format: precision1
+          - entity: sensor.heizung_zone_kg_dg_sg_circuit_1_desired_temperature
+            name: Desired
+            format: precision1
+          - entity: climate.heizung_zone_kg_dg_sg_circuit_1_climate
+            type: attribute
+            attribute: preset_mode
+            name: PresetMode
+          - entity: climate.heizung_zone_kg_dg_sg_circuit_1_climate
+            name: HVACMode
+          - entity: climate.heizung_zone_kg_dg_sg_circuit_1_climate
+            type: attribute
+            attribute: hvac_action
+            name: Action
+          - entity: number.heizung_zone_kg_dg_sg_circuit_1_quick_veto_duration
+            name: QuickVetoDuration
+          - entity: sensor.heizung_zone_kg_dg_sg_circuit_1_current_special_function
+            name: SpecialFunction
+          - entity: sensor.heizung_zone_kg_dg_sg_circuit_1_heating_operating_mode
+            name: ZoneMode
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+    type: custom:fold-entity-row
+    head:
+      entity: automation.zone_heating_off
+      name: Heating automation
+      secondary_info: last-triggered
+  - entities:
+      - entity: switch.heizung_domestic_hot_water_0_boost
+        name: Boost
+        entities:
+          - entity: sensor.heizung_domestic_hot_water_0_current_special_function
+            name: SpecialFunction
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: sensor.heizung_domestic_hot_water_0_operation_mode
+        name: Mode
+        entities:
+          - entity: sensor.heizung_domestic_hot_water_0_tank_temperature
+            name: State
+            format: precision1
+          - entity: sensor.heizung_domestic_hot_water_0_setpoint
+            name: SetPoint
+            format: precision1
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+    type: custom:fold-entity-row
+    head:
+      entity: automation.water_heating_time_program
+      name: Hot Water automation
+      secondary_info: last-triggered
+  - entities:
+      - entity: sensor.sg_ready_mode
+        name: SG-Ready mode
+        entities:
+          - entity: sensor.heating_power
+            name: Heating
+            format: precision0
+          - entity: sensor.epex_spot_data_quantile
+            name: Quantile
+            format: precision4
+          - entity: sensor.power_meter_active_power
+            name: Grid
+            format: precision0
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: switch.406_wp_sg_ready_evu
+        name: EVU Lock
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+      - entity: switch.406_wp_sg_ready_pv_ma
+        name: PV Ready
+        type: custom:multiple-entity-row
+        secondary_info: last-changed
+        show_state: true
+    type: custom:fold-entity-row
+    head:
+      entity: automation.heating_pump_sg_ready_evu_lock
+      name: Heat Pump - SG-Ready controller
+      secondary_info: last-triggered

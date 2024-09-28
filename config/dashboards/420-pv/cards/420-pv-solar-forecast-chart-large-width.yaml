@@ -1,0 +1,141 @@
+type: custom:apexcharts-card
+config_templates: pv_solar_forecast_chart
+now:
+  show: true
+graph_span: 4d
+series:
+  - entity: sensor.heizung_domestic_hot_water_0_tank_temperature
+    name: HWC
+    float_precision: 1
+    type: line
+    color: "blue"
+    opacity: 0.6
+    stroke_width: 0.8
+    yaxis_id: capacity
+    unit: "°C"
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.batteries_state_of_capacity
+    name: Bat-SoC
+    float_precision: 0
+    type: line
+    color: "#f06292"
+    opacity: 0.6
+    stroke_width: 0.8
+    yaxis_id: capacity
+    unit: "%"
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.house_consumption_power
+    name: House
+    type: line
+    color: MediumAquaMarine
+    opacity: 0.8
+    stroke_width: 0.8
+    transform: return x/1000;
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.inverter_input_power
+    name: Solar
+    color: "#ff9800"
+    opacity: 0.4
+    transform: return x/1000;
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.solcast_pv_forecast_prognose_heute
+    name: Solar FCST (D1)
+    show:
+      legend_value: false
+      in_header: false
+    data_generator: |
+      return entity.attributes.detailedForecast.map((entry) => {
+        return [new Date(entry.period_start), entry.pv_estimate];
+      });
+  - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+    name: Solar FCST (D2)
+    show:
+      legend_value: false
+      in_header: false
+    data_generator: |
+      return entity.attributes.detailedForecast.map((entry) => {
+        return [new Date(entry.period_start), entry.pv_estimate];
+      });
+  - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
+    name: Solar FCST (D3)
+    show:
+      legend_value: false
+      in_header: false
+    data_generator: |
+      return entity.attributes.detailedForecast.map((entry) => {
+        return [new Date(entry.period_start), entry.pv_estimate];
+      });
+  - entity: sensor.epex_spot_data_net_price
+    name: EPEXspot (Net)
+    yaxis_id: epex_price_show_no_yaxis
+    unit: ct/kWh
+    type: line
+    curve: stepline
+    opacity: 1
+    stroke_width: 1
+    show:
+      legend_value: false
+      in_header: false
+      extremas: true
+    data_generator: |
+      return entity.attributes.data.map((entry) => {
+        return [new Date(entry.start_time).getTime(), entry.price_ct_per_kwh];
+      });
+  - entity: sensor.epex_spot_data_net_price
+    yaxis_id: header_only
+    name: EPEXspot (Net)
+    unit: ct/kWh
+    float_precision: 2
+    show:
+      in_chart: false
+  - entity: sensor.solcast_pv_forecast_prognose_heute
+    yaxis_id: header_only
+    name: Solar FCST (D1)
+    unit: kWh
+    show:
+      in_chart: false
+  - entity: sensor.solcast_forecast_remaining_today_every_minute
+    yaxis_id: header_only
+    name: Solar FCST (D1 Remaining)
+    unit: kWh
+    show:
+      in_chart: false
+  - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+    yaxis_id: header_only
+    name: Solar FCST (D2)
+    unit: kWh
+    show:
+      in_chart: false
+  - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
+    yaxis_id: header_only
+    name: Solar FCST (D3)
+    unit: kWh
+    show:
+      in_chart: false
+  - entity: sensor.solcast_pv_forecast_zuletzt_abgefragte_api
+    yaxis_id: header_only
+    name: Solar FCST (Last Update)
+    float_precision: 0
+    unit: " min."
+    transform: >-
+      return ((Date.now()) - (new Date(x).getTime())) / 60 / 60 / 24
+    show:
+      in_chart: false
+card_mod:
+  class: solar-forecast-chart-large-width

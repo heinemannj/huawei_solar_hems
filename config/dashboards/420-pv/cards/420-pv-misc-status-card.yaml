@@ -1,0 +1,29 @@
+mushroom-template-card-defaults: &mushroom-template-card-template
+  type: custom:mushroom-template-card
+  secondary: ""
+  tap_action:
+    action: more-info
+  fill_container: true
+  card_mod:
+    class: mushroom-pv-status-card
+
+type: custom:vertical-stack-in-card
+cards:
+  - <<: *mushroom-template-card-template
+    primary: "{{ states('sensor.house_consumption_energy_daily_control')|float(0)|round(2) }} kWh"
+    icon: mdi:home-lightning-bolt
+    entity: sensor.house_consumption_energy_daily_control
+    icon_color: "#66CDAA"
+    card_mod:
+      class: mushroom-pv-status-card-margin-top
+  - <<: *mushroom-template-card-template
+    primary: "{{ states('fan.xiaomi_smart_fan') }}"
+    icon: mdi:fan
+    entity: fan.xiaomi_smart_fan
+    icon_color: "#ff9800"
+  - <<: *mushroom-template-card-template
+    primary: "{{ states('sensor.epex_spot_data_quantile')|float(0)|round(2) }}"
+    icon: mdi:eye
+    entity: sensor.epex_spot_data_quantile
+card_mod:
+  class: mushroom-pv-status-card-vertical-stack-in

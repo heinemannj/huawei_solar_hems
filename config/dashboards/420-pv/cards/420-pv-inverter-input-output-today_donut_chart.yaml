@@ -1,0 +1,26 @@
+type: custom:apexcharts-card
+config_templates: pv_donut_chart
+header:
+  title: Inverter - Input/Output (Today)
+series:
+  - entity: sensor.solar_yield_daily
+    name: Inv-In
+    color: "#ff9800"
+    show:
+      in_chart: false
+  - entity: sensor.batteries_day_discharge
+    name: Bat-Out
+    color: "#ff9800"
+    show:
+      in_chart: false
+  - entity: sensor.batteries_day_charge
+    name: Bat-In
+    color: "#f06292"
+  - entity: sensor.inverter_daily_yield
+    name: Inv-Out
+    color: MediumAquaMarine
+  - entity: sensor.inverter_loss_daily
+    name: Inv-Loss
+    color: red
+card_mod:
+  class: donut-chart-large-width

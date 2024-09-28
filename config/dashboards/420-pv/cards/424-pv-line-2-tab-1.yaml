@@ -1,0 +1,94 @@
+type: vertical-stack
+cards:
+  - type: custom:apexcharts-card
+    config_templates: tibber_chart
+    experimental:
+      color_threshold: true
+    all_series_config:
+      unit: ct/kWh
+      color: grey
+    graph_span: 48h
+    span:
+      start: day
+    series:
+      - entity: sensor.tibber_prices
+        show:
+          in_header: before_now
+          header_color_threshold: false
+        name: Electricity spot price
+        yaxis_id: KostenKWH-Left
+        type: line
+        curve: stepline
+        stroke_width: 4
+        opacity: 0.8
+        float_precision: 3
+        data_generator: >
+          const noon = new Date()
+
+          noon.setHours(0, 0, 0, 0)
+
+          const prices =
+          entity.attributes.today.concat(entity.attributes.tomorrow);
+
+          const data = [];
+
+          for(let i = 0; i < prices.length; i++) {
+            data.push([noon.getTime() + i * 1000 * 3600, prices[i].total * 100])
+          }
+
+          return data;
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_avg_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Ø
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_min_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Min
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_max_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Max
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_price_range
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Range
+        yaxis_id: header_only
+        color: grey
+    card_mod:
+      class: tibber-chart-full-width
+  - type: conditional
+    conditions:
+      - condition: state
+        entity: binary_sensor.epex_spot_data_update
+        state: "off"
+    card:
+      type: markdown
+      content: >-
+        <ha-alert alert-type="info">Der Strompreis für
+        **morgen** steht **ab 13 Uhr** zur Verfügung.</ha-alert>
+      card_mod:
+        class: mushroom-card-no-border

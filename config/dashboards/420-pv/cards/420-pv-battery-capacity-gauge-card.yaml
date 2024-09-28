@@ -1,0 +1,17 @@
+type: gauge
+entity: sensor.batteries_state_of_capacity
+name: Batteries
+min: 0
+max: 100
+needle: true
+segments:
+  - from: 0
+    color: red
+  - from: 15
+    color: orange
+  - from: 30
+    color: yellow
+  - from: 60
+    color: green
+card_mod:
+  class: gauge-card-small

@@ -1,0 +1,17 @@
+type: gauge
+entity: sensor.house_self_sufficiency_daily
+name: Self Sufficiency
+min: 0
+max: 100
+needle: true
+segments:
+  - from: 0
+    color: red
+  - from: 65
+    color: orange
+  - from: 75
+    color: yellow
+  - from: 85
+    color: green
+card_mod:
+  class: gauge-card-small

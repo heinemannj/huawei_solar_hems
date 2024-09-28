@@ -1,0 +1,648 @@
+type: custom:config-template-card
+entities:
+  - sensor.hems_sun_setting
+  - sensor.hems_sun_rising
+  - sensor.hems_sun_solar_noon
+card:
+  type: custom:apexcharts-card
+  config_templates: pv_solar_forecast_chart
+  now:
+    show: false
+  experimental:
+    color_threshold: true
+  apex_config:
+    chart:
+      height: 460px
+    stroke:
+      dashArray:
+        - 0
+        - 0
+        - 4
+        - 0
+        - 4
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 0
+        - 4
+    annotations:
+      xaxis:
+        - x: ${new Date().getTime()}
+          borderColor: 'red'
+          fillColor: 'red'
+          label:
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date().setHours(-24,0,0,0)}
+          x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()}
+          fillColor: '#c2f0f0'
+          opacity: 0.2
+          label:
+            text: >-
+              ${"Previous cycle - ☼ 00:00"}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_rising'].attributes.yesterday).getTime()}
+          label:
+            text: >-
+              ${"🌙 " + new Date(new
+              Date(states['sensor.hems_sun_rising'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.yesterday).getTime()}
+          label:
+            text: >-
+              ${"🔋 15°⚡ " + new Date(new
+              Date(states['sensor.hems_sun_pv_excess_start'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.yesterday).getTime()}
+          label:
+            text: >-
+              ${"☀️ " + new Date(new
+              Date(states['sensor.hems_sun_solar_noon'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.yesterday).getTime()}
+          label:
+            text: >-
+              ${"100%🔋 25°🌙 " + new Date(new
+              Date(states['sensor.hems_sun_prediction_end'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_setting'].attributes.yesterday).getTime()}
+          label:
+            text: >-
+              ${"☼ " + new Date(new
+              Date(states['sensor.hems_sun_setting'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date().setHours(0,0,0,0)}
+          x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()}
+          fillColor: '#ecffb3'
+          opacity: 0.2
+          label:
+            text: >-
+              ${"Actual cycle - ☼ 00:00"}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_rising'].attributes.today).getTime()}
+          label:
+            text: >-
+              ${"🌙 " + new Date(new
+              Date(states['sensor.hems_sun_rising'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.today).getTime()}
+          label:
+            text: >-
+              ${"🔋 15°⚡ " + new Date(new
+              Date(states['sensor.hems_sun_pv_excess_start'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.today).getTime()}
+          label:
+            text: >-
+              ${"☀️ " + new Date(new
+              Date(states['sensor.hems_sun_solar_noon'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()}
+          borderColor: 'blue'
+          fillColor: 'blue'
+          label:
+            text: >-
+              ${"100%🔋 25°🌙 " + new Date(new
+              Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_setting'].attributes.today).getTime()}
+          label:
+            text: >-
+              ${"☼ " + new Date(new
+              Date(states['sensor.hems_sun_setting'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date().setHours(24,0,0,0)}
+          x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()+86400000}
+          fillColor: '#c2f0f0'
+          opacity: 0.2
+          label:
+            text: >-
+              ${"Next cycle - ☼ 00:00"}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_rising'].attributes.tomorrow).getTime()}
+          label:
+            text: >-
+              ${"🌙 " + new Date(new
+              Date(states['sensor.hems_sun_rising'].attributes.tomorrow).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()}
+          label:
+            text: >-
+              ${"🔋 15°⚡ " + new Date(new
+              Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.tomorrow).getTime()}
+          label:
+            text: >-
+              ${"☀️ " + new Date(new
+              Date(states['sensor.hems_sun_solar_noon'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()}
+          borderColor: 'Teal'
+          fillColor: 'Teal'
+          label:
+            text: >-
+              ${"100%🔋 25°🌙 " + new Date(new
+              Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()).toLocaleTimeString([],{hour:'2-digit',
+              minute:'2-digit'})}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date().setHours(48,0,0,0)}
+          label:
+            text: >-
+              ${"☼ 00:00"}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_rising'].attributes.tomorrow).getTime()+86400000}
+          label:
+            text: >-
+              ${"🌙 "}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()+86400000}
+          label:
+            text: >-
+              ${"🔋 15°⚡ "}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.tomorrow).getTime()+86400000}
+          label:
+            text: >-
+              ${"☀️ "}
+            borderWidth: 0
+            style:
+              background: '#0000'
+        - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()+86400000}
+          borderColor: 'blue'
+          fillColor: 'blue'
+          label:
+            text: >-
+              ${"100%🔋 25°🌙 "}
+            borderWidth: 0
+            style:
+              background: '#0000'
+  graph_span: 5d
+  span:
+    start: day
+    offset: -2d
+  all_series_config:
+    yaxis_id: kW_2
+  series:
+    # Sun2 Integration
+    - entity: sensor.hems_sun_elevation
+      name: Sun Elevation
+      type: line
+      opacity: 1
+      stroke_width: 0.8
+      color: "orange"
+      unit: °
+      yaxis_id: elevation
+      show:
+        in_header: false
+      group_by:
+        func: avg
+        duration: 5m
+    # HUAWEI Solar Integration
+    - entity: sensor.batteries_state_of_capacity
+      name: Bat-SoC
+      float_precision: 0
+      type: line
+      color: "#f06292"
+      opacity: 0.8
+      stroke_width: 0.8
+      yaxis_id: capacity_2
+      unit: "%"
+      show:
+        in_header: false
+      group_by:
+        func: avg
+        duration: 5m
+    # EMHASS Forecast
+    - entity: sensor.soc_batt_forecast
+      name: Bat-SoC FCST
+      show:
+        legend_value: false
+        in_header: false
+      type: line
+      color: "#f06292"
+      opacity: 0.8
+      stroke_width: 0.8
+      yaxis_id: capacity_2
+      unit: "%"
+      data_generator: |
+        return entity.attributes.battery_scheduled_soc.map((entry) => {
+          return [new Date(entry.date).getTime(), entry.soc_batt_forecast];
+        });
+    # Template Sensor
+    - entity: sensor.house_consumption_power
+      name: House
+      type: line
+      color: MediumAquaMarine
+      opacity: 1
+      stroke_width: 0.8
+      transform: return x/1000;
+      show:
+        in_header: false
+      group_by:
+        func: avg
+        duration: 5m
+    # EMHASS Forecast
+    - entity: sensor.p_load_forecast
+      name: House FCST
+      show:
+        legend_value: false
+        in_header: false
+      type: line
+      color: MediumAquaMarine
+      opacity: 1.0
+      stroke_width: 0.8
+      data_generator: |
+        return entity.attributes.forecasts.map((entry) => {
+          return [new Date(entry.date).getTime(), entry.p_load_forecast/1000];
+        });
+    # HUAWEI Solar Integration
+    - entity: sensor.power_meter_active_power
+      name: Grid
+      color: "#488fc2"
+      opacity: 0.3
+      transform: return x/1000;
+      show:
+        in_header: false
+      group_by:
+        func: avg
+        duration: 5m
+    # EMHASS Forecast
+    - entity: sensor.p_grid_forecast
+      name: Grid FCST
+      color: "#488fc2"
+      opacity: 0.2
+      show:
+        legend_value: false
+        in_header: false
+      data_generator: |
+        return entity.attributes.forecasts.map((entry) => {
+          return [new Date(entry.date).getTime(), entry.p_grid_forecast/1000*-1];
+        });
+    # HUAWEI Solar Integration
+    - entity: sensor.inverter_input_power
+      name: Solar
+      color: "#ff9800"
+      opacity: 0.4
+      transform: return x/1000;
+      show:
+        in_header: false
+      group_by:
+        func: avg
+        duration: 5m
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_prognose_heute
+      name: Solar FCST (D1)
+      show:
+        legend_value: false
+        in_header: false
+      data_generator: |
+        return entity.attributes.detailedForecast.map((entry) => {
+          return [new Date(entry.period_start), entry.pv_estimate];
+        });
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+      name: Solar FCST (D2)
+      show:
+        legend_value: false
+        in_header: false
+      data_generator: |
+        return entity.attributes.detailedForecast.map((entry) => {
+          return [new Date(entry.period_start), entry.pv_estimate];
+        });
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
+      name: Solar FCST (D3)
+      show:
+        legend_value: false
+        in_header: false
+      data_generator: |
+        return entity.attributes.detailedForecast.map((entry) => {
+          return [new Date(entry.period_start), entry.pv_estimate];
+        });
+    # EPEXspot Data Integration
+    - entity: sensor.epex_spot_data_net_price
+      name: EPEXspot (Net)
+      float_precision: 3
+      yaxis_id: epex_price_show_no_yaxis
+      unit: ct/kWh
+      type: area
+      curve: stepline
+      opacity: 0.4
+      stroke_width: 0
+      color_threshold: # https://developer.tibber.com/docs/reference
+        - value: -130
+          color: "#FF00FF" # !!! ATTENTION !!! => magenta
+        - value: -30
+          color: "#FF0000" # !!! ATTENTION !!! => red
+        - value: -20
+          color: "#FFA500" # !!! ATTENTION !!! => orange
+        - value: -10
+          color: "#FFFF00" # !!! ATTENTION !!! => yellow
+        - value: -5
+          color: "#04822e"
+        - value: 0
+          color: "#04822e" # VERY_VERY_CHEAP
+        - value: 5
+          color: "#04822e"
+        - value: 10
+          color: "#04822e"
+        - value: 15
+          color: "#04822e" # VERY_CHEAP
+        - value: 16.25
+          color: "#1e8a2e"
+        - value: 17.5
+          color: "#2e932e"
+        - value: 18.75
+          color: "#3d9b2d"
+        - value: 20
+          color: "#4ba32c" # CHEAP
+        - value: 21.25
+          color: "#59ab2b"
+        - value: 22.5
+          color: "#66b329"
+        - value: 23.75
+          color: "#74bb27"
+        - value: 25
+          color: "#82c325"
+        - value: 26.25
+          color: "#90cb22"
+        - value: 27.5
+          color: "#9fd31f" # NORMAL
+        - value: 28.75
+          color: "#aeda1b"
+        - value: 30
+          color: "#bee216"
+        - value: 31.25
+          color: "#cee911"
+        - value: 32.5
+          color: "#def10b"
+        - value: 33.75
+          color: "#eef805"
+        - value: 35
+          color: "#FFFF00" # EXPENSIVE => yellow
+        - value: 36.25
+          color: "#ffe800"
+        - value: 37.5
+          color: "#ffd100"
+        - value: 38.75
+          color: "#ffbb00"
+        - value: 40
+          color: "#FFA500" # VERY_EXPENSIVE => orange
+        - value: 41.25
+          color: "#ff8b00"
+        - value: 42.5
+          color: "#ff6f00"
+        - value: 43.75
+          color: "#ff4c00"
+        - value: 45
+          color: "#FF0000" # VERY_VERY_EXPENSIVE => red
+        - value: 46.25
+          color: "#ff0046"
+        - value: 47.5
+          color: "#ff0080"
+        - value: 48.75
+          color: "#ff00bf"
+        - value: 50
+          color: "#FF00FF" # !!! ATTENTION !!! => magenta
+      show:
+        legend_value: false
+        in_header: false
+        extremas: false
+      data_generator: |
+        return entity.attributes.data.map((entry) => {
+          return [new Date(entry.start_time).getTime(), entry.price_ct_per_kwh];
+        });
+    # EPEXspot Data Integration
+    - entity: sensor.emhass_forecast_data
+      name: EPEXspot (Net) FCST
+      float_precision: 3
+      yaxis_id: epex_price_show_no_yaxis
+      unit: ct/kWh
+      type: line
+      curve: stepline
+      opacity: 1
+      stroke_width: 1
+      color_threshold: # https://developer.tibber.com/docs/reference
+        - value: -130
+          color: "#FF00FF" # !!! ATTENTION !!! => magenta
+        - value: -30
+          color: "#FF0000" # !!! ATTENTION !!! => red
+        - value: -20
+          color: "#FFA500" # !!! ATTENTION !!! => orange
+        - value: -10
+          color: "#FFFF00" # !!! ATTENTION !!! => yellow
+        - value: -5
+          color: "#04822e"
+        - value: 0
+          color: "#04822e" # VERY_VERY_CHEAP
+        - value: 5
+          color: "#04822e"
+        - value: 10
+          color: "#04822e"
+        - value: 15
+          color: "#04822e" # VERY_CHEAP
+        - value: 16.25
+          color: "#1e8a2e"
+        - value: 17.5
+          color: "#2e932e"
+        - value: 18.75
+          color: "#3d9b2d"
+        - value: 20
+          color: "#4ba32c" # CHEAP
+        - value: 21.25
+          color: "#59ab2b"
+        - value: 22.5
+          color: "#66b329"
+        - value: 23.75
+          color: "#74bb27"
+        - value: 25
+          color: "#82c325"
+        - value: 26.25
+          color: "#90cb22"
+        - value: 27.5
+          color: "#9fd31f" # NORMAL
+        - value: 28.75
+          color: "#aeda1b"
+        - value: 30
+          color: "#bee216"
+        - value: 31.25
+          color: "#cee911"
+        - value: 32.5
+          color: "#def10b"
+        - value: 33.75
+          color: "#eef805"
+        - value: 35
+          color: "#FFFF00" # EXPENSIVE => yellow
+        - value: 36.25
+          color: "#ffe800"
+        - value: 37.5
+          color: "#ffd100"
+        - value: 38.75
+          color: "#ffbb00"
+        - value: 40
+          color: "#FFA500" # VERY_EXPENSIVE => orange
+        - value: 41.25
+          color: "#ff8b00"
+        - value: 42.5
+          color: "#ff6f00"
+        - value: 43.75
+          color: "#ff4c00"
+        - value: 45
+          color: "#FF0000" # VERY_VERY_EXPENSIVE => red
+        - value: 46.25
+          color: "#ff0046"
+        - value: 47.5
+          color: "#ff0080"
+        - value: 48.75
+          color: "#ff00bf"
+        - value: 50
+          color: "#FF00FF" # !!! ATTENTION !!! => magenta
+      show:
+        legend_value: false
+        in_header: false
+        extremas: true
+      data_generator: |
+        return entity.attributes.data.map((entry) => {
+          return [new Date(entry.start_time).getTime(), entry.epexspot_price_eur_per_kwh*100];
+        });
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_prognose_heute
+      yaxis_id: header_only
+      name: Solar FCST (D1)
+      unit: kWh
+      show:
+        in_chart: false
+    # Template Sensor
+    - entity: sensor.solcast_forecast_remaining_today_every_minute
+      yaxis_id: header_only
+      name: Solar FCST (D1 Remaining)
+      unit: kWh
+      show:
+        in_chart: false
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+      yaxis_id: header_only
+      name: Solar FCST (D2)
+      unit: kWh
+      show:
+        in_chart: false
+    # Solcast PV Forecast Integration
+    - entity: sensor.solcast_pv_forecast_vorhersage_tag_3
+      yaxis_id: header_only
+      name: Solar FCST (D3)
+      unit: kWh
+      show:
+        in_chart: false
+    # EPEXspot Data Integration
+    - entity: sensor.epex_spot_data_net_price
+      name: EPEXspot (Net)
+      float_precision: 2
+      yaxis_id: header_only
+      unit: ct/kWh
+      show:
+        in_header: true
+        in_chart: false
+        header_color_threshold: true
+    # Template Sensor
+    - entity: sensor.epex_spot_data_quantile
+      float_precision: 3
+      yaxis_id: header_only
+      unit: ""
+      name: EPEXspot Quantile
+      color: "#f06292"
+      show:
+        in_header: true
+        in_chart: false
+    - entity: sensor.emhass_forecast_data
+      attribute: epexspot_min_price
+      unit: ct/kWh
+      transform: return x * 100;
+      show:
+        in_header: true
+        name_in_header: true
+        in_chart: false
+        header_color_threshold: true
+      name: Min
+      yaxis_id: header_only
+    - entity: sensor.emhass_forecast_data
+      attribute: epexspot_max_price
+      unit: ct/kWh
+      transform: return x * 100;
+      show:
+        in_header: true
+        name_in_header: true
+        in_chart: false
+        header_color_threshold: true
+      name: Max
+      yaxis_id: header_only
+    - entity: sensor.emhass_forecast_data
+      attribute: epexspot_avg_price
+      unit: ct/kWh
+      transform: return x * 100;
+      show:
+        in_header: true
+        name_in_header: true
+        in_chart: false
+        header_color_threshold: true
+      name: Ø
+      yaxis_id: header_only
+  card_mod:
+    class: elevation-forecast-chart

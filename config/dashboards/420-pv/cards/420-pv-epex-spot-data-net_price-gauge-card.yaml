@@ -1,0 +1,25 @@
+type: gauge
+entity: sensor.epex_spot_data_net_price
+name: EPEXspot (Net)
+min: 15
+max: 55
+needle: true
+segments:
+  - from: 15
+    color: "#04822e"
+  - from: 20
+    color: "#12A141"
+  - from: 25
+    color: "#79B92C"
+  - from: 30
+    color: "#C4D81D"
+  - from: 35
+    color: yellow
+  - from: 40
+    color: orange
+  - from: 45
+    color: red
+  - from: 50
+    color: magenta
+card_mod:
+  class: gauge-card-small

@@ -1,0 +1,9 @@
+title: 428-PV
+theme: dashboards
+path: 428-pv
+icon: mdi:solar-power-variant
+type: custom:grid-layout
+badges: []
+cards:
+  - !include /config/dashboards/420-pv/cards/428-pv-row-1.yaml
+  - !include /config/dashboards/420-pv/cards/428-pv-row-2.yaml

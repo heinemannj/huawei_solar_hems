@@ -1,0 +1,24 @@
+type: custom:horizon-card
+title: Horizon Card
+moon: true
+refresh_period: 60
+fields:
+  sunrise: true
+  sunset: true
+  dawn: true
+  noon: true
+  dusk: true
+  azimuth: true
+  sun_azimuth: true
+  moon_azimuth: false
+  elevation: true
+  sun_elevation: true
+  moon_elevation: false
+  moonrise: false
+  moonset: false
+  moon_phase: false
+moon_phase_rotation: -10
+language: en
+time_format: 24
+time_zone: Europe/Berlin
+debug_level: 0

@@ -1,0 +1,26 @@
+type: custom:apexcharts-card
+config_templates: pv_diagnostic_chart
+header:
+  title: Inverter - Loss (24h)
+apex_config:
+  chart:
+    height: 240px;
+all_series_config:
+  type: line
+  float_precision: 3
+  yaxis_id: kWh
+  group_by:
+    func: last
+    duration: 5m
+    fill: last
+graph_span: 24h
+series:
+  - entity: sensor.inverter_loss_daily
+    name: Inv-Total
+    color: grey
+  - entity: sensor.batteries_charge_loss_daily
+    name: Bat-In
+    color: "#f06292"
+  - entity: sensor.batteries_discharge_loss_daily
+    name: Bat-Out
+    color: "#4db6ac"

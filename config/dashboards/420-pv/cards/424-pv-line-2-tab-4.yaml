@@ -1,0 +1,16 @@
+type: custom:vertical-stack-in-card
+cards:
+  - entity: input_number.tibber_grundpreis_je_monat
+    type: tile
+    color: red
+  - entity: input_number.tibber_messtellengebuhr_je_tag
+    type: tile
+    color: red
+  - entity: input_number.tibber_netznutzungsgebuhr_je_tag
+    type: tile
+    color: red
+  - entity: input_number.tibber_mehrwertsteuersatz
+    type: tile
+    color: red
+card_mod:
+  class: mushroom-card-no-border

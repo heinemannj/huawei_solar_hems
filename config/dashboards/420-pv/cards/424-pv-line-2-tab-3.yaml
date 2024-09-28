@@ -1,0 +1,38 @@
+tabbed-card-attributes: &tabbed-card-attributes-template
+  minWidth: true
+  stacked: false
+
+tabbed-card-styles: &tabbed-card-styles-template
+  styles:
+    '--mdc-theme-primary': var(--energy-grid-consumption-color)
+    '--mdc-tab-horizontal-padding': 0px !important
+    '--mdc-tab-height': 28px !important
+
+type: custom:tabbed-card
+styles:
+  '--mdc-tab-horizontal-padding': 0px !important
+tabs:
+  - attributes:
+      <<: *tabbed-card-attributes-template
+      label: Hourly
+    <<: *tabbed-card-styles-template
+    card:
+      !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-3-1.yaml
+  - attributes:
+      <<: *tabbed-card-attributes-template
+      label: Daily
+    <<: *tabbed-card-styles-template
+    card:
+      !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-3-2.yaml
+  - attributes:
+      <<: *tabbed-card-attributes-template
+      label: Monthly
+    <<: *tabbed-card-styles-template
+    card:
+      !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-3-3.yaml
+  - attributes:
+      <<: *tabbed-card-attributes-template
+      label: Yearly
+    <<: *tabbed-card-styles-template
+    card:
+      !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-3-4.yaml

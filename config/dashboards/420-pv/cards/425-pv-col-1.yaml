@@ -1,0 +1,482 @@
+bar-card-defaults: &bar-card-template
+  type: custom:bar-card
+  height: 28px
+  decimal: "0"
+  entity_row: true
+  positions:
+    icon: "off"
+    indicator: "off"
+    value: inside
+  card_mod:
+    class: pv-bar-card
+
+bar-card-style-defaults: &bar-card-style
+  width: 12%
+  opacity: 0.7
+  filter: brightness(1)
+  "--bar-card-border-radius": 12px
+
+state-label-style-flush-left-defaults: &state-label-style-flush-left
+  position: absolute
+  transform: translate(0,0)
+
+type: picture-elements
+title: Huawei Sun2000-6KTL-M1
+image: /local/images/huawei-solar/sun2000-luna2000.png
+elements:
+  - entity: switch.inverter_inverter_on_off
+    prefix: "Mode: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: "-2%"
+    type: state-label
+  - entity: sensor.inverter_inverter_state
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 2%
+    type: state-label
+  - entity: sensor.power_meter_meter_status
+    prefix: "Status: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 4%
+    type: state-label
+  - entity: sensor.inverter_alarms
+    prefix: "Alarms: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 6%
+    type: state-label
+  - entity: switch.batteries_charge_from_grid
+    prefix: "Batteries Charge from grid: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 10%
+    type: state-label
+  - entity: number.batteries_end_of_charge_soc
+    prefix: "Batteries End-of-charge SOC: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 12%
+    type: state-label
+  - entity: number.batteries_end_of_discharge_soc
+    prefix: "Batteries End-of-discharge SOC: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 14%
+    type: state-label
+  - entity: number.batteries_maximum_charging_power
+    prefix: "Batteries Maximum charging power: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 16%
+    type: state-label
+  - entity: number.batteries_maximum_discharging_power
+    prefix: "Batteries Maximum discharging power: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 18%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 3.8%
+    entities:
+      - entity: sensor.power_meter_active_power
+        name: Out
+        min: "0"
+        max: "7800"
+        severity:
+          - color: "#a280db"
+            from: 0
+            to: 7800
+            hide: false
+          - color: grey
+            from: -7800
+            to: -1
+            hide: true
+      - entity: sensor.power_meter_active_power
+        name: In
+        min: "0"
+        max: "-7800"
+        severity:
+          - color: grey
+            from: 0
+            to: 7800
+            hide: true
+          - color: "#488fc2"
+            from: -7800
+            to: -1
+            hide: false
+  - entity: sensor.power_meter_phase_a_active_power
+    style:
+      left: 54%
+      top: 10%
+    type: state-label
+  - entity: sensor.power_meter_phase_b_active_power
+    style:
+      left: 54%
+      top: 12%
+    type: state-label
+  - entity: sensor.power_meter_phase_c_active_power
+    style:
+      left: 54%
+      top: 14%
+    type: state-label
+  - entity: sensor.power_meter_exported
+    prefix: "T: "
+    style:
+      left: 80.5%
+      top: 0%
+    type: state-label
+  - entity: sensor.power_meter_exported_energy_daily
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 0%
+    type: state-label
+  - entity: sensor.power_meter_consumption
+    prefix: "T: "
+    style:
+      left: 80.5%
+      top: 15.5%
+    type: state-label
+  - entity: sensor.power_meter_consumption_energy_daily
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 15.5%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 37.6%
+    entities:
+      - entity: sensor.house_consumption_power
+        name: Load
+        min: "0"
+        max: "7800"
+        severity:
+          - color: MediumAquaMarine
+            from: 0
+            to: 7800
+            hide: false
+          - color: grey
+            from: -7800
+            to: 0
+            hide: false
+  - entity: sensor.house_consumption_energy_total
+    prefix: "T: "
+    style:
+      left: 80.5%
+      top: 37.6%
+    type: state-label
+  - entity: sensor.house_consumption_energy_daily
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 37.6%
+    type: state-label
+  - entity: sensor.inverter_total_yield
+    prefix: "T: "
+    style:
+      left: 32%
+      top: 41%
+    type: state-label
+  - entity: sensor.inverter_daily_yield
+    prefix: "D: "
+    style:
+      left: 18%
+      top: 41%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 39.6%
+      top: 48.3%
+    entities:
+      - entity: sensor.inverter_active_power
+        name: Out
+        min: "0"
+        max: "7800"
+        severity:
+          - color: yellow
+            from: 0
+            to: 7800
+            hide: false
+          - color: red
+            from: -7800
+            to: 0
+            hide: false
+  - entity: sensor.batteries_total_discharge
+    prefix: "T: "
+    style:
+      left: 80.5%
+      top: 50%
+    type: state-label
+  - entity: sensor.batteries_day_discharge_with_loss
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 48%
+    type: state-label
+  - entity: sensor.batteries_day_discharge
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 50%
+    type: state-label
+  - entity: sensor.batteries_status
+    prefix: "Status: "
+    style:
+      left: 92%
+      top: 53%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 92%
+      top: 56.5%
+    entities:
+      - entity: sensor.batteries_state_of_capacity
+        name: Capacity
+        min: "0"
+        max: "100"
+        severity:
+          - color: "#f06292"
+            from: 0
+            to: 100
+            hide: false
+  - entity: sensor.batteries_state_of_capacity_energy
+    style:
+      left: 94.5%
+      top: 60%
+    type: state-label
+  - entity: sensor.batteries_state_of_capacity_remaining_discharge_time
+    style:
+      left: 94%
+      top: 62%
+    type: state-label
+  - entity: sensor.batteries_total_charge
+    prefix: "T: "
+    style:
+      left: 80.5%
+      top: 65%
+    type: state-label
+  - entity: sensor.batteries_day_charge
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 65%
+    type: state-label
+  - entity: sensor.batteries_day_charge_with_loss
+    prefix: "D: "
+    style:
+      left: 93%
+      top: 67%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 54.3%
+    entities:
+      - entity: sensor.batteries_active_power
+        name: In
+        min: "0"
+        max: "7575"
+        severity:
+          - color: "#f06292"
+            from: 0
+            to: 7575
+            hide: false
+          - color: grey
+            from: -7575
+            to: -1
+            hide: true
+      - entity: sensor.batteries_active_power
+        name: Out
+        min: "0"
+        max: "-7575"
+        severity:
+          - color: grey
+            from: 0
+            to: 7575
+            hide: true
+          - color: "#4db6ac"
+            from: -7575
+            to: -1
+            hide: false
+  - entity: sensor.inverter_device_status
+    prefix: "Status: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 44%
+    type: state-label
+  - entity: sensor.inverter_off_grid_status
+    prefix: "Off-grid Status: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 46%
+    type: state-label
+  - entity: sensor.inverter_off_grid_switch
+    prefix: "Off-grid Switch: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 48%
+    type: state-label
+  - entity: sensor.inverter_locking_status
+    prefix: "Locking: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 51%
+    type: state-label
+  - entity: sensor.inverter_internal_temperature
+    prefix: "Internal Temperature: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 53%
+    type: state-label
+  - entity: sensor.inverter_dsp_data_collection
+    prefix: "Data Collection: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 55%
+    type: state-label
+  - entity: sensor.inverter_efficiency
+    prefix: "Efficiency: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 57%
+    type: state-label
+  - entity: sensor.inverter_loss_daily
+    prefix: "Loss D: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 59%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 39.6%
+      top: 67.8%
+    entities:
+      - entity: sensor.inverter_input_power
+        name: In
+        min: "0"
+        max: "9000"
+        severity:
+          - color: "#ff9800"
+            from: 0
+            to: 9000
+            hide: false
+  - entity: sensor.solar_yield
+    prefix: "T: "
+    style:
+      left: 31%
+      top: 76%
+    type: state-label
+  - entity: sensor.solar_yield_daily
+    prefix: "D: "
+    style:
+      left: 17%
+      top: 76%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 75%
+    entities:
+      - entity: sensor.inverter_pv_power
+        name: PV-Ʃ
+        min: "0"
+        max: "9000"
+        severity:
+          - color: "#ff9800"
+            from: 0
+            to: 9000
+            hide: false
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 83%
+    entities:
+      - entity: sensor.inverter_pv_1_power
+        name: PV-1
+        min: "0"
+        max: "4500"
+        severity:
+          - color: "#ff9800"
+            from: 0
+            to: 4500
+            hide: false
+  - entity: sensor.inverter_pv_1_voltage
+    style:
+      left: 62%
+      top: 83%
+    type: state-label
+  - entity: sensor.inverter_pv_1_current
+    style:
+      left: 70%
+      top: 83%
+    type: state-label
+  - entity: sensor.inverter_pv_connection_status
+    prefix: "Status: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 85%
+    type: state-label
+  - entity: sensor.inverter_startup_time
+    prefix: "Startup Time: "
+    style:
+      <<: *state-label-style-flush-left
+      left: 1%
+      top: 87%
+    type: state-label
+  - <<: *bar-card-template
+    style:
+      <<: *bar-card-style
+      left: 52%
+      top: 94.5%
+    entities:
+      - entity: sensor.inverter_pv_2_power
+        name: PV-2
+        min: "0"
+        max: "4500"
+        severity:
+          - color: "#ff9800"
+            from: 0
+            to: 4500
+            hide: false
+  - entity: sensor.inverter_pv_2_voltage
+    style:
+      left: 62%
+      top: 94.5%
+    type: state-label
+  - entity: sensor.inverter_pv_2_current
+    style:
+      left: 70%
+      top: 94.5%
+    type: state-label

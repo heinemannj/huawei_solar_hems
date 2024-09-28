@@ -1,0 +1,50 @@
+tabbed-card-attributes: &tabbed-card-attributes-template
+  minWidth: true
+  stacked: false
+
+tabbed-card-styles: &tabbed-card-styles-template
+  styles:
+    '--mdc-theme-primary': var(--energy-grid-consumption-color)
+    '--mdc-tab-horizontal-padding': 0px !important
+    '--mdc-tab-height': 28px !important
+
+type: custom:stack-in-card
+card_mod:
+  style: |
+    ha-card {
+      padding: 0px !important;
+    }
+mode: vertical
+keep:
+  background: true
+  border_radius: true
+  box_shadow: false
+  margin: true
+  outer_padding: true
+cards:
+  - type: custom:tabbed-card
+    tabs:
+      - attributes:
+          <<: *tabbed-card-attributes-template
+          label: Forecast 
+        <<: *tabbed-card-styles-template
+        card:
+          !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-1.yaml
+      - attributes:
+          <<: *tabbed-card-attributes-template
+          label: Electricity spot price
+        <<: *tabbed-card-styles-template
+        card:
+          !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-2.yaml
+      - attributes:
+          <<: *tabbed-card-attributes-template
+          label: Consumption & Cost
+        <<: *tabbed-card-styles-template
+        card:
+          !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-3.yaml
+      - attributes:
+          <<: *tabbed-card-attributes-template
+          label: Settings
+        <<: *tabbed-card-styles-template
+        card:
+          !include /config/dashboards/420-pv/cards/424-pv-line-2-tab-4.yaml

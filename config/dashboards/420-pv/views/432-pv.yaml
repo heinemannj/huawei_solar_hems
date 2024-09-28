@@ -1,0 +1,12 @@
+title: 432-PV
+theme: dashboards
+path: 432-pv
+icon: mdi:solar-power-variant
+type: custom:grid-layout
+badges: []
+cards:
+  - !include /config/dashboards/420-pv/cards/420-pv-sunsynk-power-flow-card.yaml
+layout:
+  grid-template-columns: auto
+  margin: 0px;
+  padding: 0px;

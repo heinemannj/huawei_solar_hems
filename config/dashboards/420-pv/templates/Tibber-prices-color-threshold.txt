@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<style>
+p {
+  display: block;
+  padding: 1px;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+</style>
+<body>
+
+<h3>EPEX Spot color threshold</h3>
+
+<div style="background-color:#FF00FF">
+  <p>value: -130, color: "#FF00FF", !!! ATTENTION !!! => magenta</p>
+</div>
+<div style="background-color:#FF0000">
+  <p>value: -30, color: "#FF0000", !!! ATTENTION !!! => red<p>
+</div>
+<div style="background-color:#FFA500">
+  <p>value: -20, color: "#FFA500", !!! ATTENTION !!! => orange</p>
+</div>
+<div style="background-color:#FFFF00">
+  <p>value: -10, color: "#FFFF00", !!! ATTENTION !!! => yellow<p>
+</div>
+<div style="background-color:#04822e">
+  <p>value: -5, color: "#04822e"</p>
+</div>
+<div style="background-color:#04822e">
+  <p>value: 0, color: "#04822e", # VERY_VERY_CHEAP</p>
+</div>
+<div style="background-color:#04822e">
+  <p>value: 5, color: "#04822e"</p>
+</div>
+<div style="background-color:#04822e">
+  <p>value: 10, color: "#04822e"</p>
+</div>
+<div style="background-color:#04822e">
+  <p>value: 15, color: "#04822e", # VERY_CHEAP</p>
+</div>
+<div style="background-color:#1e8a2e">
+  <p>value: 16.25, color: "#1e8a2e"</p>
+</div>
+<div style="background-color:#2e932e">
+  <p>value: 17.5, color: "#2e932e"</p>
+</div>
+<div style="background-color:#3d9b2d">
+  <p>value: 18.75, color: "#3d9b2d"</p>
+</div>
+<div style="background-color:#4ba32c">
+  <p>value: 20, color: "#4ba32c", # CHEAP</p>
+</div>
+<div style="background-color:#59ab2b">
+  <p>value: 21.25, color: "#59ab2b"</p>
+</div>
+<div style="background-color:#66b329">
+  <p>value: 22.5, color: "#66b329"</p>
+</div>
+<div style="background-color:#74bb27">
+  <p>value: 23.75, color: "#74bb27"</p>
+</div>
+<div style="background-color:#82c325">
+  <p>value: 25, color: "#82c325"</p>
+</div>
+<div style="background-color:#90cb22">
+  <p>value: 26.25, color: "#90cb22"</p>
+</div>
+<div style="background-color:#9fd31f">
+  <p>value: 27.5, color: "#9fd31f", # NORMAL</p>
+</div>
+<div style="background-color:#aeda1b">
+  <p>value: 28.75, color: "#aeda1b"</p>
+</div>
+<div style="background-color:#bee216">
+  <p>value: 30, color: "#bee216"</p>
+</div>
+<div style="background-color:#cee911">
+  <p>value: 31.25, color: "#cee911"</p>
+</div>
+<div style="background-color:#def10b">
+  <p>value: 32.5, color: "#def10b"</p>
+</div>
+<div style="background-color:#eef805">
+  <p>value: 33.75, color: "#eef805"</p>
+</div>
+<div style="background-color:#FFFF00">
+  <p>value: 35, color: "#FFFF00", # EXPENSIVE => yellow</p>
+</div>
+<div style="background-color:#ffe800">
+  <p>value: 36.25, color: "#ffe800"</p>
+</div>
+<div style="background-color:#ffd100">
+  <p>value: 37.5, color: "#ffd100"</p>
+</div>
+<div style="background-color:#ffbb00">
+  <p>value: 38.75, color: "#ffbb00"</p>
+</div>
+<div style="background-color:#FFA500">
+  <p>value: 40, color: "#FFA500", # VERY_EXPENSIVE => orange</p>
+</div>
+<div style="background-color:#ff8b00">
+  <p>value: 41.25, color: "#ff8b00"</p>
+</div>
+<div style="background-color:#ff6f00">
+  <p>value: 42.5, color: "#ff6f00"</p>
+</div>
+<div style="background-color:#ff4c00">
+  <p>value: 43.75, color: "#ff4c00"</p>
+</div>
+<div style="background-color:#FF0000">
+  <p>value: 45, color: "#FF0000", # VERY_VERY_EXPENSIVE => red</p>
+</div>
+<div style="background-color:#ff0046">
+  <p>value: 46.25, color: "#ff0046"</p>
+</div>
+<div style="background-color:#ff0080">
+  <p>value: 47.5, color: "#ff0080"</p>
+</div>
+<div style="background-color:#ff00bf">
+  <p>value: 48.75, color: "#ff00bf"</p>
+</div>
+<div style="background-color:#FF00FF">
+  <p>value: 50, color: "#FF00FF", !!! ATTENTION !!! => magenta</p>
+</div>
+</body>
+</html>

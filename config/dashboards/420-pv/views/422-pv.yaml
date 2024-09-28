@@ -1,0 +1,18 @@
+title: 422-PV
+theme: dashboards
+path: 422-pv
+icon: mdi:solar-power-variant
+type: custom:grid-layout
+badges: []
+cards:
+  - type: custom:layout-card
+    layout_type: custom:grid-layout
+    cards:
+      - !include /config/dashboards/420-pv/cards/422-pv-hourly-weather-card.yaml
+      - !include /config/dashboards/420-pv/cards/422-pv-history-graph-card.yaml
+      - !include /config/dashboards/420-pv/cards/420-pv-solar-forecast-chart-full-width.yaml
+      - !include /config/dashboards/420-pv/cards/420-pv-epex-forecast-chart-full-width.yaml
+    layout:
+      grid-template-columns: auto
+      margin: 0px;
+      padding: 0px;

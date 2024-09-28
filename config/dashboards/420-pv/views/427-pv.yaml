@@ -1,0 +1,15 @@
+title: 427-PV
+theme: dashboards
+path: 427-pv
+icon: mdi:solar-power-variant
+type: custom:grid-layout
+badges: []
+cards:
+  - type: custom:layout-card
+    layout_type: custom:grid-layout
+    cards:
+      - !include /config/dashboards/420-pv/cards/427-pv-row-1.yaml
+    layout:
+      grid-template-columns: auto
+      margin: 0px;
+      padding: 0px;

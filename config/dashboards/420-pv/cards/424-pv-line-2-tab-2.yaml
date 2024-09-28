@@ -1,0 +1,124 @@
+markdown-card-styles: &markdown-card-styles-template
+  style:
+    .: |
+      ha-markdown.no-header {
+        padding: 0px !important; 
+        }
+      ha-markdown {
+        padding: 0px 0px 0px !important; 
+        }
+      ha-card {
+        overflow: hidden !important;
+        background: none !important;
+        box-shadow: none !important;
+        margin-top: 0.5rem !important;
+        margin-left: -0.6rem !important;
+        margin-right: -0.6rem !important;
+        border: none !important;
+      }
+
+type: vertical-stack
+cards:
+  - type: markdown
+    card_mod:
+      <<: *markdown-card-styles-template
+    content: >-
+      <ha-alert alert-type="info" title="{{
+      state_attr('sensor.tibber_strompreisentwicklung_website_text',
+      'tibber_price_preview_week_number') }}">{{
+      state_attr('sensor.tibber_strompreisentwicklung_website_text',
+      'tibber_price_preview_week_short_state') | replace("\n",
+      "") }}
+
+      <br>Quelle: [**https://tibber.com/de/strompreisentwicklung**](https://tibber.com/de/strompreisentwicklung)
+      </ha-alert>
+  - type: custom:apexcharts-card
+    config_templates: tibber_chart
+    experimental:
+      color_threshold: true
+      brush: true
+    graph_span: 18months
+    brush:
+      selection_span: 14d
+    apex_config:
+      chart:
+        height: 350px
+    all_series_config:
+      float_precision: 4
+      unit: ct/kWh
+      type: line
+      curve: stepline
+      stroke_width: 1
+      opacity: 0.8
+      color: grey
+    series:
+      - entity: sensor.tibber_electricity_spot_price
+        show:
+          in_header: false
+        yaxis_id: costCent
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.startsAt).getTime(), entry.total * 100];
+          });
+      - entity: sensor.tibber_prices
+        show:
+          in_header: true
+          header_color_threshold: false
+          in_chart: false
+        name: Electricity spot price
+        yaxis_id: header_only
+        float_precision: 3
+        transform: return x * 100;
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_avg_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Ø
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_min_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Min
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_max_price
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Max
+        yaxis_id: header_only
+      - entity: sensor.emhass_forecast_data
+        attribute: epexspot_price_range
+        transform: return x * 100;
+        show:
+          in_header: true
+          name_in_header: true
+          in_chart: false
+          header_color_threshold: false
+        name: Range
+        yaxis_id: header_only
+        color: grey
+      - entity: sensor.tibber_electricity_spot_price
+        yaxis_id: costCent
+        show:
+          in_brush: true
+          in_chart: false
+          in_header: false
+        data_generator: >
+          return entity.attributes.nodes.map((entry) => {
+            return [new Date(entry.startsAt).getTime(), entry.total * 100];
+          });
+    card_mod:
+      class: tibber-brush-chart-full-width

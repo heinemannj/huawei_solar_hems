@@ -1,0 +1,102 @@
+type: custom:apexcharts-card
+config_templates: pv_solar_forecast_chart_test
+experimental:
+  color_threshold: true
+  brush: true
+now:
+  show: true
+graph_span: 6d
+brush:
+  # selection_span: optional
+  # defines the default selected span in the brush
+  # Defaults to 1/4 of the `graph_span`
+  selection_span: 6d
+  # apex_config: optional
+  apex_config:
+    legend:
+      show: true
+    header:
+      show: true
+      standard_format: true
+      show_states: true
+      colorize_states: true
+    chart:
+      height: 270px
+    # Any ApexCharts settings you want to apply to the brush
+    # Same as the standard apex_config
+series:
+  - entity: sensor.heizung_domestic_hot_water_0_tank_temperature
+    name: WW
+    float_precision: 1
+    type: line
+    color: "blue"
+    opacity: 0.6
+    stroke_width: 0.8
+    yaxis_id: capacity
+    unit: "°C"
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.batteries_state_of_capacity
+    name: Bat-SoC
+    float_precision: 0
+    type: line
+    color: "#f06292"
+    opacity: 0.6
+    stroke_width: 0.8
+    yaxis_id: capacity
+    unit: "%"
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.house_consumption_power
+    name: House Power
+    type: line
+    color: MediumAquaMarine
+    opacity: 0.8
+    stroke_width: 0.8
+    transform: return x/1000;
+    show:
+      in_header: false
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.p_load_forecast
+    name: House Power FCST
+    show:
+      in_header: false
+      # in_brush: set it to true and the serie will show up in the brush
+      in_brush: true
+      # add this also if you want your serie to only show up in the brush
+      in_chart: false
+    type: line
+    curve: stepline
+    color: MediumAquaMarine
+    opacity: 0.8
+    stroke_width: 0.8
+    data_generator: |
+      return entity.attributes.forecasts.map((entry) => {
+        return [new Date(entry.date).getTime(), entry.p_load_forecast/1000];
+      });
+  - entity: sensor.epex_spot_data_net_price
+    name: EPEX Spot (Net)
+    yaxis_id: epex_price
+    unit: ct/kWh
+    type: line
+    curve: stepline
+    opacity: 1
+    stroke_width: 1
+    show:
+      legend_value: true
+      in_header: true
+      extremas: true
+      in_chart: false
+      in_brush: true
+    data_generator: |
+      return entity.attributes.data.map((entry) => {
+        return [new Date(entry.start_time).getTime(), entry.price_ct_per_kwh];
+      });

@@ -1,0 +1,17 @@
+type: gauge
+entity: sensor.inverter_internal_temperature
+name: Inverter
+min: 20
+max: 70
+needle: true
+segments:
+  - from: 20
+    color: green
+  - from: 45
+    color: yellow
+  - from: 60
+    color: orange
+  - from: 65
+    color: red
+card_mod:
+  class: gauge-card-small

@@ -1,0 +1,37 @@
+type: custom:apexcharts-card
+config_templates: pv_radial_chart
+header:
+  title: Solar Yield - Self Sufficiency
+series:
+  - entity: sensor.inverter_yield_self_use_total
+    name: Total
+    transform: >
+      let inv_yield_self_use = hass.states['sensor.inverter_yield_self_use_total'].state;
+      let house_consumption = hass.states['sensor.house_consumption_energy_total'].state;
+      return(inv_yield_self_use / house_consumption * 100);
+  - entity: sensor.inverter_yield_self_use_yearly
+    name: Year
+    transform: >
+      let inv_yield_self_use = hass.states['sensor.inverter_yield_self_use_yearly'].state;
+      let house_consumption = hass.states['sensor.house_consumption_energy_yearly'].state;
+      return(inv_yield_self_use / house_consumption * 100);
+  - entity: sensor.inverter_yield_self_use_monthly
+    name: Month
+    transform: >
+      let inv_yield_self_use = hass.states['sensor.inverter_yield_self_use_monthly'].state;
+      let house_consumption = hass.states['sensor.house_consumption_energy_monthly'].state;
+      return(inv_yield_self_use / house_consumption * 100);
+  - entity: sensor.inverter_yield_self_use_weekly
+    name: Week
+    transform: >
+      let inv_yield_self_use = hass.states['sensor.inverter_yield_self_use_weekly'].state;
+      let house_consumption = hass.states['sensor.house_consumption_energy_weekly'].state;
+      return(inv_yield_self_use / house_consumption * 100);
+  - entity: sensor.inverter_yield_self_use_daily
+    name: Today
+    transform: >
+      let inv_yield_self_use = hass.states['sensor.inverter_yield_self_use_daily'].state; let
+      house_consumption = hass.states['sensor.house_consumption_energy_daily'].state;
+      return(inv_yield_self_use / house_consumption * 100);
+card_mod:
+  class: donut-chart

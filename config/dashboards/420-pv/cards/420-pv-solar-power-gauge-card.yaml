@@ -1,0 +1,17 @@
+type: gauge
+entity: sensor.inverter_input_power
+name: Solar
+min: 0
+max: 9000
+needle: true
+segments:
+  - from: 0
+    color: red
+  - from: 350
+    color: orange
+  - from: 700
+    color: yellow
+  - from: 2100
+    color: green
+card_mod:
+  class: gauge-card-small

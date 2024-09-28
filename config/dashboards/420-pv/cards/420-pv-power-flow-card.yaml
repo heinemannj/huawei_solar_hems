@@ -1,0 +1,45 @@
+type: custom:power-flow-card-plus
+title: Power Flows (Now)
+min_flow_rate: 0.75
+max_flow_rate: 6
+watt_threshold: 9999
+kw_decimals: 3
+w_decimals: 0
+clickable_entities: true
+display_zero_lines: true
+use_new_flow_rate_model: true
+entities:
+  home:
+    entity: sensor.house_consumption_power
+    override_state: false
+  solar:
+    entity: sensor.inverter_input_power
+  battery:
+    name: Batteries
+    entity: sensor.batteries_active_power
+    invert_state: true
+    state_of_charge: sensor.batteries_state_of_capacity
+    color_circle: true
+  individual:
+    - entity: sensor.washing_power
+      icon: mdi:washing-machine
+      name: Washing
+      display_zero: true
+    #      color: "#00CC44"
+    - entity: sensor.heating_power
+      icon: mdi:heat-pump-outline
+      name: Heating
+      display_zero: true
+  #      color: "#00CC44"
+  grid:
+    entity: sensor.power_meter_active_power
+    invert_state: true
+  fossil_fuel_percentage:
+    entity: sensor.co2_signal_grid_fossil_fuel_percentage
+    icon: mdi:pine-tree
+    color_icon: true
+    display_zero: true
+    name: Low-carbon
+    state_type: power
+card_mod:
+  class: power-energy-flow-card

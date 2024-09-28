@@ -1,0 +1,18 @@
+#kiosk_mode:
+#  hide_header: false
+title: 420_PV
+apexcharts_card_templates: !include /config/dashboards/420-pv/templates/apexcharts_card_config.yaml
+views:
+  - !include /config/dashboards/420-pv/views/421-pv.yaml
+  - !include /config/dashboards/420-pv/views/422-pv.yaml
+  - !include /config/dashboards/420-pv/views/423-pv.yaml
+  - !include /config/dashboards/420-pv/views/424-pv.yaml
+  - !include /config/dashboards/420-pv/views/425-pv.yaml
+  - !include /config/dashboards/420-pv/views/426-pv.yaml
+  - !include /config/dashboards/420-pv/views/427-pv.yaml
+  - !include /config/dashboards/420-pv/views/428-pv.yaml
+  - !include /config/dashboards/420-pv/views/429-pv.yaml
+  - !include /config/dashboards/420-pv/views/430-pv.yaml
+  - !include /config/dashboards/420-pv/views/431-pv.yaml
+  - !include /config/dashboards/420-pv/views/432-pv.yaml
+  - !include /config/dashboards/420-pv/views/433-pv.yaml

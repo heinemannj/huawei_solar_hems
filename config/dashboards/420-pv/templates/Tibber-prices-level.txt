@@ -1,0 +1,84 @@
+{% set var = namespace() %}
+{% set var.cost = state_attr('sensor.tibber_electricity_spot_price', 'nodes') %}
+
+{% set var.VeryCheapMin = 1000 %}
+{% set var.VeryCheapMax = -1000 %}
+
+{% set var.CheapMin = 1000 %}
+{% set var.CheapMax = -1000 %}
+
+{% set var.NormalMin = 1000 %}
+{% set var.NormalMax = -1000 %}
+
+{% set var.ExpensiveMin = 1000 %}
+{% set var.ExpensiveMax = -1000 %}
+{# EXPENSIVE #}
+{% set var.VeryExpensiveMin = 1000 %}
+{% set var.VeryExpensiveMax = -1000 %}
+{# VERY_EXPENSIVE #}
+
+
+{%- for record in var.cost %}
+  {% if (record.total < var.VeryCheapMin) and (record.level == 'VERY_CHEAP') %}
+    {% set var.VeryCheapMin = record.total %}
+  {% endif %}
+  {% if (record.total > var.VeryCheapMax) and (record.level == 'VERY_CHEAP') %}
+    {% set var.VeryCheapMax = record.total %}
+  {% endif %}
+
+  {% if (record.total < var.CheapMin) and (record.level == 'CHEAP') %}
+    {% set var.CheapMin = record.total %}
+  {% endif %}
+  {% if (record.total > var.CheapMax) and (record.level == 'CHEAP') %}
+    {% set var.CheapMax = record.total %}
+  {% endif %}
+
+  {% if (record.total < var.NormalMin) and (record.level == 'NORMAL') %}
+    {% set var.NormalMin = record.total %}
+  {% endif %}
+  {% if (record.total > var.NormalMax) and (record.level == 'NORMAL') %}
+    {% set var.NormalMax = record.total %}
+  {% endif %}
+
+  {% if (record.total < var.ExpensiveMin) and (record.level == 'EXPENSIVE') %}
+    {% set var.ExpensiveMin = record.total %}
+  {% endif %}
+  {% if (record.total > var.ExpensiveMax) and (record.level == 'EXPENSIVE') %}
+    {% set var.ExpensiveMax = record.total %}
+  {% endif %}
+
+  {% if (record.total < var.VeryExpensiveMin) and (record.level == 'VERY_EXPENSIVE') %}
+    {% set var.VeryExpensiveMin = record.total %}
+  {% endif %}
+  {% if (record.total > var.VeryExpensiveMax) and (record.level == 'VERY_EXPENSIVE') %}
+    {% set var.VeryExpensiveMax = record.total %}
+  {% endif %}
+
+{%- endfor %}
+VERY_CHEAP
+{{ var.VeryCheapMin }}
+{{ var.VeryCheapMax }}
+
+CHEAP
+{{ (var.VeryCheapMax + var.CheapMin) / 2 }}
+
+{{ var.CheapMin }}
+{{ var.CheapMax }}
+
+NORMAL
+{{ (var.CheapMax + var.NormalMin) / 2 }}
+
+{{ var.NormalMin }}
+{{ var.NormalMax }}
+
+EXPENSIVE
+{{ (var.NormalMax + var.ExpensiveMin) / 2 }}
+
+{{ var.ExpensiveMin }}
+{{ var.ExpensiveMax }}
+
+VERY_EXPENSIVE
+{{ (var.ExpensiveMax + var.VeryExpensiveMin) / 2 }}
+
+{{ var.VeryExpensiveMin }}
+{{ var.VeryExpensiveMax }}

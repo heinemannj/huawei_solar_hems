@@ -1,0 +1,59 @@
+type: custom:apexcharts-card
+config_templates: pv_solar_forecast_chart
+header:
+  show: false
+apex_config:
+  chart:
+    height: 250px
+graph_span: 3d
+series:
+  - entity: sensor.batteries_state_of_capacity
+    name: Bat-SoC
+    float_precision: 0
+    type: line
+    color: "#f06292"
+    opacity: 0.6
+    stroke_width: 0.8
+    yaxis_id: capacity
+    unit: "%"
+    group_by:
+      func: last
+      duration: 5m
+  - entity: sensor.house_consumption_power
+    name: Haus
+    type: line
+    color: MediumAquaMarine
+    opacity: 0.8
+    stroke_width: 0.8
+    transform: return x/1000;
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.inverter_input_power
+    name: Solar
+    color: "#ff9800"
+    opacity: 0.4
+    transform: return x/1000;
+    group_by:
+      func: avg
+      duration: 5m
+  - entity: sensor.solcast_pv_forecast_prognose_heute
+    name: Forecast D1
+    extend_to: false
+    show:
+      legend_value: false
+    data_generator: |
+      return entity.attributes.detailedForecast.map((entry) => {
+        return [new Date(entry.period_start), entry.pv_estimate];
+      });
+  - entity: sensor.solcast_pv_forecast_prognose_fur_morgen
+    name: Forecast D2
+    extend_to: false
+    show:
+      legend_value: false
+    data_generator: |
+      return entity.attributes.detailedForecast.map((entry) => {
+        return [new Date(entry.period_start), entry.pv_estimate];
+      });
+card_mod:
+  class: solar-forecast-chart

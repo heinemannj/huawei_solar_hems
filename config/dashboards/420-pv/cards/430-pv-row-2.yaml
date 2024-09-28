@@ -1,0 +1,32 @@
+type: custom:apexcharts-card
+config_templates: pv_diagnostic_chart
+header:
+  title: Power Flows (6h)
+apex_config:
+  chart:
+    height: 175px
+all_series_config:
+  opacity: 0.1
+  yaxis_id: watts
+graph_span: 6h
+series:
+  - entity: sensor.inverter_input_power
+    name: Inv-In
+    color: "#ff9800"
+  - entity: sensor.inverter_active_power
+    name: Inv-Out
+    color: yellow
+  - entity: sensor.batteries_charge_power
+    name: Bat-In
+    color: "#f06292"
+  - entity: sensor.batteries_discharge_power
+    name: Bat-Out
+    color: "#4db6ac"
+  - entity: sensor.power_meter_active_power
+    name: Grid-In
+    transform: return -Math.min(0,x);
+    color: "#488fc2"
+  - entity: sensor.power_meter_active_power
+    name: Grid-Out
+    transform: return Math.max(0,x);
+    color: "#a280db"

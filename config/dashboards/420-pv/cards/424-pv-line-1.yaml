@@ -1,0 +1,88 @@
+type: custom:layout-card
+layout_type: custom:grid-layout
+layout:
+  grid-template-columns: 7% 15.5% 15.5% 15.5% 15.5% 15.5% 15.5%
+  margin: "0px 0px 0px 0px;"
+cards:
+  - type: custom:mushroom-title-card
+    title: Tibber
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_prices
+    primary: Electricity spot price
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_prices', 'current') %}
+      {{ current.level }}
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_prices
+    primary: Electricity spot price
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_prices', 'current') %}
+      {{ (current.total|float(0) * 100)|round(3) }} ct/kWh (Total)
+
+      {{ (current.energy|float(0) * 100)|round(3) }} ct/kWh (Energy)
+
+      {{ (current.tax|float(0) * 100)|round(3) }} ct/kWh (Tax+VAT)
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_hourly_cost_total
+    primary: "Actual hour"
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_hourly_cost_total', 'nodes') %}
+      {{ current[-1].totalCost|round(3, "ceil", 0) }} € (Total)
+
+      {{ current[-1].cost|round(3, "ceil", 0) }} € (Energy+Tax+VAT)
+
+      {{ current[-1].totalFee|round(3, "ceil", 0) }} € (Fee+VAT)
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_daily_cost_total
+    primary: "Today"
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_daily_cost_total', 'nodes') %}
+      {{ current[-1].totalCost|round(2, "ceil", 0) }} € (Total)
+
+      {{ current[-1].cost|round(2, "ceil", 0) }} € (Energy+Tax+VAT)
+
+      {{ current[-1].totalFee|round(2, "ceil", 0) }} € (Fee+VAT)
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_monthly_cost_total
+    primary: "Actual month"
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_monthly_cost_total', 'nodes') %}
+      {{ current[-1].totalCost|round(2, "ceil", 0) }} € (Total)
+
+      {{ current[-1].cost|round(2, "ceil", 0) }} € (Energy+Tax+VAT)
+
+      {{ current[-1].totalFee|round(2, "ceil", 0) }} € (Fee+VAT)
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+  - type: custom:mushroom-template-card
+    entity: sensor.tibber_yearly_cost_total
+    primary: "Actual year"
+    secondary: >-
+      {% set current = state_attr('sensor.tibber_yearly_cost_total', 'nodes') %}
+      {{ current[-1].totalCost|round(2, "ceil", 0) }} € (Total)
+
+      {{ current[-1].cost|round(2, "ceil", 0) }} € (Energy+Tax+VAT)
+
+      {{ current[-1].totalFee|round(2, "ceil", 0) }} € (Fee+VAT)
+    icon: mdi:currency-eur
+    multiline_secondary: true
+    tap_action:
+      action: more-info

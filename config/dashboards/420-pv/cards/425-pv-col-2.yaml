@@ -1,0 +1,94 @@
+type: vertical-stack
+cards:
+  - type: custom:apexcharts-card
+    config_templates: pv_diagnostic_chart
+    header:
+      title: Power Flows (24h)
+    all_series_config:
+      opacity: 0.3
+      stroke_width: 0
+      yaxis_id: watts
+    series:
+      - entity: sensor.batteries_state_of_capacity
+        name: Bat-SoC
+        type: line
+        color: "#f06292"
+        opacity: 0.6
+        stroke_width: 0.8
+        yaxis_id: capacity
+        unit: "%"
+        group_by:
+          func: last
+          duration: 5m
+      - entity: sensor.inverter_input_power
+        name: Inv-In
+        color: "#ff9800"
+      - entity: sensor.inverter_active_power
+        name: Inv-Out
+        color: grey
+      - entity: sensor.batteries_charge_power
+        name: Bat-In
+        color: "#f06292"
+      - entity: sensor.batteries_discharge_power
+        name: Bat-Out
+        color: "#4db6ac"
+      - entity: sensor.power_meter_active_power
+        name: Grid-In
+        transform: return -Math.min(0,x);
+        color: "#488fc2"
+      - entity: sensor.power_meter_active_power
+        name: Grid-Out
+        transform: return Math.max(0,x);
+        color: "#a280db"
+  - type: custom:apexcharts-card
+    config_templates: pv_diagnostic_chart
+    header:
+      title: Inverter - Loss (24h)
+    all_series_config:
+      type: line
+      yaxis_id: kWh
+      float_precision: 3
+      group_by:
+        func: last
+        duration: 5m
+        fill: last
+    graph_span: 24h
+    series:
+      - entity: sensor.inverter_loss_daily
+        name: Inv-Total
+        color: grey
+      - entity: sensor.batteries_charge_loss_daily
+        name: Bat-In
+        color: "#f06292"
+      - entity: sensor.batteries_discharge_loss_daily
+        name: Bat-Out
+        color: "#4db6ac"
+  - type: custom:apexcharts-card
+    config_templates: pv_diagnostic_chart
+    header:
+      title: PV Modules/Strings - Solar Production (24h)
+    series:
+      - entity: sensor.inverter_pv_1_voltage
+        name: PV-1
+        float_precision: 1
+        type: line
+        yaxis_id: voltage
+        color: orange
+      - entity: sensor.inverter_pv_2_voltage
+        name: PV-2
+        float_precision: 1
+        type: line
+        yaxis_id: voltage
+        color: green
+      - entity: sensor.inverter_pv_1_current
+        name: PV-1
+        float_precision: 2
+        type: line
+        yaxis_id: current
+        color: yellow
+      - entity: sensor.inverter_pv_2_current
+        name: PV-2
+        float_precision: 2
+        type: line
+        yaxis_id: current
+        color: blue

@@ -1,0 +1,7 @@
+type: history-graph
+entities:
+  - entity: sensor.sg_ready_mode
+    name: Heat mode
+hours_to_show: 48
+logarithmic_scale: false
+show_names: true
