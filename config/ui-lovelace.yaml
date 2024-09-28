@@ -1,0 +1,15 @@
+# ui-lovelace.yaml
+#
+# UI managed dashboards
+#
+mode: storage
+#
+# Additional YAML dashboards
+#
+dashboards:
+  420-pv-yaml:
+    mode: yaml
+    title: 420_PV
+    icon: mdi:solar-power-variant
+    show_in_sidebar: true
+    filename: dashboards/420-pv/index.yaml
