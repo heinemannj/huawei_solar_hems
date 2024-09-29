@@ -82,11 +82,16 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 |||
 |:---|:---:|
 |**Power distribution**|<img src="assets/em-power-flows.png" width=400>|
-|- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker|<img src="assets/em-meter-cabinet.png" width=400>|
+|- AC-Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker|<img src="assets/em-meter-cabinet.png" width=400>|
+||<img src="assets/em-sun2000-cabeling.png" width=400>|
+||<img src="assets/em-meter-cabinet-label.png" width=400>|
 |**Energy measurement**|<img src="assets/em-energy-flows.png" width=400>|
+||<img src="assets/em-sun2000-communication.png" width=400>|
 |- Smart meter<br>&#160;&#160;<sup>HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
+||<img src="assets/em-dtsu666-h-cabeling.png" width=400>|
 |- Tibber Pulse|<img src="assets/em-tibber-pulse.png" width=400>|
 |- Three-phase energy meters<br>&#160;&#160;<sup>Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
+||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
 
 ### FusionSolar PV
 
