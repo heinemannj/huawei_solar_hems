@@ -25,7 +25,7 @@ For an overview and a more detailed description of the custom sensors and automa
   - [Tibber prices](#tibber-prices)
   - [Tibber consumption and costs](#tibber-consumption-and-costs)
 - [Installation](#installation)
-- [Inverter polling frequency](#inverter-polling-frequency)
+- [System setup](#system-setup)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Additional HEMS features
@@ -73,17 +73,24 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 
 * **Step by step**.
 
-## Notes
+## System setup
 
-* Alpha version at this stage.
-  * Especially the persistant template sensors and all automations should be validated by the community.
-  * In my environment [Wife Acceptance Factor](https://en.wikipedia.org/wiki/Wife_acceptance_factor) (WAF) is strongly increasing - **Save your money to have more fun** ;-)
-  * ...
-* No support by "Huawei Solar", "Solcast", "EPEXSpot" intergartions and EMHASS Add-on.
-* Not for HA beginners, but hopefully our **community will help** ...
-* **Do the needful** - **Safe our earth**!
+### House load
 
-The provided custom sensors are based on a setup with one inverter and two batteries:
+|||
+|:---|:---:|
+|**Power distribution**|<img src="assets/em-power-flows.png" width=400>|
+|- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker|<img src="assets/em-meter-cabinet.png" width=400>|
+|**Energy measurement**|<img src="assets/em-energy-flows.png" width=400>|
+|- Smart meter<br>&#160;&#160;<sup>HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
+|- Tibber Pulse|<img src="assets/em-tibber-pulse.png" width=400>|
+|- Three-phase energy meters<br>&#160;&#160;<sup>Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
+
+### FusionSolar PV
+
+The provided custom sensors are based on a setup with **one** Huawei Smart Energy Controller (**Inverter**) and **multiple** Huawei Smart String ESS (**Batteries**):
+
+<img src="assets/em-system-setup.png">
 
 - Inverter Type: SUN2000-6KTL-M1 (High Current)
 - Inverter Firmware version: V100R001C00SPC165
@@ -98,9 +105,18 @@ The provided custom sensors are based on a setup with one inverter and two batte
 - Battery-1: LUNA2000-5KW-C0
 - Battery-2: LUNA2000-10KW-C0
 - Batteries Firmware version: V100R002C00SPC624
-- Huawei Solar integration version: latest
+- Connect to the inverter: Via the `SUN200-<serial_no> WiFi`
 
 This is reflected throughout this README and the [Huawei Solar HEMS Wiki Pages](https://github.com/heinemannj/huawei_solar_hems/wiki).
+
+## Notes
+
+* Alpha version at this stage.
+  * Especially the persistant template sensors and all automations should be validated by the community.
+  * Not for HA beginners, but hopefully our **community will help** ...
+* In my environment [Wife Acceptance Factor](https://en.wikipedia.org/wiki/Wife_acceptance_factor) (WAF) is strongly increasing - **Save your money to have more fun** ;-)
+* **Save our earth** and **protect** next generations of **our children**!
+* **Think long term** and **do the needful**.
 
 Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://github.com/wlcrs/huawei_solar/discussions/355)
 
