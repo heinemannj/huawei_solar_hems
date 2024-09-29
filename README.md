@@ -26,6 +26,8 @@ For an overview and a more detailed description of the custom sensors and automa
   - [Tibber consumption and costs](#tibber-consumption-and-costs)
 - [Installation](#installation)
 - [System setup](#system-setup)
+  - [House load](#house-load)
+  - [FusionSolar PV](#fusionsolar-pv)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Additional HEMS features
