@@ -28,6 +28,7 @@ For an overview and a more detailed description of the custom sensors and automa
 - [System setup](#system-setup)
   - [House load](#house-load)
   - [FusionSolar PV](#fusionsolar-pv)
+    - [Example setup](#example-setup)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Additional HEMS features
@@ -99,7 +100,9 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 
 <img src="assets/em-system-setup.png">
 
-- Inverter Type: SUN2000-6KTL-M1 (High Current)
+#### Example setup
+
+- **Inverter** Type: `SUN2000-6KTL-M1 (High Current)`
 - Inverter Firmware version: V100R001C00SPC165
 - MBUS Firmware version: V100R001C00SPC335
 - PV1: 3900 Wp
@@ -107,14 +110,12 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 - sDongle Type: sDongleA-05 (WiFi / Ethernet)
 - sDongle Connectivitiy: Ethernet
 - sDongle Firmware: V200R022C10SPC118
-- Power meter present: three phase
+- **Power meter** present: `Three phase`
 - Optimizers Present: No
 - Battery-1: LUNA2000-5KW-C0
 - Battery-2: LUNA2000-10KW-C0
 - Batteries Firmware version: V100R002C00SPC624
-- Connect to the inverter: Via the `SUN200-<serial_no> WiFi`
-
-This is reflected throughout this README and the [Huawei Solar HEMS Wiki Pages](https://github.com/heinemannj/huawei_solar_hems/wiki).
+- **Connect** to the inverter: Via the `SUN200-<serial_no> WiFi`
 
 ## Notes
 
