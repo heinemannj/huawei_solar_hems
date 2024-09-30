@@ -82,7 +82,7 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 |||
 |:---|:---:|
 |**Power distribution**|<img src="assets/em-power-flows.png" width=400>|
-|- AC-Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker|<img src="assets/em-meter-cabinet.png" width=400>|
+|- AC-Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>[Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
 ||<img src="assets/em-sun2000-cabeling.png" width=400>|
 ||<img src="assets/em-meter-cabinet-label.png" width=400>|
 |**Energy measurement**|<img src="assets/em-energy-flows.png" width=400>|
