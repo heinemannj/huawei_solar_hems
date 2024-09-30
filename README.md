@@ -129,50 +129,22 @@ Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://gi
 
 - Private information is stored in secrets.yaml (not uploaded).
 
----
-
 ## FAQ - Troubleshooting
 
-**At this time just a copy of** [Huawei Solar FAQ](https://github.com/wlcrs/huawei_solar#faq---troubleshooting).
-<br>**To be adjusted in short time** ;-)
+**Q**: What are the minimum hardware requirements for the Home Assistant (HA) server in relation to HEMS features?
+
+**A**: I started my HEMS development journey on a Raspberry Pi 4b with 8GB RAM. This hardware level is sufficient for testing purposes. For production, it is highly recommended to upgrade your HA to a [Mini PC server](https://github.com/heinemannj/huawei_solar_hems/wiki/Environment#mini-pc-server). 
 
 ---
 
-**Q**: Why do I get the error "Connection succeeded, but failed to read from inverter." while setting up this integration?
+**Q**: I don't use Tibber. Can I use the other HEMS functions?
 
-**A**: While the integration was able to setup the initial connection to the Huawei Inverter, it did not respond to any queries in time. This is either caused by using an invalid slave ID (typically 0 or 1, try both or ask your installer if unsure), or because an other device established a connection with the inverter, causing the integration to lose it's connection
-
----
-
-**Q**: Will the FusionSolar App still work when using this integration?
-
-**A**: The inverter will still send it's data to the Huawei cloud, and you will still be able to see live statistics from your installation in the FusionSolar App. However, if you are using this integration via the network, and you (or your installer) need to use the 'Device commissioning' feature of the app, you will need to disable this integration.
+**A**: Yes you can. Simply comment out Tibber related entries in
+* `<config>/configuration.yaml` and in
+* `<config>/dashboards/420-pv/index.yaml` the line 
+  * `- !include /config/dashboards/420-pv/views/424-pv.yaml`.
 
 ---
-
-<a name="daily-yield"></a>
-
-**Q**: The "Daily Yield" value reported does not match with the value from FusionSolar?
-
-**A**: The "Daily Yield" reported by the inverter is the *output* yield of the inverter, and not the *input* from your solar panels. It therefore includes the yield from discharging the battery, but misses the yield used to charge the battery. FusionSolar computes the "Yield" by combining the values from "Daily Yield", "Battery Day Charge" and "Battery Day Discharge". [More information on the Wiki ...](https://github.com/wlcrs/huawei_solar/wiki/Daily-Solar-Yield)
-
----
-
-<a name="debugging"></a>
-
-**Q**: I can't get this integration to work. What am I doing wrong?
-
-**A**: First make sure that ['Modbus TCP' access is enabled in the settings of your inverter](https://forum.huawei.com/enterprise/en/modbus-tcp-guide/thread/789585-100027). Next, check if the port is correct. Some inverters use port 6607 instead of 502 (this can change for you after a firmware update!). If that doesn't work for you, and you intend to write an issue, make sure you have the relevant logs included. For this integration, you can enable all relevant logs by including the following lines in your `configuration.yaml`:
-
-```yaml
-logger:
-  logs:
-    pymodbus: debug # only include this if you're having connectivity issues
-    huawei_solar: debug
-    homeassistant.components.huawei_solar: debug
-```
-By providing logs directly when creating the issue, you will likely get help much faster.
-
 [commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_hems.svg
 [commits]: https://github.com/heinemannj/huawei_solar_hems/commits/master
 [actions-shield]: https://github.com/heinemannj/huawei_solar_hems/workflows/Home%20Assistant%20CI/badge.svg
