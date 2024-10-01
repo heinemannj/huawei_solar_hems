@@ -26,9 +26,8 @@ For an overview and a more detailed description of the custom sensors and automa
   - [Tibber consumption and costs](#tibber-consumption-and-costs)
 - [Installation](#installation)
 - [System setup](#system-setup)
-  - [House load](#house-load)
   - [FusionSolar PV](#fusionsolar-pv)
-    - [Example setup](#example-setup)
+  - [PV system and House load](#pv-system-and-house-load)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Additional HEMS features
@@ -78,23 +77,6 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 
 ## System setup
 
-### House load
-
-|||
-|:---|:---:|
-|**Power distribution**|<img src="assets/em-power-flows.png" width=400>|
-|- AC-Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>[Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
-||<img src="assets/em-sun2000-cabeling.png" width=400>|
-||<img src="assets/em-meter-cabinet-label.png" width=400>|
-|**Energy measurement**|<img src="assets/em-energy-flows.png" width=400>|
-||<img src="assets/em-sun2000-communication.png" width=400>|
-|- Smart meter<br>&#160;&#160;<sup>HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
-||<img src="assets/em-dtsu666-h-cabeling.png" width=400>|
-|- Tibber Pulse<br><img src="assets/em-tibber-pulse-ir.png" height=60><br><img src="assets/em-tibber-pulse-batteries.png" height=60>|<img src="assets/em-tibber-pulse.png" width=400>|
-|<img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
-|- Three-phase energy meters<br>&#160;&#160;<sup>Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
-||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
-
 ### FusionSolar PV
 
 The provided custom sensors are based on a setup with **one** Huawei Smart Energy Controller (**Inverter**) and **multiple** Huawei Smart String ESS (**Batteries**):
@@ -117,6 +99,29 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 - Battery-2: LUNA2000-10KW-C0
 - Batteries Firmware version: V100R002C00SPC624
 - **Connect** to the inverter: Via the `SUN200-<serial_no> WiFi`
+
+### PV system and House load
+
+|PV system||
+|:---|:---:|
+|**PV strings**|<img src="assets/em-pv-strings.png" width=400>|
+|**Increases the total number of modules per string** to expand to the opposite roof||
+|**PV system**|<img src="assets/em-pv-system.png" width=400>|
+||<img src="assets/em-sun2000-cabeling.png" width=400>|
+|**Power distribution**||
+|**Power flows**|<img src="assets/em-power-flows.png" width=400>|
+|**Wallbox**<br>- Wiring and fuses for future use.||
+|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>[Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
+||<img src="assets/em-meter-cabinet-label.png" width=400>|
+|**Energy measurement**||
+|**Energy flows**|<img src="assets/em-energy-flows.png" width=400>|
+|**Smart meter**<br><sup>- HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
+||<img src="assets/em-dtsu666-h-cabeling.png" width=400>|
+||<img src="assets/em-sun2000-communication.png" width=400>|
+|**Tibber Pulse**<br>- <img src="assets/em-tibber-pulse-ir.png" height=60><br>- <img src="assets/em-tibber-pulse-batteries.png" height=60>|<img src="assets/em-tibber-pulse.png" width=400>|
+|- <img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
+|**Three-phase energy meters**<br><sup>- Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
+||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
 
 ## Notes
 
