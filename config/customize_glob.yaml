@@ -1,0 +1,5 @@
+"sensor.pulsemeter_*_power":
+  templates:
+    icon_color: >
+      if (state > 0) return '#fdd835';
+      return '#44739e';

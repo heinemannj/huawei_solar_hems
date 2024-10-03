@@ -1,0 +1,42 @@
+# Add an entry for each entity that you want to overwrite.
+sensor.air_quality_index_borken:
+  unit_of_measurement: AQI
+sensor.air_quality_index_wesel:
+  unit_of_measurement: AQI
+sensor.ozone_o3_borken:
+  unit_of_measurement: AQI
+sensor.ozone_o3_wesel:
+  unit_of_measurement: AQI
+sensor.particulate_matter_pm25_borken:
+  unit_of_measurement: AQI
+sensor.particulate_matter_pm25_wesel:
+  unit_of_measurement: AQI
+sensor.particulate_matter_pm10_borken:
+  unit_of_measurement: AQI
+sensor.particulate_matter_pm10_wesel:
+  unit_of_measurement: AQI
+sensor.nitrogen_dioxide_no2_borken:
+  unit_of_measurement: AQI
+sensor.nitrogen_dioxide_no2_wesel:
+  unit_of_measurement: AQI
+
+sensor.avia_xpress_silvesterstrasse_53_diesel:
+  entity_picture: "/local/images/fuel-stations/avia.png"
+sensor.freie_tankstelle_alte_dorstener_strasse_20_diesel:
+  entity_picture: "/local/images/fuel-stations/freie-tankstelle.png"
+sensor.raiffeisen_erler_strasse_3_diesel:
+  entity_picture: "/local/images/fuel-stations/raiffeisen.png"
+sensor.shell_freudenbergstr_383_diesel:
+  entity_picture: "/local/images/fuel-stations/shell.png"
+sensor.shell_weseler_str_7_diesel:
+  entity_picture: "/local/images/fuel-stations/shell.png"
+sensor.star_borkener_strasse_87_diesel:
+  entity_picture: "/local/images/fuel-stations/star.png"
+sensor.star_pliesterbecker_strasse_141_diesel:
+  entity_picture: "/local/images/fuel-stations/star.png"
+sensor.star_schmachtendorfer_strasse_125_diesel:
+  entity_picture: "/local/images/fuel-stations/star.png"
+sensor.t_borkener_str_156_diesel:
+  entity_picture: "/local/images/fuel-stations/t.png"
+sensor.westfalen_gahlener_str_105_diesel:
+  entity_picture: "/local/images/fuel-stations/westfalen.png"
