@@ -81,7 +81,9 @@ For [installation](https://github.com/heinemannj/huawei_solar_hems/wiki/Installa
 
 The provided custom sensors are based on a setup with **one** Huawei Smart Energy Controller (**Inverter**) and **multiple** Huawei Smart String ESS (**Batteries**):
 
-<img src="assets/em-system-setup.png">
+| Dashboard: Level 5                     |
+|:--------------------------------------:|
+| ![Dashboard-5](assets/em-system-setup.png) |
 
 ### PV system and House load
 
