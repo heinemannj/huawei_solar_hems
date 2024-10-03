@@ -83,38 +83,23 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 
 <img src="assets/em-system-setup.png">
 
-#### Example setup
-
-- **Inverter** Type: `SUN2000-6KTL-M1 (High Current)`
-- Inverter Firmware version: V100R001C00SPC165
-- MBUS Firmware version: V100R001C00SPC335
-- sDongle Type: sDongleA-05 (WiFi / Ethernet)
-- sDongle Connectivitiy: Ethernet
-- sDongle Firmware: V200R022C10SPC118
-- **Power meter** present: `Three phase`
-- Battery-1: LUNA2000-5KW-C0
-- Battery-2: LUNA2000-10KW-C0
-- Batteries Firmware version: V100R002C00SPC624
-- **Connect** to the inverter: Via the `SUN200-<serial_no> WiFi`
-
 ### PV system and House load
 
 |PV system||
 |:---|:---:|
-|**PV strings**<br>- PV1: 3900 Wp<br>- PV2: 3900 Wp<br>- Optimizers: No<br>Improvement: Use optimizers for all modules.|<img src="assets/em-pv-strings.png" width=400>|
-|**Increases the total number of modules per string** for expand to the opposite side of roof.||
-|**PV system**|<img src="assets/em-pv-system.png" width=400>|
+|**PV strings**<br>- PV1: 3900 Wp<br>- PV2: 3900 Wp<br>Vollbelegung<br>- Optimizers: No<br>Improvement: Use optimizers for all modules.<br>**Increases the total number of modules per string** for expand to the opposite side of roof.|<img src="assets/em-pv-strings.png" width=400>|
+|**Inverter**<br>- Type: `SUN2000-6KTL-M1 (High Current)`<br>- Firmware: V100R001C00SPC165<br>- MBUS Firmware: V100R001C00SPC335<br>- **Connect** to inverter: Via `SUN2000-<serial_no> WiFi`<br>**sDongle**<br>- Type: sDongleA-05 (WiFi / Ethernet)<br>- Connectivitiy: Ethernet<br>- Firmware: V200R022C10SPC118<br>**Batteries**<br>- Battery-1: LUNA2000-5KW-C0<br>- Battery-2: LUNA2000-10KW-C0<br>- Firmware : V100R002C00SPC624<br>**Power meter**<br>- Type: `Three phase`|<img src="assets/em-pv-system.png" width=400>|
 ||<img src="assets/em-sun2000-cabeling.png" width=400>|
 |**Power distribution**||
 |**Power flows**|<img src="assets/em-power-flows.png" width=400>|
 |**Wallbox**<br>- Wiring and fuses for future use.||
-|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>[Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
+|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>- [Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
 ||<img src="assets/em-meter-cabinet-label.png" width=400>|
 |**Energy measurement**||
 |**Energy flows**|<img src="assets/em-energy-flows.png" width=400>|
 |**Smart meter**<br><sup>- HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
 ||<img src="assets/em-dtsu666-h-cabeling.png" width=400>|
-||<img src="assets/em-sun2000-communication.png" width=400>|
+|**Connect** to inverters MBUS: Via `SUN2000-<serial_no> WiFi`|<img src="assets/em-sun2000-communication.png" width=400>|
 |**Tibber Pulse**<br>- <img src="assets/em-tibber-pulse-ir.png" height=60><br>- <img src="assets/em-tibber-pulse-batteries.png" height=60>|<img src="assets/em-tibber-pulse.png" width=400>|
 |- <img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
 |**Three-phase energy meters**<br><sup>- Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
