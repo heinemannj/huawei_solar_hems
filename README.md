@@ -88,13 +88,10 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 - **Inverter** Type: `SUN2000-6KTL-M1 (High Current)`
 - Inverter Firmware version: V100R001C00SPC165
 - MBUS Firmware version: V100R001C00SPC335
-- PV1: 3900 Wp
-- PV2: 3900 Wp
 - sDongle Type: sDongleA-05 (WiFi / Ethernet)
 - sDongle Connectivitiy: Ethernet
 - sDongle Firmware: V200R022C10SPC118
 - **Power meter** present: `Three phase`
-- Optimizers Present: No
 - Battery-1: LUNA2000-5KW-C0
 - Battery-2: LUNA2000-10KW-C0
 - Batteries Firmware version: V100R002C00SPC624
@@ -104,8 +101,8 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 
 |PV system||
 |:---|:---:|
-|**PV strings**|<img src="assets/em-pv-strings.png" width=400>|
-|**Increases the total number of modules per string** to expand to the opposite roof||
+|**PV strings**<br>- PV1: 3900 Wp<br>- PV2: 3900 Wp<br>- Optimizers: No<br>Improvement: Use optimizers for all modules.|<img src="assets/em-pv-strings.png" width=400>|
+|**Increases the total number of modules per string** for expand to the opposite side of roof.||
 |**PV system**|<img src="assets/em-pv-system.png" width=400>|
 ||<img src="assets/em-sun2000-cabeling.png" width=400>|
 |**Power distribution**||
