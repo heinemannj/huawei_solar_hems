@@ -88,12 +88,11 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |PV system||
 |:---|:---:|
 |**PV strings**<br>- PV1: 3900 Wp<br>- PV2: 3900 Wp<br>Vollbelegung<br>- Optimizers: No<br>Improvement: Use optimizers for all modules.<br>**Increases the total number of modules per string** for expand to the opposite side of roof.|<img src="assets/em-pv-strings.png" width=400>|
-|**Inverter**<br>- Type: `SUN2000-6KTL-M1 (High Current)`<br>- Firmware: V100R001C00SPC165<br>- MBUS Firmware: V100R001C00SPC335<br>- **Connect** to inverter: Via `SUN2000-<serial_no> WiFi`<br>**sDongle**<br>- Type: sDongleA-05 (WiFi / Ethernet)<br>- Connectivitiy: Ethernet<br>- Firmware: V200R022C10SPC118<br>**Batteries**<br>- Battery-1: LUNA2000-5KW-C0<br>- Battery-2: LUNA2000-10KW-C0<br>- Firmware : V100R002C00SPC624<br>**Power meter**<br>- Type: `Three phase`|<img src="assets/em-pv-system.png" width=400>|
-||<img src="assets/em-sun2000-cabeling.png" width=400>|
+|**Inverter**<br>- Type: `SUN2000-6KTL-M1 (High Current)`<br>- Firmware: V100R001C00SPC165<br>- MBUS Firmware: V100R001C00SPC335<br>- **Connect** to inverter: Via `SUN2000-<serial_no> WiFi`<br><br>**Batteries**<br>- Battery-1: LUNA2000-5KW-C0<br>- Battery-2: LUNA2000-10KW-C0<br>- Firmware : V100R002C00SPC624|<img src="assets/em-pv-system.png" width=400>|
+|**Power meter**<br>- Type: `Three phase`<br><br>**sDongle**<br>- Type: sDongleA-05 (WiFi / Ethernet)<br>- Connectivitiy: `Ethernet`<br>- Firmware: V200R022C10SPC118<br><br>|<img src="assets/em-sun2000-cabeling.png" width=400>|
 |**Power distribution**||
 |**Power flows**|<img src="assets/em-power-flows.png" width=400>|
-|**Wallbox**<br>- Wiring and fuses for future use.||
-|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>- [Documentation](assets/meter-cabinet-documentation.pdf)|<img src="assets/em-meter-cabinet.png" width=400>|
+|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>- [Documentation](assets/meter-cabinet-documentation.pdf)<br><br>**Wallbox**<br>- Wiring and fuses for future use.|<img src="assets/em-meter-cabinet.png" width=400>|
 ||<img src="assets/em-meter-cabinet-label.png" width=400>|
 |**Energy measurement**||
 |**Energy flows**|<img src="assets/em-energy-flows.png" width=400>|
