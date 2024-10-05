@@ -510,7 +510,7 @@ entities:
           }
     type: custom:fold-entity-row
     head:
-      entity: automation.solcast_pv_forecast_api_update_2
+      entity: automation.solcast_pv_forecast_api_update
       name: Solcast PV forecast
       secondary_info: last-changed
   - entities:
