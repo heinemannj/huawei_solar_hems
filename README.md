@@ -27,7 +27,7 @@ For an overview and a more detailed description of the custom sensors and automa
 - [Installation](#installation)
 - [System setup](#system-setup)
   - [FusionSolar PV](#fusionsolar-pv)
-  - [PV system and House load](#pv-system-and-house-load)
+  - [EM system and House load](#em-system-and-house-load)
 - [FAQ - Troubleshooting](#faq---troubleshooting)
 
 ## Additional HEMS features
@@ -85,7 +85,7 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |:--------------------------------------:|
 | ![Dashboard-5](assets/em-system-setup.png) |
 
-### PV system and House load
+### EM system and House load
 
 |PV system||
 |:---|:---:|
@@ -106,6 +106,9 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |- <img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
 |**Three-phase energy meters**<br><sup>- Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
 ||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
+|**Energy management**||
+|**Smart Grid ready controller**<br><sup>- Shelly Plus 1<br>&#160;&#160;406_WP-SG-Ready-EVU<br>&#160;&#160;406_WP-SG-Ready-PV-MA</sup><br><br>**eBUS controller**<br><sup>- [eBUS Adapter Shield v5](https://adapter.ebusd.eu/)|<img src="assets/em-sg-ready-ebus-controller-1.png" width=400>|
+||<img src="assets/em-sg-ready-ebus-controller-2.png" width=400>|
 
 ## Notes
 
