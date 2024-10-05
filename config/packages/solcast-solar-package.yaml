@@ -2,7 +2,32 @@
 #
 # solcast-solar-package.yaml
 #
+# -automation.solcast_pv_forecast_api_update
+#
 # - sensor.solcast_pv_forecast_api_update
+#
+# ########## Start: Automation ##########
+#
+automation solcast:
+- id: 'solcast_pv_forecast_api_update'
+  alias: 'SolCast PV Forecast - API Update'
+  description: 'Update the SolCast PV Forecast data during sunrise and sunset.'
+  triggers:
+  - trigger: time_pattern
+    minutes: /3
+  conditions:
+  - condition: template
+    value_template: >-
+      {% set next_poll_time = states('sensor.solcast_pv_forecast_api_update') %}
+      {{ now() >= next_poll_time|as_datetime|as_local }}
+  actions:
+  - delay:
+      seconds: '{{ range(7, 67)|random|int }}'
+  - data: {}
+    action: solcast_solar.update_forecasts
+  mode: single
+#
+# ########## End: Automation ##########
 #
 # ########## Start: Template Sensor ##########
 #
@@ -41,7 +66,9 @@ template:
           last_updated: "{{ t }}"
 #
 # ########## End: Template Sensor ##########
-
+#
+# ########## Start: Rest commands ##########
+#
 #rest:
 #  - resource: https://api.solcast.com.au/rooftop_sites/***YOUR-Side-ID***/forecasts?format=json&api_key=***Your-API-Key***&hours=120
 #    scan_interval: '01:30:00'
@@ -74,3 +101,5 @@ template:
 #        device_class: power
 #        state_class: measurement
 #        icon: mdi:solar-power
+#
+# ########## End: Rest commands ##########
