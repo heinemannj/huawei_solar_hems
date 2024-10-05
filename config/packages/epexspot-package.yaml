@@ -2,6 +2,8 @@
 #
 # epexspot-package.yaml
 #
+# - automation.epex_spot_fetch_data
+#
 # - binary_sensor.epex_spot_data_update
 #
 # - sensor.hwc_charge_interval_night
@@ -11,6 +13,31 @@
 # - sensor.epex_spot_data_price
 # - sensor.epex_spot_data_net_price
 # - sensor.epex_spot_data_quantile
+#
+# ########## Start: Automation ##########
+#
+automation epexspot:
+  - id: 'epex_spot_fetch_data'
+    alias: 'EPEX Spot - Fetch data'
+    description: 'EPEX Spot: Fetch data from all services or a specific service.'
+    triggers:
+    - trigger: time_pattern
+      minutes: /3
+    conditions:
+    - condition: state
+      entity_id: binary_sensor.epex_spot_data_update
+      state: 'off'
+    - condition: template
+      value_template: >-
+        {{ now() >= state_attr('binary_sensor.epex_spot_data_update', 'next_poll_time')|as_datetime|as_local }}
+    actions:
+    - delay:
+        seconds: '{{ range(7, 67)|random|int }}'
+    - data: {}
+      action: epex_spot.fetch_data
+    mode: single
+#
+# ########## End: Automation ##########
 #
 # ########## Start: Template Binary Sensors and Sensors ##########
 #
