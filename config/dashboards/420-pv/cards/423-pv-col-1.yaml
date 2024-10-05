@@ -40,7 +40,7 @@ entities:
             name: SOC
             format: precision0
           - entity: sensor.batteries_charge_discharge_power
-            name: ChargeDischarge
+            name: Charge
             format: precision0
         type: custom:multiple-entity-row
         secondary_info: last-changed
@@ -764,7 +764,7 @@ entities:
           }
     type: custom:fold-entity-row
     head:
-      entity: automation.huawei_solar_batteries_maximum_charging_power
+      entity: automation.huawei_solar_batteries_charge_discharge_management
       name: Batteries Charge-Discharge automation
       secondary_info: last-triggered
   - entities:
