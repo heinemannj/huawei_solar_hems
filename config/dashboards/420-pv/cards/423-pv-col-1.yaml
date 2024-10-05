@@ -40,7 +40,7 @@ entities:
             name: SOC
             format: precision0
           - entity: sensor.batteries_charge_discharge_power
-            name: Charge
+            name: ChargeDischarge
             format: precision0
         type: custom:multiple-entity-row
         secondary_info: last-changed
@@ -54,7 +54,7 @@ entities:
               --paper-item-icon-color: #fdd835;
             {% endif %}
           }
-      - entity: automation.inverter_fan_control
+      - entity: automation.huawei_solar_inverter_ventilation_control
         name: Ventilation
         entities:
           - entity: sensor.battery_2_temperature
@@ -77,7 +77,7 @@ entities:
         show_state: true
         state_color: true
         toggle: false
-      - entity: automation.heating_room_venting_control
+      - entity: automation.huawei_solar_room_venting_control
         name: Venting
         entities:
           - entity: sensor.hm_tc_it_wm_w_eu_oeq1676193_humidity
@@ -764,7 +764,7 @@ entities:
           }
     type: custom:fold-entity-row
     head:
-      entity: automation.huawei_solar_batteries_charge_discharge_management
+      entity: automation.huawei_solar_batteries_charge_discharge_control
       name: Batteries Charge-Discharge automation
       secondary_info: last-triggered
   - entities:
@@ -889,6 +889,6 @@ entities:
         show_state: true
     type: custom:fold-entity-row
     head:
-      entity: automation.heating_pump_sg_ready_evu_lock
+      entity: automation.heating_pump_sg_ready_controller
       name: Heat Pump - SG-Ready controller
       secondary_info: last-triggered
