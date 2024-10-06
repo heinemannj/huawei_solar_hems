@@ -20,16 +20,15 @@ automation epexspot:
   - id: 'epex_spot_fetch_data'
     alias: 'EPEX Spot - Fetch data'
     description: 'EPEX Spot: Fetch data from all services or a specific service.'
+    variables:
+      state: "{{ states('binary_sensor.epex_spot_data_update') }}"
+      next_poll_time: "{{ state_attr('binary_sensor.epex_spot_data_update', 'next_poll_time') }}"
     triggers:
     - trigger: time_pattern
       minutes: /3
     conditions:
-    - condition: state
-      entity_id: binary_sensor.epex_spot_data_update
-      state: 'off'
     - condition: template
-      value_template: >-
-        {{ now() >= state_attr('binary_sensor.epex_spot_data_update', 'next_poll_time')|as_datetime|as_local }}
+      value_template: "{{ now() >= next_poll_time|as_datetime|as_local and state == 'off' }}"
     actions:
     - delay:
         seconds: '{{ range(7, 67)|random|int }}'
