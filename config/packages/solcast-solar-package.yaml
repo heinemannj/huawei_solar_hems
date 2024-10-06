@@ -2,30 +2,30 @@
 #
 # solcast-solar-package.yaml
 #
-# -automation.solcast_pv_forecast_api_update
+# - automation.solcast_pv_forecast_api_update
 #
 # - sensor.solcast_pv_forecast_api_update
 #
 # ########## Start: Automation ##########
 #
 automation solcast:
-- id: 'solcast_pv_forecast_api_update'
-  alias: 'SolCast PV Forecast - API Update'
-  description: 'Update the SolCast PV Forecast data during sunrise and sunset.'
-  triggers:
-  - trigger: time_pattern
-    minutes: /3
-  conditions:
-  - condition: template
-    value_template: >-
-      {% set next_poll_time = states('sensor.solcast_pv_forecast_api_update') %}
-      {{ now() >= next_poll_time|as_datetime|as_local }}
-  actions:
-  - delay:
-      seconds: '{{ range(7, 67)|random|int }}'
-  - data: {}
-    action: solcast_solar.update_forecasts
-  mode: single
+  - id: 'solcast_pv_forecast_api_update'
+    alias: 'SolCast PV Forecast - API Update'
+    description: 'Update the SolCast PV Forecast data during sunrise and sunset.'
+    variables:
+      next_poll_time: "{{ states('sensor.solcast_pv_forecast_api_update') }}"
+    triggers:
+    - trigger: time_pattern
+      minutes: /3
+    conditions:
+    - condition: template
+      value_template: "{{ now() >= next_poll_time|as_datetime|as_local }}"
+    actions:
+    - delay:
+        seconds: '{{ range(7, 67)|random|int }}'
+    - data: {}
+      action: solcast_solar.update_forecasts
+    mode: single
 #
 # ########## End: Automation ##########
 #
