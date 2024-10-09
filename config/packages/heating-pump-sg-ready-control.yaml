@@ -1,0 +1,72 @@
+# ########## Heating Pump - SG-Ready controller ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/heating-pump-sg-ready-control.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
+#
+# - sensor.sg_ready_mode
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+template:
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+          epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
+          grid_active_power: "{{ states(var.grid_active_power)|float(0) }}"
+          EVU: "{{ states(var.sg_ready_evu) }}"
+          PV: "{{ states(var.sg_ready_pv) }}"
+    sensor:
+      #
+      # SG-Ready mode
+      #
+      # - for SG-Ready controller/automation
+      #
+      - name: "sg-ready-mode"
+        unique_id: sg-ready-mode
+        state: >-
+          {% if EVU == 'off' and PV == 'off' %}
+            {{ 'Normal' }}
+          {% elif EVU == 'on' and PV == 'off' %}
+            {{ 'EVU lock' }}
+          {% elif EVU == 'off' and PV == 'on' %}
+            {{ 'Recommendation' }}
+          {% elif EVU == 'on' and PV == 'on' %}
+            {{ 'Turn On' }}
+          {% elif EVU == 'off' and PV == 'off' %}
+            {{ 'Normal' }}
+          {% else %}
+            {{ 'Unavailable' }}
+          {% endif %}
+        attributes:
+          mode: >-
+            {% if epexspot_quantile|float(0) >= var.epexspot_quantile_setpoint_high|float(0)
+                and grid_active_power <= 1000 %}
+              {{ 'EVU lock' }}
+            {% else %}
+              {{ 'Normal' }}
+            {% endif %}
+          evu_lock: "{{ EVU }}"
+          pv_ready: "{{ PV }}"
+          last_updated: "{{ t }}"
+#
+# ########## End: Template Sensors ##########
