@@ -1,6 +1,21 @@
-# ########## EPEX Spot Data add-on ##########
+# ########## EPEX Spot Integration ##########
 #
-# epexspot-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/epexspot.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
 #
 # - automation.epex_spot_fetch_data
 #
@@ -38,7 +53,7 @@ automation epexspot:
 #
 # ########## End: Automation ##########
 #
-# ########## Start: Template Binary Sensors and Sensors ##########
+# ########## Start: Persistent Template Sensors ##########
 #
 template:
   - trigger:
@@ -211,4 +226,4 @@ template:
           sensor_active: "{{ sensor_active }}"
           last_updated: "{{ now().isoformat() }}"
 #
-# ########## End: Template Sensor ##########
+# ########## End: Persistent Template Sensors ##########
