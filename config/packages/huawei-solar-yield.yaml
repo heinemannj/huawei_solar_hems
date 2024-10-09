@@ -1,24 +1,4 @@
-# ########## Huawei Solar Integration ##########
-#
-# huawei-solar-yield-package.yaml
-#
-# - sensor.inverter_input_power_corrected
-# - sensor.solar_yield
-# - sensor.solar_yield_daily
-#
-# - sensor.solar_yield_without_correction
-# - sensor.solar_yield_without_correction_daily
-#
-# - sensor.solar_yield_quarter_hourly
-#
-# - sensor.solar_yield_hourly
-#
-# ########## Setting for UPDATE_INTERVAL in const.py ##########
-#
-# UPDATE_INTERVAL = timedelta(seconds=1)
-#
-# ########## Start: Persistent Template Sensors ##########
-#
+
 template:
   - sensor:
       #
