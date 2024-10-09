@@ -1,6 +1,58 @@
-# ########## Huawei Solar Integration ##########
+# ########## Huawei Solar Integration - Energy flow card ##########
 #
-# huawei-solar-energy-flow-card-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/huawei-solar-energy-flow-card.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Setting for Huawei Solar Integration UPDATE_INTERVAL in const.py ##########
+#
+# UPDATE_INTERVAL = timedelta(seconds=3)
+#
+# ########## Entities ##########
+#
+# - sensor.house_consumption_energy_total
+# - sensor.inverter_yield_self_use_total
+# - sensor.house_self_sufficiency_total
+#
+# - sensor.house_consumption_energy_daily
+# - sensor.house_consumption_solar_energy_daily
+# - sensor.inverter_yield_self_use_daily
+# - sensor.house_self_sufficiency_daily
+# - sensor.house_consumption_energy_daily_control
+#
+# - sensor.inverter_yield_self_use_weekly
+# - sensor.inverter_yield_self_use_monthly
+# - sensor.inverter_yield_self_use_yearly
+#
+# - sensor.power_meter_consumption_energy_hourly
+# - sensor.power_meter_consumption_energy_daily
+# - sensor.power_meter_consumption_energy_weekly
+# - sensor.power_meter_consumption_energy_monthly
+# - sensor.power_meter_consumption_energy_yearly
+#
+# - sensor.power_meter_exported_energy_daily
+# - sensor.power_meter_exported_energy_weekly
+# - sensor.power_meter_exported_energy_monthly
+# - sensor.power_meter_exported_energy_yearly
+#
+# - sensor.inverter_yield_weekly
+# - sensor.inverter_yield_monthly
+# - sensor.inverter_yield_yearly
+#
+# - sensor.house_consumption_energy_weekly
+# - sensor.house_consumption_energy_monthly
+# - sensor.house_consumption_energy_yearly
 #
 # ########## Abbreviations ##########
 #
@@ -43,33 +95,7 @@
 # House Consumption Today (FusionSolar)         : sensor.house_consumption_energy_daily
 # House Consumption from PV Today (FusionSolar) :
 #
-# ######### Dashboard sensors ##########
-#
-# - sensor.house_consumption_energy_total
-# - sensor.house_consumption_energy_daily
-# - sensor.house_consumption_solar_energy_daily
-# - sensor.inverter_yield_self_use_total
-# - sensor.inverter_yield_self_use_daily
-# - sensor.inverter_yield_self_use_weekly
-# - sensor.inverter_yield_self_use_monthly
-# - sensor.inverter_yield_self_use_yearly
-# - sensor.house_self_sufficiency_daily
-# - sensor.power_meter_consumption_energy_daily
-# - sensor.power_meter_consumption_energy_weekly
-# - sensor.power_meter_consumption_energy_monthly
-# - sensor.power_meter_consumption_energy_yearly
-# - sensor.power_meter_exported_energy_daily
-# - sensor.power_meter_exported_energy_weekly
-# - sensor.power_meter_exported_energy_monthly
-# - sensor.power_meter_exported_energy_yearly
-# - sensor.house_consumption_energy_weekly
-# - sensor.house_consumption_energy_monthly
-# - sensor.house_consumption_energy_yearly
-# - sensor.inverter_yield_weekly
-# - sensor.inverter_yield_monthly
-# - sensor.inverter_yield_yearly
-#
-# ########## Start: Energy Cards ##########
+# ########## Start: Persistent Template Sensors ##########
 #
 # custom:system-energy-flow-card
 # https://github.com/Neuvidor/system-energy-flow-card
@@ -288,7 +314,7 @@ template:
           {% set grid_out_yearly = states(var.grid_out_yearly)|float(0) %}
           {{ (inv_out_yearly - grid_out_yearly)|float(0) }}
 #
-# ########## End: Energy Cards ##########
+# ########## End: Persistent Template Sensors ##########
 #
 # ########## Start: Utility Meter Sensors ##########
 #
