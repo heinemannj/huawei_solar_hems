@@ -1,28 +1,42 @@
-# ########## EMHASS add-on ##########
+# ########## EMHASS Add-on ##########
 #
-# emhass-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/emhass.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
 #
 # - automation.emhass_naive_mpc_optim_forecast
-# - automation.huawei_solar_batteries_charge_discharge_control
-# - automation.huawei_solar_inverter_ventilation_control
-# - automation.
 #
 # - binary_sensor.batteries_charge_from_grid
 # - binary_sensor.batteries_maximum_charging_power
 # - binary_sensor.batteries_maximum_discharging_power
 # - binary_sensor.batteries_forcible_charge
+#
 # - sensor.emhass_prediction_horizon
-# - sensor.emhass_forecast_data
 # - sensor.load_forecast_remaining_today_every_minute
 # - sensor.solcast_forecast_remaining_today_every_minute
-# - sensor.sg_ready_mode
 #
-# rest_command:
+# - sensor.emhass_forecast_data
 #
+# ########## Rest commands ##########
+# 
 # - emhass_publish_data
 # - emhass_perfect_optim
 # - emhass_dayahead_optim_forecast
 # - emhass_naive_mpc_optim_forecast
+#
 # - emhass_ml_load_forecast_model_fit
 # - emhass_ml_load_forecast_model_predict
 # - emhass_ml_load_forecast_model_tune
@@ -45,7 +59,8 @@ automation emhass:
       action: rest_command.emhass_naive_mpc_optim_forecast
     - if:
       - condition: template
-        value_template: '{{ rest_response[''status''] < 400 }}'
+        value_template: >-
+          {{ rest_response['status'] < 400 }}
       then:
       - data:
           prefix: all
@@ -61,331 +76,10 @@ automation emhass:
           logger: EMHASS.MINUTE
         action: system_log.write
     mode: single
-
-  - id: 'huawei_solar_batteries_charge_discharge_control'
-    alias: Huawei Solar - Batteries Charge-Discharge Control
-    description: 'Batteries Charge-Discharge Management for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter'
-    trigger:
-    - platform: time_pattern
-      minutes: /1
-    condition: []
-    action:
-    - choose:
-      - conditions:
-        - condition: state
-          entity_id: binary_sensor.batteries_forcible_charge
-          state: 'on'
-        sequence:
-        - if:
-          - condition: state
-            entity_id: sensor.batteries_forcible_charge
-            state: Stop
-            attribute: mode
-          then:
-          - data:
-              target_soc: '{{ state_attr(''binary_sensor.batteries_forcible_charge'',
-                ''bat_target_soc'')|float(100) }}
-
-                '
-              power: '7500'
-              device_id: bef8f888d7a9c518dcc38cdb13028b00
-            action: huawei_solar.forcible_charge_soc
-        - if:
-          - condition: state
-            entity_id: switch.batteries_charge_from_grid
-            state: 'on'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.batteries_charge_from_grid
-            action: switch.turn_off
-        alias: EPEX spot price controlled Batteries Charging - Forcible Charge = ON
-          - Charge from Grid = OFF
-      - conditions:
-        - condition: state
-          entity_id: binary_sensor.batteries_maximum_charging_power
-          state: 'off'
-        sequence:
-        - if:
-          - condition: template
-            value_template: '{%- set actual = states(''number.batteries_maximum_charging_power'')|int
-              %} {%- set target = state_attr(''binary_sensor.batteries_maximum_charging_power'',
-              ''maximum_charging_power'')|int %} {{ iif(target > 0 and not 98 < actual/target*100
-              < 102) }}
-
-              '
-          then:
-          - data:
-              value: '{{ state_attr(''binary_sensor.batteries_maximum_charging_power'',
-                ''maximum_charging_power'')|int }}
-
-                '
-            target:
-              entity_id: number.batteries_maximum_charging_power
-            action: number.set_value
-        - if:
-          - condition: state
-            entity_id: sensor.batteries_forcible_charge
-            state: Charge
-            attribute: mode
-          then:
-          - data:
-              device_id: bef8f888d7a9c518dcc38cdb13028b00
-            action: huawei_solar.stop_forcible_charge
-        - if:
-          - condition: state
-            entity_id: switch.batteries_charge_from_grid
-            state: 'on'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.batteries_charge_from_grid
-            action: switch.turn_off
-        alias: Solar Forecast controlled Batteries Charging Power - Forcible Charge
-          = OFF - Charge from Grid = OFF
-      - conditions:
-        - condition: and
-          conditions:
-          - condition: state
-            entity_id: binary_sensor.batteries_maximum_discharging_power
-            state: 'off'
-        sequence:
-        - if:
-          - condition: state
-            entity_id: sensor.batteries_forcible_charge
-            state: Stop
-            attribute: mode
-          then:
-          - data:
-              target_soc: '{{ state_attr(''binary_sensor.batteries_forcible_charge'',
-                ''bat_target_soc'')|float(100) }}
-
-                '
-              power: '7500'
-              device_id: bef8f888d7a9c518dcc38cdb13028b00
-            action: huawei_solar.forcible_charge_soc
-        - if:
-          - condition: state
-            entity_id: switch.batteries_charge_from_grid
-            state: 'on'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.batteries_charge_from_grid
-            action: switch.turn_off
-        alias: EPEX spot price controlled Batteries Discharging - Discharge = OFF -
-          Charge from Grid = OFF
-      default:
-      - if:
-        - condition: template
-          value_template: '{%- set actual = states(''number.batteries_maximum_charging_power'')|int
-            %} {%- set target = state_attr(''binary_sensor.batteries_maximum_charging_power'',
-            ''maximum_charging_power'')|int %} {{ iif(actual != target) }}
-
-            '
-        then:
-        - data:
-            value: '{{ state_attr(''binary_sensor.batteries_maximum_charging_power'',
-              ''maximum_charging_power'')|int }}
-
-              '
-          target:
-            entity_id: number.batteries_maximum_charging_power
-          action: number.set_value
-      - if:
-        - condition: state
-          entity_id: sensor.batteries_forcible_charge
-          state: Charge
-          attribute: mode
-        then:
-        - data:
-            device_id: bef8f888d7a9c518dcc38cdb13028b00
-          action: huawei_solar.stop_forcible_charge
-      - if:
-        - condition: state
-          entity_id: switch.batteries_charge_from_grid
-          state: 'on'
-        then:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.batteries_charge_from_grid
-          action: switch.turn_off
-    mode: single
-
-  - id: 'huawei_solar_inverter_ventilation_control'
-    alias: 'Huawei Solar - Inverter Ventilation Control'
-    description: 'Turns On a fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C'
-    triggers:
-    - trigger: time_pattern
-      minutes: /1
-      enabled: true
-    conditions: []
-    actions:
-    - choose:
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.inverter_internal_temperature
-          below: 43
-        - condition: state
-          entity_id: fan.xiaomi_smart_fan
-          state: 'on'
-        sequence:
-        - data: {}
-          target:
-            entity_id: fan.xiaomi_smart_fan
-          action: fan.turn_off
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.inverter_internal_temperature
-          above: 45
-        - condition: state
-          entity_id: fan.xiaomi_smart_fan
-          state: 'off'
-        sequence:
-        - data: {}
-          target:
-            entity_id: fan.xiaomi_smart_fan
-          action: fan.turn_on
-        - target:
-            entity_id: fan.xiaomi_smart_fan
-          data:
-            percentage: 33
-          action: fan.set_percentage
-        - data:
-            oscillating: true
-          target:
-            entity_id: fan.xiaomi_smart_fan
-          action: fan.oscillate
-        - data:
-            entity_id: fan.xiaomi_smart_fan
-          action: xiaomi_miio_fan.fan_set_buzzer_off
-    mode: single
-
-  - id: 'huawei_solar_room_venting_control'
-    alias: 'Huawei Solar - Room Venting Control'
-    description: 'Turns On a venting fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C and Room humidity gets higher than 54%.'
-    triggers:
-    - trigger: time_pattern
-      minutes: /1
-    conditions: []
-    actions:
-    - choose:
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.inverter_internal_temperature
-          below: 43
-        - condition: state
-          entity_id: switch.401_heizungsraum_luefter
-          state: 'on'
-        sequence:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.401_heizungsraum_luefter
-          action: switch.turn_off
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.inverter_internal_temperature
-          above: 45
-        - condition: numeric_state
-          entity_id: sensor.hm_tc_it_wm_w_eu_oeq1676193_humidity
-          above: 54
-        - condition: state
-          entity_id: switch.401_heizungsraum_luefter
-          state: 'off'
-        sequence:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.401_heizungsraum_luefter
-          action: switch.turn_on
-    mode: single
-
-  - id: 'heating_pump_sg_ready_controller'
-    alias: 'Heating Pump - SG-Ready controller'
-    description: 'Heating Pump: SG-Ready controller.'
-    triggers:
-    - trigger: time_pattern
-      minutes: /1
-    conditions: []
-    actions:
-    - choose:
-      - conditions:
-        - condition: state
-          entity_id: sensor.sg_ready_mode
-          attribute: mode
-          state: EVU lock
-        sequence:
-        - if:
-          - condition: state
-            entity_id: switch.406_wp_sg_ready_evu
-            state: 'off'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.406_wp_sg_ready_evu
-            action: switch.turn_on
-        - if:
-          - condition: state
-            entity_id: switch.406_wp_sg_ready_pv_ma
-            state: 'on'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.406_wp_sg_ready_pv_ma
-            action: switch.turn_off
-        - if:
-          - condition: state
-            entity_id: switch.heizung_domestic_hot_water_0_boost
-            state: 'on'
-          then:
-          - metadata: {}
-            data: {}
-            target:
-              entity_id: switch.heizung_domestic_hot_water_0_boost
-            action: switch.turn_off
-      default:
-      - if:
-        - condition: state
-          entity_id: switch.406_wp_sg_ready_evu
-          state: 'on'
-        then:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.406_wp_sg_ready_evu
-          action: switch.turn_off
-      - if:
-        - condition: state
-          entity_id: switch.406_wp_sg_ready_pv_ma
-          state: 'on'
-        then:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.406_wp_sg_ready_pv_ma
-          action: switch.turn_off
-      - if:
-        - condition: state
-          entity_id: switch.heizung_domestic_hot_water_0_boost
-          state: 'on'
-        then:
-        - metadata: {}
-          data: {}
-          target:
-            entity_id: switch.heizung_domestic_hot_water_0_boost
-          action: switch.turn_off
-    mode: single
 #
 # ########## End: Automation ##########
 #
-# ########## Start: Template Sensor ##########
+# ########## Start: Persistent Template Sensors ##########
 #
 template:
   - trigger:
@@ -677,50 +371,8 @@ template:
           epexspot_avg_price: "{{ stat.avg_price|round(5) }}"
           epexspot_price_range: "{{ stat.price_range|round(5) }}"
           last_updated: "{{ t }}"
-
-  - trigger:
-      - platform: time_pattern
-        minutes: "/1"
-    action:
-      - variables:
-          t: "{{ now().isoformat() }}"
-          var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
-            {{ globalVariables()|from_json }}
-          epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
-          grid_active_power: "{{ states(var.grid_active_power)|float(0) }}"
-          EVU: "{{ states(var.sg_ready_evu) }}"
-          PV: "{{ states(var.sg_ready_pv) }}"
-    sensor:
-      - name: "sg-ready-mode"
-        unique_id: sg-ready-mode
-        state: >-
-          {% if EVU == 'off' and PV == 'off' %}
-            {{ 'Normal' }}
-          {% elif EVU == 'on' and PV == 'off' %}
-            {{ 'EVU lock' }}
-          {% elif EVU == 'off' and PV == 'on' %}
-            {{ 'Recommendation' }}
-          {% elif EVU == 'on' and PV == 'on' %}
-            {{ 'Turn On' }}
-          {% elif EVU == 'off' and PV == 'off' %}
-            {{ 'Normal' }}
-          {% else %}
-            {{ 'Unavailable' }}
-          {% endif %}
-        attributes:
-          mode: >-
-            {% if epexspot_quantile|float(0) >= var.epexspot_quantile_setpoint_high|float(0)
-                and grid_active_power <= 1000 %}
-              {{ 'EVU lock' }}
-            {% else %}
-              {{ 'Normal' }}
-            {% endif %}
-          evu_lock: "{{ EVU }}"
-          pv_ready: "{{ PV }}"
-          last_updated: "{{ t }}"
 #
-# ########## End: Template Sensor ##########
+# ########## End: Persistent Template Sensors ##########
 #
 # ########## Start: Rest commands ##########
 #
