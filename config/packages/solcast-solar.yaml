@@ -1,6 +1,21 @@
 # ########## SolCast PV Forecast Integration ##########
 #
-# solcast-solar-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/solcast-solar.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
 #
 # - automation.solcast_pv_forecast_api_update
 #
@@ -29,7 +44,7 @@ automation solcast:
 #
 # ########## End: Automation ##########
 #
-# ########## Start: Template Sensor ##########
+# ########## Start: Persistent Template Sensors ##########
 #
 template:
   - trigger:
@@ -65,7 +80,7 @@ template:
         attributes:
           last_updated: "{{ t }}"
 #
-# ########## End: Template Sensor ##########
+# ########## End: Persistent Template Sensors ##########
 #
 # ########## Start: Rest commands ##########
 #
