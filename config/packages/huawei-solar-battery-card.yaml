@@ -1,6 +1,21 @@
-# ########## Huawei Solar Integration ##########
+# ########## Huawei Solar Integration - Battery card ##########
 #
-# huawei-solar-battery-card-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/huawei-solar-battery-card.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
 #
 # - sensor.batteries_discharge_power_average_last_24h
 # - sensor.batteries_charge_power_average_last_30mins
