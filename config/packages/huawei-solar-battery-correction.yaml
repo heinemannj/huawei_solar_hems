@@ -1,13 +1,31 @@
-# ########## Huawei Solar Integration ##########
+# ########## Huawei Solar Integration - Battery correction ##########
 #
-# huawei-solar-battery-correction-package.yaml
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: template sensor
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/packages/huawei-solar-battery-correction.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Setting for Huawei Solar Integration UPDATE_INTERVAL in const.py ##########
+#
+# UPDATE_INTERVAL = timedelta(seconds=3)
+#
+# ########## Entities ##########
 #
 # - sensor.inverter_loss_daily
 # - sensor.batteries_day_discharge_with_loss
 # - sensor.batteries_day_charge_with_loss
 # - sensor.batteries_discharge_loss_daily
 # - sensor.batteries_charge_loss_daily
-# - sensor.house_consumption_energy_daily_control
 #
 # ########## Start: Persistent Template Sensors ##########
 #
