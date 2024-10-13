@@ -878,17 +878,17 @@ entities:
         secondary_info: last-changed
         show_state: true
       - entity: switch.406_wp_sg_ready_evu
-        name: EVU Lock
+        name: Heat Pump Lock
         type: custom:multiple-entity-row
         secondary_info: last-changed
         show_state: true
       - entity: switch.406_wp_sg_ready_pv_ma
-        name: PV Ready
+        name: PV Excess
         type: custom:multiple-entity-row
         secondary_info: last-changed
         show_state: true
     type: custom:fold-entity-row
     head:
-      entity: automation.heating_pump_sg_ready_controller
+      entity: automation.heating_pump_sg_ready_control
       name: Heat Pump - SG-Ready controller
       secondary_info: last-triggered
