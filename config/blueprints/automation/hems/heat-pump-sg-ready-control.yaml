@@ -1,0 +1,232 @@
+# ########## Heat Pump - SG-Ready controller ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: automation
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/heat-pump-sg-ready-control.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
+#
+# - automation.heat_pump_sg_ready_control
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: heat_pump_sg_ready_control
+  description: >-
+    ## Heat Pump - SG-Ready Control
+
+    Smart Grid Ready controller.
+
+    * automation.heat_pump_sg_ready_control
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: automation
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/heat-pump-sg-ready-control.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+  domain: automation
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/heat-pump-sg-ready-control.yaml
+  input:
+    sg_ready_mode:
+      name: SG-Ready Operating mode control sensor
+      description: Operating mode sensor of Heat Pump SG-Ready controller.
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+          include_entities:
+            - sensor.sg_ready_mode
+          multiple: false
+    hp_lock_switch:
+      name: SG-Ready Heat Pump Lock switch
+      description: Lock switch of Heat Pump SG-Ready controller (HP Terminal 1).
+      selector:
+        entity:
+          domain: switch
+          multiple: false
+    pv_excess_switch:
+      name: SG-Ready PV excess switch
+      description: PV excess switch of Heat Pump SG-Ready controller (HP Terminal 2).
+      selector:
+        entity:
+          domain: switch
+          multiple: false
+    domestic_hot_water_boost_switch:
+      name: Domestic Hot Water Boost switch
+      description: Domestic Hot Water Boost switch of Heat Pump.
+      selector:
+        entity:
+          domain: switch
+          multiple: false
+#
+# ########## Start: Automation ##########
+#
+id: 'heat_pump_sg_ready_control'
+alias: 'Heat Pump - SG-Ready controller'
+description: 'Heat Pump: SG-Ready controller.'
+triggers:
+- trigger: time_pattern
+  minutes: /1
+conditions: []
+actions:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input sg_ready_mode
+      attribute: mode
+      state: 'Lock'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input hp_lock_switch
+        state: 'off'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input hp_lock_switch
+        action: switch.turn_on
+    - if:
+      - condition: state
+        entity_id: !input pv_excess_switch
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input pv_excess_switch
+        action: switch.turn_off
+    - if:
+      - condition: state
+        entity_id: !input domestic_hot_water_boost_switch
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input domestic_hot_water_boost_switch
+        action: switch.turn_off
+    alias: "Heat Pump lock (Operating mode 1: Switching state, with terminal solution: 1:0)."
+
+  - conditions:
+    - condition: state
+      entity_id: !input sg_ready_mode
+      attribute: mode
+      state: 'Recommendation'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input hp_lock_switch
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input hp_lock_switch
+        action: switch.turn_off
+    - if:
+      - condition: state
+        entity_id: !input pv_excess_switch
+        state: 'off'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input pv_excess_switch
+        action: switch.turn_on
+    alias: "Switch-on recommendation according to today's boost (Operating mode 3: Switching state, with terminal solution: 0:1)."
+
+  - conditions:
+    - condition: state
+      entity_id: !input sg_ready_mode
+      attribute: mode
+      state: 'Turn On'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input hp_lock_switch
+        state: 'off'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input hp_lock_switch
+        action: switch.turn_on
+    - if:
+      - condition: state
+        entity_id: !input pv_excess_switch
+        state: 'off'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input pv_excess_switch
+        action: switch.turn_on
+    alias: "Turn-on command (Operating mode 4: Switching state, with terminal solution: 1:1)."
+
+  default:
+  - if:
+    - condition: state
+      entity_id: !input hp_lock_switch
+      state: 'on'
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input hp_lock_switch
+      action: switch.turn_off
+  - if:
+    - condition: state
+      entity_id: !input pv_excess_switch
+      state: 'on'
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input pv_excess_switch
+      action: switch.turn_off
+  - if:
+    - condition: state
+      entity_id: !input domestic_hot_water_boost_switch
+      state: 'on'
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input domestic_hot_water_boost_switch
+      action: switch.turn_off
+    alias: "Normal energy-efficient mode (Operating mode 2: Switching state, with terminal solution: 0:0)."
+mode: single
+#
+# ########## End: Automation ##########
