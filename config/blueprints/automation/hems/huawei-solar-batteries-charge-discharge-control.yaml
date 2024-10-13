@@ -1,0 +1,299 @@
+# ########## Huawei Solar - Batteries Charge-Discharge control ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: automation
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-batteries-charge-discharge-control.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
+#
+# - automation.huawei_solar_batteries_charge_discharge_control
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: huawei_solar_batteries_charge_discharge_control
+  description: >-
+    ## Huawei Solar - Batteries Charge-Discharge Control
+
+    Batteries Charge-Discharge Management for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter.
+
+    * automation.huawei_solar_batteries_charge_discharge_control
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: automation
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-batteries-charge-discharge-control.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+  domain: automation
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-batteries-charge-discharge-control.yaml
+  input:
+    binary_sensor_batteries_forcible_charge:
+      name: HEMS Batteries Forcible charge control binary sensor
+      description: Forcible charge binary sensor of HEMS batteries controller.
+      selector:
+        entity:
+          domain: binary_sensor
+          include_entities:
+            - binary_sensor.batteries_forcible_charge
+          multiple: false
+    binary_sensor_batteries_charge_from_grid:
+      name: HEMS Batteries Charge from grid control binary sensor
+      description: Charge from grid binary sensor of HEMS batteries controller.
+      selector:
+        entity:
+          domain: binary_sensor
+          include_entities:
+            - binary_sensor.batteries_charge_from_grid
+          multiple: false
+    binary_sensor_batteries_maximum_charging_power:
+      name: HEMS Batteries Maximum charging power control  binary sensor
+      description: Maximum charge power binary sensor of HEMS batteries controller.
+      selector:
+        entity:
+          domain: binary_sensor
+          include_entities:
+            - binary_sensor.batteries_maximum_charging_power
+          multiple: false
+    sensor_batteries_forcible_charge:
+      name: Batteries Forcible charge sensor
+      description: Forcible charge sensor of PV system's Batteries device.
+      selector:
+        entity:
+          domain: sensor
+          include_entities:
+            - sensor.batteries_forcible_charge
+          multiple: false
+    switch_batteries_charge_from_grid:
+      name: Batteries Charge from grid switch
+      description: Charge from grid switch of PV system's Batteries device.
+      selector:
+        entity:
+          domain: switch
+          include_entities:
+            - switch.batteries_charge_from_grid
+          multiple: false
+    number_batteries_maximum_charging_power:
+      name: Batteries Maximum charge power number
+      description: Maximum charge power number of PV system's Batteries device.
+      selector:
+        entity:
+          domain: number
+          include_entities:
+            - number.batteries_maximum_charging_power
+          multiple: false
+    batteries_device:
+      name: Batteries device
+      description: PV system's Batteries device.
+      selector:
+        device:
+          integration: huawei_solar
+          multiple: false
+#
+# ########## Start: Automation ##########
+#
+id: 'huawei_solar_batteries_charge_discharge_control'
+alias: 'Huawei Solar - Batteries Charge-Discharge Control'
+description: 'Batteries Charge-Discharge Management for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter'
+trigger:
+- platform: time_pattern
+  minutes: /1
+variables:
+  var: >-
+    {% from '032-emhass.jinja' import globalVariables %}
+    {{ globalVariables()|from_json }}
+  bat_forcible_charge_id: !input binary_sensor_batteries_forcible_charge
+  bat_target_soc: "{{ state_attr(bat_forcible_charge_id, 'bat_target_soc')|float(100) }}"
+  bat_target_charge_power_id: !input binary_sensor_batteries_maximum_charging_power
+  bat_target_charge_power: "{{ state_attr(bat_target_charge_power_id, 'maximum_charging_power') }}"
+  bat_max_charge_power_id: !input number_batteries_maximum_charging_power
+  bat_max_charge_power: "{{ states(bat_max_charge_power_id)|int }}"
+condition: []
+action:
+- choose:
+  - conditions:
+    - condition: state
+      entity_id: !input binary_sensor_batteries_charge_from_grid
+      state: 'on'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input sensor_batteries_forcible_charge
+        state: Stop
+        attribute: mode
+      then:
+      - data:
+          target_soc: '{{ bat_target_soc|float(100) }}'
+          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          device_id: !input batteries_device
+        action: huawei_solar.forcible_charge_soc
+    - if:
+      - condition: state
+        entity_id: !input switch_batteries_charge_from_grid
+        state: 'off'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input switch_batteries_charge_from_grid
+        action: switch.turn_on
+    alias: 'EMHASS and EPEX spot price controlled Batteries Charging from Grid - Forcible Charge = ON - Charge from Grid = ON'
+  - conditions:
+    - condition: state
+      entity_id: !input binary_sensor_batteries_forcible_charge
+      state: 'on'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input sensor_batteries_forcible_charge
+        state: Stop
+        attribute: mode
+      then:
+      - data:
+          target_soc: '{{ bat_target_soc|float(100) }}'
+          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          device_id: !input batteries_device
+        action: huawei_solar.forcible_charge_soc
+    - if:
+      - condition: state
+        entity_id: !input switch_batteries_charge_from_grid
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input switch_batteries_charge_from_grid
+        action: switch.turn_off
+    alias: 'EPEX spot price controlled Batteries Charging - Forcible Charge = ON - Charge from Grid = OFF'
+  - conditions:
+    - condition: state
+      entity_id: !input binary_sensor_batteries_maximum_charging_power
+      state: 'off'
+    sequence:
+    - if:
+      - condition: template
+        value_template: >-
+          {%- set actual = bat_max_charge_power|int %}
+          {%- set target = bat_target_charge_power|int %}
+          {{ iif(target > 0 and not 98 < actual/target*100 < 102) }}
+      then:
+      - data:
+          value: '{{ bat_target_charge_power|int }}'
+        target:
+          entity_id: !input number_batteries_maximum_charging_power
+        action: number.set_value
+    - if:
+      - condition: state
+        entity_id: !input sensor_batteries_forcible_charge
+        state: Charge
+        attribute: mode
+      then:
+      - data:
+          device_id: !input batteries_device
+        action: huawei_solar.stop_forcible_charge
+    - if:
+      - condition: state
+        entity_id: !input switch_batteries_charge_from_grid
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input switch_batteries_charge_from_grid
+        action: switch.turn_off
+    alias: 'Solar Forecast controlled Batteries Charging Power - Forcible Charge = OFF - Charge from Grid = OFF'
+  - conditions:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: binary_sensor.batteries_maximum_discharging_power
+        state: 'off'
+    sequence:
+    - if:
+      - condition: state
+        entity_id: !input sensor_batteries_forcible_charge
+        state: Stop
+        attribute: mode
+      then:
+      - data:
+          target_soc: '{{ bat_target_soc|float(100) }}'
+          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          device_id: !input batteries_device
+        action: huawei_solar.forcible_charge_soc
+    - if:
+      - condition: state
+        entity_id: !input switch_batteries_charge_from_grid
+        state: 'on'
+      then:
+      - metadata: {}
+        data: {}
+        target:
+          entity_id: !input switch_batteries_charge_from_grid
+        action: switch.turn_off
+    alias: 'EPEX spot price controlled Batteries Discharging - Discharge = OFF - Charge from Grid = OFF'
+  default:
+  - if:
+    - condition: template
+      value_template: >-
+        {%- set actual = bat_max_charge_power|int %}
+        {%- set target = bat_target_charge_power|int %}
+        {{ iif(actual != target) }}
+    then:
+    - data:
+        value: '{{ bat_target_charge_power|int }}'
+      target:
+        entity_id: !input number_batteries_maximum_charging_power
+      action: number.set_value
+  - if:
+    - condition: state
+      entity_id: !input sensor_batteries_forcible_charge
+      state: Charge
+      attribute: mode
+    then:
+    - data:
+        device_id: !input batteries_device
+      action: huawei_solar.stop_forcible_charge
+  - if:
+    - condition: state
+      entity_id: !input switch_batteries_charge_from_grid
+      state: 'on'
+    then:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input switch_batteries_charge_from_grid
+      action: switch.turn_off
+    alias: 'Normal mode - Forcible Charge = OFF - Charge from Grid = OFF'
+mode: single
+#
+# ########## End: Automation ##########
