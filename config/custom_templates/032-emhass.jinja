@@ -200,18 +200,18 @@
             'pv_excess_end_time': 'sensor.hems_sun_pv_excess_end',
 
             'epexspot_price': 'sensor.epex_spot_data_price',
-            'epexspot_price_1': 'sensor.epex_spot_data_price_1',
-            'epexspot_price_2': 'sensor.epex_spot_data_price_3',
+            'epexspot_price_1': 'sensor.epex_spot_data_price_3',
+            'epexspot_price_2': 'sensor.epex_spot_data_price_1',
             'epexspot_price_3': 'sensor.epex_spot_data_price_2',
 
             'epexspot_net_price': 'sensor.epex_spot_data_net_price',
-            'epexspot_net_price_1': 'sensor.epex_spot_data_net_price_1',
-            'epexspot_net_price_2': 'sensor.epex_spot_data_net_price_3',
+            'epexspot_net_price_1': 'sensor.epex_spot_data_net_price_3',
+            'epexspot_net_price_2': 'sensor.epex_spot_data_net_price_1',
             'epexspot_net_price_3': 'sensor.epex_spot_data_net_price_2',
 
             'epexspot_quantile': 'sensor.epex_spot_data_quantile',
-            'epexspot_quantile_1': 'sensor.epex_spot_data_quantile_1',
-            'epexspot_quantile_2': 'sensor.epex_spot_data_quantile_3',
+            'epexspot_quantile_1': 'sensor.epex_spot_data_quantile_3',
+            'epexspot_quantile_2': 'sensor.epex_spot_data_quantile_1',
             'epexspot_quantile_3': 'sensor.epex_spot_data_quantile_2',
 
             'epexspot_data_update': 'binary_sensor.epex_spot_data_update',
@@ -223,7 +223,7 @@
             'solcast_api_request_limit': 'sensor.solcast_pv_forecast_api_limit',
             'solcast_api_request_used': 'sensor.solcast_pv_forecast_verwendete_api',
 
-            'sg_ready_evu': 'switch.406_wp_sg_ready_evu',
-            'sg_ready_pv': 'switch.406_wp_sg_ready_pv_ma'
+            'sg_ready_hp_lock': 'switch.406_wp_sg_ready_evu',
+            'sg_ready_pv_excess': 'switch.406_wp_sg_ready_pv_ma'
         }|to_json -}}
 {%- endmacro %}
