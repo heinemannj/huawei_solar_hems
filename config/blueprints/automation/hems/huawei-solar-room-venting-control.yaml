@@ -1,0 +1,128 @@
+# ########## Huawei Solar - Room Venting Control ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: automation
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-room-venting-control.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
+#
+# - automation.huawei_solar_room_venting_control
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: huawei_solar_room_venting_control
+  description: >-
+    ## Huawei Solar - Room Venting Control
+
+    Turns On a venting fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C and Room humidity gets higher than 54%.
+
+    * automation.huawei_solar_room_venting_control
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: automation
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-room-venting-control.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+  domain: automation
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-room-venting-control.yaml
+  input:
+    inverter_internal_temperature:
+      name: Inverter internal temperature sensor
+      description: Internal temperature sensor of PV system's Inverter device.
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+          include_entities:
+            - sensor.inverter_internal_temperature
+          multiple: false
+    venting_fan:
+      name: Room venting fan switch
+      description: Room venting fan switch.
+      selector:
+        entity:
+          domain: switch
+          multiple: false
+    humidity:
+      name: Room humidity sensor
+      description: Room humidity sensor.
+      selector:
+        entity:
+          domain: sensor
+          multiple: false
+#
+# ########## Start: Automation ##########
+#
+id: 'huawei_solar_room_venting_control'
+alias: 'Huawei Solar - Room Venting Control'
+description: 'Turns On a venting fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C and Room humidity gets higher than 54%.'
+triggers:
+- trigger: time_pattern
+  minutes: /1
+conditions: []
+actions:
+- choose:
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input inverter_internal_temperature
+      below: 43
+    - condition: state
+      entity_id: !input venting_fan
+      state: 'on'
+    sequence:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input venting_fan
+      action: switch.turn_off
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input inverter_internal_temperature
+      above: 45
+    - condition: numeric_state
+      entity_id: !input humidity
+      above: 54
+    - condition: state
+      entity_id: !input venting_fan
+      state: 'off'
+    sequence:
+    - metadata: {}
+      data: {}
+      target:
+        entity_id: !input venting_fan
+      action: switch.turn_on
+mode: single
+#
+# ########## End: Automation ##########
