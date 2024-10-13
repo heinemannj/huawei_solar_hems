@@ -1,0 +1,130 @@
+# ########## Huawei Solar - Inverter Ventilation Control ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: automation
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-inverter-ventilation-control.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+# Copyright (c) 2024 Joerg Heinemann
+#
+# ########## Entities ##########
+#
+# - automation.huawei_solar_inverter_ventilation_control
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: huawei_solar_inverter_ventilation_control
+  description: >-
+    ## Huawei Solar - Inverter Ventilation Control
+
+    Turns On a fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C.
+
+    * automation.huawei_solar_inverter_ventilation_control
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: automation
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-inverter-ventilation-control.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+  domain: automation
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-inverter-ventilation-control.yaml
+  input:
+    inverter_internal_temperature:
+      name: Inverter internal temperature sensor
+      description: Internal temperature sensor of PV system's Inverter device.
+      selector:
+        entity:
+          filter:
+            - domain: sensor
+          include_entities:
+            - sensor.inverter_internal_temperature
+          multiple: false
+    inverter_ventilation_fan:
+      name: Inverter ventilation fan
+      description: Ventilation smart fan of PV system's Inverter device.
+      selector:
+        entity:
+          domain: fan
+          multiple: false
+#
+# ########## Start: Automation ##########
+#
+id: 'huawei_solar_inverter_ventilation_control'
+alias: 'Huawei Solar - Inverter Ventilation Control'
+description: 'Turns On a fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C'
+triggers:
+- trigger: time_pattern
+  minutes: /1
+  enabled: true
+conditions: []
+actions:
+- choose:
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input inverter_internal_temperature
+      below: 43
+    - condition: state
+      entity_id: !input inverter_ventilation_fan
+      state: 'on'
+    sequence:
+    - data: {}
+      target:
+        entity_id: !input inverter_ventilation_fan
+      action: fan.turn_off
+  - conditions:
+    - condition: numeric_state
+      entity_id: !input inverter_internal_temperature
+      above: 45
+    - condition: state
+      entity_id: !input inverter_ventilation_fan
+      state: 'off'
+    sequence:
+    - data: {}
+      target:
+        entity_id: !input inverter_ventilation_fan
+      action: fan.turn_on
+    - target:
+        entity_id: !input inverter_ventilation_fan
+      data:
+        percentage: 33
+      action: fan.set_percentage
+    - data:
+        oscillating: true
+      target:
+        entity_id: !input inverter_ventilation_fan
+      action: fan.oscillate
+    - data:
+        entity_id: !input inverter_ventilation_fan
+      action: xiaomi_miio_fan.fan_set_buzzer_off
+mode: single
+#
+# ########## End: Automation ##########
