@@ -44,6 +44,11 @@
 # ########## Start: Automation ##########
 #
 automation emhass:
+  #
+  # EMHASS - naive mpc optimization - upto 48 hours forecast
+  #
+  # Start rest command: emhass_naive_mpc_optim_forecast
+  #
   - id: 'emhass_naive_mpc_optim_forecast'
     alias: 'EMHASS - naive mpc optim forecast'
     description: 'EMHASS - naive mpc optimization - upto 48 hours forecast.'
@@ -117,7 +122,10 @@ template:
           bat_charge_energy_forecast_pv_excess_start: "{{ solar_energy_forecast_pv_excess_start - load_energy_forecast_pv_excess_start }}"
           bat_charge_energy_forecast_pv_excess_end: "{{ solar_energy_forecast_pv_excess_end - load_energy_forecast_pv_excess_end }}"
     binary_sensor:
-      - name: "batteries_charge_from_grid"
+      #
+      #
+      #
+      - name: "HEMS Batteries Charge from grid control"
         unique_id: batteries_charge_from_grid
         icon: mdi:battery-charging-50
         state: >-
@@ -131,7 +139,10 @@ template:
           epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
           epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
           last_updated: "{{ t }}"
-      - name: "batteries_maximum_charging_power"
+      #
+      #
+      #
+      - name: "HEMS Batteries Maximum charging power control"
         unique_id: batteries_maximum_charging_power
         icon: mdi:battery-charging-50
         state: "{{ bat_soc == 100
@@ -164,7 +175,10 @@ template:
           charge_energy_forecast_pv_excess_start: "{{ bat_charge_energy_forecast_pv_excess_start|float(0)|round(3) }}"
           charge_energy_forecast_pv_excess_end: "{{ bat_charge_energy_forecast_pv_excess_end|float(0)|round(3) }}"
           last_updated: "{{ t }}"
-      - name: "batteries_maximum_discharging_power"
+      #
+      #
+      #
+      - name: "HEMS Batteries Maximum discharging power control"
         unique_id: batteries_maximum_discharging_power
         icon: mdi:battery-charging-50
         state: >-
@@ -183,7 +197,10 @@ template:
           soc_setpoint_low: "{{ var.batteries_soc_setpoint_low }}"
           epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
           last_updated: "{{ t }}"
-      - name: "batteries_forcible_charge"
+      #
+      #
+      #
+      - name: "HEMS Batteries Forcible charge control"
         unique_id: batteries_forcible_charge
         icon: mdi:battery-charging-50
         state: >-
@@ -222,6 +239,9 @@ template:
             {% from '032-emhass.jinja' import convertDate %}
             {{ convertDate(state_attr(var.solcast_forecast_today, 'detailedForecast'), 'period_start')|from_json }}
     sensor:
+      #
+      #
+      #
       - name: "emhass_prediction_horizon"
         unique_id: emhass_prediction_horizon
         state: "{{ ((prediction_end_time_tomorrow|as_timestamp - now()|as_timestamp)/60/30)|int(0) + 1 }}"
@@ -238,6 +258,9 @@ template:
           pv_excess_end_time_today: "{{ pv_excess_end_time_today }}"
           pv_excess_end_elevation: 15
           last_updated: "{{ t }}"
+      #
+      #
+      #
       - name: load_forecast_remaining_today_every_minute
         unique_id: load_forecast_remaining_today_every_minute
         #friendly_name: "EMHass Load Forecast Remaining Today (Every Minute)"
@@ -276,6 +299,9 @@ template:
             {% from '032-emhass.jinja' import forecastPeriod %}
             {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
           last_updated: "{{ t }}"
+      #
+      #
+      #
       - name: solcast_forecast_remaining_today_every_minute
         unique_id: solcast_forecast_remaining_today_every_minute
         #friendly_name: "Solcast Forecast Remaining Today (Every Minute)"
@@ -333,6 +359,9 @@ template:
             {%- set tomorrow = convertDate(state_attr(var.solcast_forecast_tomorrow, 'detailedForecast'), 'period_start')|from_json %}
             {{ today + tomorrow }}
     sensor:
+      #
+      #
+      #
       - name: emhass_forecast_data
         unique_id: emhass_forecast_data
         #friendly_name: "emhass_forecast_data"
