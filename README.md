@@ -14,7 +14,7 @@ Home Assistent (HA) **Home Energy Management System** (HEMS)
 
 These custom sensors and automations calculate all the power and energy flows of your Huawei FusionSolar PV installation based on the sensors, services and information provided by [Huawei Solar Integration](https://github.com/wlcrs/huawei_solar), because this custom HA integration ONLY exposes the information and functions made available by Huawei Solar inverters directly via one of its Modbus interfaces, which is far away from enhanced requirements of an HEMS.
 
-All custom template sensors and automations are available as HA package files and all dashboards are available through HA YAML dashboards for an easy [Installation](#installation).
+All custom template sensors and automations are available as HA package files or HA blueprints and all dashboards are available through HA YAML dashboards for an easy [Installation](#installation).
 For an overview and a more detailed description of the custom sensors and automations, please refer to the [Huawei Solar HEMS Wiki Pages](https://github.com/heinemannj/huawei_solar_hems/wiki).
 
 ## Table of Contents
@@ -104,11 +104,11 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |**Connect** to inverters MBUS: Via `SUN2000-<serial_no> WiFi`|<img src="assets/em-sun2000-communication.png" width=400>|
 |**Tibber Pulse**<br>- <img src="assets/em-tibber-pulse-ir.png" height=60><br>- <img src="assets/em-tibber-pulse-batteries.png" height=60>|<img src="assets/em-tibber-pulse.png" width=400>|
 |- <img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
-|**Three-phase energy meters**<br><sup>- Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
+|**Three-phase energy meters**<br><sup>- 3 x Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
 ||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
 |**Energy management**||
-|**Smart Grid ready controller**<br><sup>- Shelly Plus 1<br>&#160;&#160;406_WP-SG-Ready-EVU<br>&#160;&#160;406_WP-SG-Ready-PV-MA</sup><br><br>**eBUS controller**<br><sup>- [eBUS Adapter Shield v5](https://adapter.ebusd.eu/)|<img src="assets/em-sg-ready-ebus-controller-1.png" width=400>|
-||<img src="assets/em-sg-ready-ebus-controller-2.png" width=400>|
+|**Heat Pump Smart Grid Ready controller**<br><br><sup>- 2 x Shelly Plus 1<br>&#160;&#160;SG-Ready Heat Pump Lock switch (HP Terminal 1)<br>&#160;&#160;SG-Ready PV Excess switch (HP Terminal 2)</sup><br><br>**eBUS controller**<br><sup>- [eBUS Adapter Shield v5](https://adapter.ebusd.eu/)|<img src="assets/em-sg-ready-ebus-controller-1.png" width=400>|
+|- [SG-/PV-Ready Documentation](assets/Installation-Manual-PV-Ready-aroTherm-Plus.pdf)|<img src="assets/em-sg-ready-ebus-controller-2.png" width=400>|
 
 ## Notes
 
