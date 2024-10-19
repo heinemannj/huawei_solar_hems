@@ -101,7 +101,7 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |**Energy flows**|<img src="assets/em-energy-flows.png" width=400>|
 |**Smart meter**<br><sup>- HUAWEI Smart Power Sensor DTSU666-H 100A/50mA|<img src="assets/em-smart-meter.png" width=400>|
 ||<img src="assets/em-dtsu666-h-cabeling.png" width=400>|
-|**Connect** to inverters MBUS: Via `SUN2000-<serial_no> WiFi`|<img src="assets/em-sun2000-communication.png" width=400>|
+|**Connect** to inverters MBUS<br><sup>- [Via `SUN2000-<serial_no> WiFi`](https://github.com/wlcrs/huawei_solar/wiki/Connecting-to-the-inverter#connect-to-the-inverter-ap-sun2000-serial_no-wifi)|<img src="assets/em-sun2000-communication.png" width=400>|
 |**Tibber Pulse**<br>- <img src="assets/em-tibber-pulse-ir.png" height=60><br>- <img src="assets/em-tibber-pulse-batteries.png" height=60>|<img src="assets/em-tibber-pulse.png" width=400>|
 |- <img src="assets/em-tibber-pulse-bridge.png" height=60>|<img src="assets/em-tibber-pulse-communication.png" width=400>|
 |**Three-phase energy meters**<br><sup>- 3 x Shelly Pro 3EM - 120A|<img src="assets/em-shelly-pro-3em.png" width=400>|
