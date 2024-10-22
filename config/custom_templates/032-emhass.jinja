@@ -120,33 +120,36 @@
     {# 1 x Huawei LUNA2000-10-S0 #}
     {# 1 x Huawei LUNA2000-5-S0 #}
     {{- {
-            'inverter_rated_power': 6000.0,
-            'inverter_maximum_active_power': 6600.0,
-            'batteries_rated_capacity': 15.0,
-            'batteries_rated_charge_energy': 17.250,
-            'batteries_rated_discharge_power': 6600.0,
-            'batteries_rated_charge_power': 7500.0,
-            'batteries_soc_setpoint_low': 5.0,
-            'batteries_soc_setpoint_neutral': 60.0,
-            'batteries_soc_setpoint_high': 75.0,
-            'epexspot_quantile_setpoint_low': 0.15,
-            'epexspot_quantile_setpoint_neutral': 0.33,
-            'epexspot_quantile_setpoint_high': 0.96,
+            'bat_soc_setpoint_low': 'input_number.batteries_soc_setpoint_low',
+            'bat_soc_setpoint_neutral': 'input_number.batteries_soc_setpoint_neutral',
+            'bat_soc_setpoint_high': 'input_number.batteries_soc_setpoint_high',
+            'bat_soc_setpoint_forcible_charge': 'input_number.batteries_soc_setpoint_forcible_charge',
+
+            'epexspot_quantile_setpoint_low': 'input_number.epexspot_quantile_setpoint_low',
+            'epexspot_quantile_setpoint_neutral': 'input_number.epexspot_quantile_setpoint_neutral',
+            'epexspot_quantile_setpoint_high': 'input_number.epexspot_quantile_setpoint_high',
 
             'pv_1_current': 'sensor.inverter_pv_1_current',
             'pv_1_voltage': 'sensor.inverter_pv_1_voltage',
             'pv_2_current': 'sensor.inverter_pv_2_current',
             'pv_2_voltage': 'sensor.inverter_pv_2_voltage',
 
+            'inv_rated_power': 'sensor.inverter_rated_power',
+            'inv_max_active_power': 'sensor.inverter_power',
+
             'inv_input_power': 'sensor.inverter_input_power',
             'inv_active_power': 'sensor.inverter_active_power',
             'grid_active_power': 'sensor.power_meter_active_power',
             'house_power': 'sensor.house_consumption_power',
 
+            'bat_rated_capacity': 'sensor.batteries_rated_capacity',
+            'bat_rated_charge_power': 'sensor.batteries_maximum_charge_power',
+            'bat_rated_discharge_power': 'sensor.batteries_maximum_discharge_power',
+
             'bat_power': 'sensor.batteries_charge_discharge_power',
             'bat_charge_power_average_last_30mins': 'sensor.batteries_charge_power_average_last_30mins',
             'bat_discharge_power_average_last_24h': 'sensor.batteries_discharge_power_average_last_24h',
-            
+
             'bat_soc': 'sensor.batteries_state_of_capacity',
 
             'pv_yield_total': 'sensor.inverter_total_dc_input_energy',

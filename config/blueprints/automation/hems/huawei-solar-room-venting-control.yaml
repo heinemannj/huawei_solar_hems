@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -22,11 +24,10 @@
 # ########## Start: Blueprint ##########
 #
 blueprint:
-  name: huawei_solar_room_venting_control
+  name: Huawei Solar - Room Venting Control
   description: >-
-    ## Huawei Solar - Room Venting Control
-
-    Turns On a venting fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C and Room humidity gets higher than 54%.
+    <br>
+    **Turns On a room venting fan if** Huawei SUN2000-3/4/5/6/8/10KTL-M1 **inverter temperature gets higher than 45°C and room humidity gets higher than 54%**.
 
     * automation.huawei_solar_room_venting_control
 
@@ -52,36 +53,97 @@ blueprint:
 
     * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
 
+    * All rights reserved.
+
   domain: automation
   homeassistant:
     min_version: 2024.10.1
   author: heinemannj
   source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-room-venting-control.yaml
   input:
-    inverter_internal_temperature:
-      name: Inverter internal temperature sensor
-      description: Internal temperature sensor of PV system's Inverter device.
-      selector:
-        entity:
-          filter:
-            - domain: sensor
-          include_entities:
-            - sensor.inverter_internal_temperature
-          multiple: false
-    venting_fan:
-      name: Room venting fan switch
-      description: Room venting fan switch.
-      selector:
-        entity:
-          domain: switch
-          multiple: false
-    humidity:
-      name: Room humidity sensor
-      description: Room humidity sensor.
-      selector:
-        entity:
-          domain: sensor
-          multiple: false
+    room_venting_control_settings:
+      name: Room Venting controller settings
+      icon: mdi:cog
+      description: Configure sensors and switches for Room Venting controller.
+      input:
+        inverter_internal_temperature:
+          name: Huawei Solar Inverter internal temperature sensor
+          description: >-
+            Internal temperature sensor of PV system's Inverter device.
+            <br>
+            <br>Default: sensor.inverter_internal_temperature
+          selector:
+            entity:
+              filter:
+                - domain: sensor
+              multiple: false
+          default: sensor.inverter_internal_temperature
+        venting_fan:
+          name: Room venting fan switch
+          description: Room venting fan switch.
+          selector:
+            entity:
+              domain: switch
+              multiple: false
+        humidity:
+          name: Room humidity sensor
+          description: Room humidity sensor.
+          selector:
+            entity:
+              domain: sensor
+              multiple: false
+        temperature_threshold_on:
+          name: Inverters internal temperature threshold - Turn ON
+          description: >-
+            Set the inverters internal temperature threshold to turn `ON` room venting fan switch.
+            <br>
+            <br>Default: 45°C; Will match above 45°C.
+          default: 45
+          selector:
+            number:
+              min: 20
+              max: 65
+              step: 1
+              unit_of_measurement: '°C'
+              mode: box
+        temperature_threshold_off:
+          name: Inverters internal temperature threshold - Turn OFF
+          description: >-
+            Set the inverters internal temperature threshold to turn `OFF` room venting fan switch.
+            <br>
+            <br>Default: 43°C; Will match below 43°C.
+          default: 43
+          selector:
+            number:
+              min: 20
+              max: 65
+              step: 1
+              unit_of_measurement: '°C'
+              mode: box
+        humidity_threshold:
+          name: Room humidity threshold
+          description: >-
+            Set the room humidity threshold.
+            <br>
+            <br>Default: 54%; Will match above 54%.
+          default: 54
+          selector:
+            number:
+              min: 40
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        trigger_frequency:
+          name: Trigger frequency
+          description: >-
+            Set the `time_pattern` for the automation trigger (in minutes).
+            <br>
+            <br>Default: /1; Will match every 1 minutes.
+            <br>Note: Must start with a `/`
+          default: "/1"
+          selector:
+            text:
 #
 # ########## Start: Automation ##########
 #
@@ -90,14 +152,14 @@ alias: 'Huawei Solar - Room Venting Control'
 description: 'Turns On a venting fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C and Room humidity gets higher than 54%.'
 triggers:
 - trigger: time_pattern
-  minutes: /1
+  minutes: !input trigger_frequency
 conditions: []
 actions:
 - choose:
   - conditions:
     - condition: numeric_state
       entity_id: !input inverter_internal_temperature
-      below: 43
+      below: !input temperature_threshold_off
     - condition: state
       entity_id: !input venting_fan
       state: 'on'
@@ -110,10 +172,10 @@ actions:
   - conditions:
     - condition: numeric_state
       entity_id: !input inverter_internal_temperature
-      above: 45
+      above: !input temperature_threshold_on
     - condition: numeric_state
       entity_id: !input humidity
-      above: 54
+      above: !input humidity_threshold
     - condition: state
       entity_id: !input venting_fan
       state: 'off'

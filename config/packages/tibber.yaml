@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Rest Sensors ##########
 #
@@ -39,6 +41,11 @@
 # - sensor.tibber_daily_cost_statistics
 # - sensor.tibber_monthly_cost_statistics
 # - sensor.tibber_yearly_cost_statistics
+#
+# - input_number.tibber_basic_fee_monthly
+# - input_number.tibber_grid_usage_fee_daily
+# - input_number.tibber_electricity_meter_fee_daily
+# - input_number.tibber_vat_rate
 #
 # ########## Start: Rest Sensors ##########
 #
@@ -237,14 +244,6 @@ multiscrape:
 #
 # - for Persistent Template Sensor states after HA restart
 #
-
-#
-# input_number.tibber_grundpreis_je_monat
-# input_number.tibber_netznutzungsgebuhr_je_tag
-# input_number.tibber_messtellengebuhr_je_tag
-# input_number.tibber_mehrwertsteuersatz
-#
-
 template:
   - trigger:
 
@@ -544,3 +543,52 @@ template:
           last_update: "{{ t }}"
 #
 # ########## End: Persistent Template Sensors ##########
+#
+# ########## Start: Input numbers ##########
+#
+input_number:
+  #
+  #
+  # Default: 5.03
+  #
+  tibber_basic_fee_monthly:
+    name: Tibber setting - Monthly Tibber contract basic fee
+    min: 0
+    max: 10
+    step: 0.01
+    unit_of_measurement: '€'
+    mode: box
+  #
+  #
+  # Default: 0.21
+  #
+  tibber_grid_usage_fee_daily:
+    name: Tibber setting - Daily Grid usage fee
+    min: 0
+    max: 1
+    step: 0.01
+    unit_of_measurement: '€'
+    mode: box
+  #
+  #
+  # Default: 0.0459
+  #
+  tibber_electricity_meter_fee_daily:
+    name: Tibber setting - Daily electricity meter fee
+    min: 0
+    max: 0.1
+    step: 0.0001
+    unit_of_measurement: '€'
+    mode: box
+  #
+  #
+  # Default: 0.19
+  #
+  tibber_vat_rate:
+    name: Tibber setting - VAT rate
+    min: 0
+    max: 1
+    step: 0.01
+    mode: box
+#
+# ########## End: Input numbers ##########

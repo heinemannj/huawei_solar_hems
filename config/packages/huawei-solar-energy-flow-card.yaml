@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Setting for Huawei Solar Integration UPDATE_INTERVAL in const.py ##########
 #

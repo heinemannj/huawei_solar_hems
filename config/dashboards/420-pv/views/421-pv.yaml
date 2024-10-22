@@ -2,7 +2,8 @@ title: 421-PV
 theme: dashboards
 path: 421-pv
 icon: mdi:solar-power-variant
-type: custom:grid-layout
+type: custom:layout-card
+layout_type: custom:grid-layout
 badges: []
 cards:
   - type: custom:layout-card

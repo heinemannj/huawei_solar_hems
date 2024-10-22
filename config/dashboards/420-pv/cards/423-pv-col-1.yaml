@@ -889,6 +889,6 @@ entities:
         show_state: true
     type: custom:fold-entity-row
     head:
-      entity: automation.heating_pump_sg_ready_control
+      entity: automation.heat_pump_sg_ready_control
       name: Heat Pump - SG-Ready controller
       secondary_info: last-triggered

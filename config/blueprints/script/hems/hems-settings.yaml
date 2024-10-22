@@ -1,0 +1,225 @@
+# ########## HEMS - Settings ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: script
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/hems-settings.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+#
+# ########## Entities ##########
+#
+# - script.hems_settings
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: HEMS - Settings
+  description: >-
+    <br>
+    Set **initial** values of **HEMS configuration** input numbers.
+
+    * script.hems_settings
+
+
+    Note: **Run this script manually** at least once after configuration changes.
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: script
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/hems-settings.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+    * All rights reserved.
+
+  domain: script
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/hems-settings.yaml
+  input:
+    batteries_settings:
+      name: Batteries SOC setpoint settings
+      icon: mdi:cog
+      description: Configure Batteries SOC setpoint for Batteries Charge-Discharge Control.
+      input:
+        batteries_soc_setpoint_low:
+          name: Batteries SOC setpoint low 
+          description: >-
+            Set the Batteries SOC setpoint `low`.
+            <br>
+            <br>Used by `Batteries Maximum discharging power control`.
+            <br>Can not be lower then `Batteries End-of-discharge SOC`.
+            <br>Default: 5 %; Adjust as required.
+          default: 5
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        batteries_soc_setpoint_neutral:
+          name: Batteries SOC setpoint neutral 
+          description: >-
+            Set the Batteries SOC setpoint `neutral`.
+            <br>
+            <br>Used by `Batteries Maximum charging power control`.
+            <br>Default: 67 %; Adjust as required.
+          default: 67
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        batteries_soc_setpoint_high:
+          name: Batteries SOC setpoint high 
+          description: >-
+            Set the Batteries SOC setpoint `high`.
+            <br>
+            <br>Not in use.
+            <br>Default: 75 %; Adjust as required.
+          default: 75
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        batteries_soc_setpoint_forcible_charge:
+          name: Batteries SOC setpoint forcible charge 
+          description: >-
+            Set the Batteries SOC setpoint `forcible charge`.
+            <br>
+            <br>Used by `Batteries Forcible charge control`.
+            <br>Default: 90 %; Adjust as required.
+          default: 90
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+    epexspot_settings:
+      name: EPEXspot Quantile setpoint settings
+      icon: mdi:cog
+      description: Configure EPEXspot Quantile setpoint for Batteries Charge-Discharge Control.
+      input:
+        epexspot_quantile_setpoint_low:
+          name: EPEXspot Quantile setpoint low 
+          description: >-
+            Set the EPEXspot Quantile setpoint `low`.
+            <br>
+            <br>Used by `Batteries Charge from grid control`, `Batteries Maximum discharging power control` and `SG-Ready Operating mode control`.
+            <br>Default: 0.15; Adjust as required.
+          default: 0.15
+          selector:
+            number:
+              min: 0
+              max: 1
+              step: 0.01
+              mode: box
+        epexspot_quantile_setpoint_neutral:
+          name: EPEXspot Quantile setpoint neutral 
+          description: >-
+            Set the EPEXspot Quantile setpoint `neutral`.
+            <br>
+            <br>Used by `Batteries Forcible charge control` and `SG-Ready Operating mode control`.
+            <br>Default: 0.33; Adjust as required.
+          default: 0.33
+          selector:
+            number:
+              min: 0
+              max: 1
+              step: 0.01
+              mode: box
+        epexspot_quantile_setpoint_high:
+          name: SEPEXspot Quantile setpoint high 
+          description: >-
+            Set the EPEXspot Quantile setpoint `high`.
+            <br>
+            <br>Used by `SG-Ready Operating mode control`.
+            <br>Default: 0.90; Adjust as required.
+          default: 0.90
+          selector:
+            number:
+              min: 0
+              max: 1
+              step: 0.01
+              mode: box
+
+sequence:
+  - alias: Set initial value of batteries_soc_setpoint_low
+    action: input_number.set_value
+    target:
+      entity_id: input_number.batteries_soc_setpoint_low
+    data:
+      value: !input batteries_soc_setpoint_low
+  - alias: Set initial value of batteries_soc_setpoint_neutral
+    action: input_number.set_value
+    target:
+      entity_id: input_number.batteries_soc_setpoint_neutral
+    data:
+      value: !input batteries_soc_setpoint_neutral
+  - alias: Set initial value of batteries_soc_setpoint_high
+    action: input_number.set_value
+    target:
+      entity_id: input_number.batteries_soc_setpoint_high
+    data:
+      value: !input batteries_soc_setpoint_high
+  - alias: Set initial value of batteries_soc_setpoint_forcible_charge
+    action: input_number.set_value
+    target:
+      entity_id: input_number.batteries_soc_setpoint_forcible_charge
+    data:
+      value: !input batteries_soc_setpoint_forcible_charge
+  - alias: Set initial value of epexspot_quantile_setpoint_low
+    action: input_number.set_value
+    target:
+      entity_id: input_number.epexspot_quantile_setpoint_low
+    data:
+      value: !input epexspot_quantile_setpoint_low
+  - alias: Set initial value of epexspot_quantile_setpoint_neutral
+    action: input_number.set_value
+    target:
+      entity_id: input_number.epexspot_quantile_setpoint_neutral
+    data:
+      value: !input epexspot_quantile_setpoint_neutral
+  - alias: Set initial value of epexspot_quantile_setpoint_high
+    action: input_number.set_value
+    target:
+      entity_id: input_number.epexspot_quantile_setpoint_high
+    data:
+      value: !input epexspot_quantile_setpoint_high
+icon: mdi:cog
+mode: single

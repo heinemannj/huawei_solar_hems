@@ -1,0 +1,155 @@
+# ########## Tibber - Settings ##########
+#
+# homeassistant:
+#   min_version: 2024.10.1
+# domain: script
+#
+# source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/tibber-settings.yaml
+#
+# repository_name: Huawei Solar HEMS
+# repository_description: Home Assistent (HA) Home Energy Management System (HEMS)
+# repository_url: https://github.com/heinemannj/huawei_solar_hems
+# documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
+# author: https://github.com/heinemannj
+#
+# Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
+#
+# ########## Entities ##########
+#
+# - script.tibber_settings
+#
+# ########## Start: Blueprint ##########
+#
+blueprint:
+  name: Tibber - Settings
+  description: >-
+    <br>
+    Set **initial** values of **Tibber configuration** input numbers.
+
+    * script.tibber_settings
+
+
+    Note: **Run this script manually** at least once after configuration changes.
+
+    ### Home Assistent (HA) Home Energy Management System (HEMS)
+
+    * Min HA version: 2024.10.1
+
+    * Domain: script
+
+    * [Source](https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/tibber-settings.yaml)
+
+    #### Repository
+
+    * [Huawei Solar HEMS](https://github.com/heinemannj/huawei_solar_hems)
+
+    * [Documentation](https://github.com/heinemannj/huawei_solar_hems/wiki)
+
+    #### Author
+    
+    * [heinemannj](https://github.com/heinemannj)
+
+    #### License
+
+    * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
+
+    * All rights reserved.
+
+  domain: script
+  homeassistant:
+    min_version: 2024.10.1
+  author: heinemannj
+  source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/script/hems/tibber-settings.yaml
+
+  input:
+    tibber_settings:
+      name: Tibber settings
+      icon: mdi:cog
+      description: Configure surcharges and tax to calculate the total costs.
+      input:
+        tibber_basic_fee_monthly:
+          name: Monthly Tibber contract basic fee
+          description: >-
+            Set the monthly Tibber contract basic fee.
+            <br>
+            <br>Default for Germany: 5.03 €; Adjust as required.
+          default: 5.03
+          selector:
+            number:
+              min: 0
+              max: 10
+              step: 0.01
+              unit_of_measurement: '€'
+              mode: box
+        tibber_electricity_meter_fee_daily:
+          name: Daily electricity meter fee
+          description: >-
+            Set the daily electricity meter fee.
+            <br>
+            <br>Default for Germany: 0.0459 €; Adjust as required.
+          default: 0.0459
+          selector:
+            number:
+              min: 0
+              max: 0.1
+              step: 0.001
+              unit_of_measurement: '€'
+              mode: box
+        tibber_grid_usage_fee_daily:
+          name: Daily Grid usage fee
+          description: >-
+            Set the daily Grid usage fee.
+            <br>
+            <br>Default for Germany: 0.21 €; Adjust as required.
+          default: 0.21
+          selector:
+            number:
+              min: 0
+              max: 1
+              step: 0.01
+              unit_of_measurement: '€'
+              mode: box
+        tibber_vat_rate:
+          name: VAT rate
+          description: >-
+            Set the VAT rate.
+            <br>
+            <br>Default for Germany: 0.19; Adjust as required.
+          default: 0.19
+          selector:
+            number:
+              min: 0
+              max: 1
+              step: 0.01
+              mode: box
+
+sequence:
+  - alias: Set initial value of tibber_basic_fee_monthly
+    action: input_number.set_value
+    target:
+      entity_id: input_number.tibber_basic_fee_monthly
+    data:
+      value: !input tibber_basic_fee_monthly
+  - alias: Set initial value of tibber_electricity_meter_fee_daily
+    action: input_number.set_value
+    target:
+      entity_id: input_number.tibber_electricity_meter_fee_daily
+    data:
+      value: !input tibber_electricity_meter_fee_daily
+  - alias: Set initial value of tibber_grid_usage_fee_daily
+    action: input_number.set_value
+    target:
+      entity_id: input_number.tibber_grid_usage_fee_daily
+    data:
+      value: !input tibber_grid_usage_fee_daily
+  - alias: Set initial value of tibber_vat_rate
+    action: input_number.set_value
+    target:
+      entity_id: input_number.tibber_vat_rate
+    data:
+      value: !input tibber_vat_rate
+icon: mdi:cog
+mode: single

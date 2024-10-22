@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -22,11 +24,10 @@
 # ########## Start: Blueprint ##########
 #
 blueprint:
-  name: huawei_solar_batteries_charge_discharge_control
+  name: Huawei Solar - Batteries Charge-Discharge Control
   description: >-
-    ## Huawei Solar - Batteries Charge-Discharge Control
-
-    Batteries Charge-Discharge Management for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter.
+    <br>
+    **Batteries Charge-Discharge Management** for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter.
 
     * automation.huawei_solar_batteries_charge_discharge_control
 
@@ -52,73 +53,139 @@ blueprint:
 
     * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
 
+    * All rights reserved.
+
   domain: automation
   homeassistant:
     min_version: 2024.10.1
   author: heinemannj
   source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-batteries-charge-discharge-control.yaml
   input:
-    binary_sensor_batteries_forcible_charge:
-      name: HEMS Batteries Forcible charge control binary sensor
-      description: Forcible charge binary sensor of HEMS batteries controller.
-      selector:
-        entity:
-          domain: binary_sensor
-          include_entities:
-            - binary_sensor.batteries_forcible_charge
-          multiple: false
-    binary_sensor_batteries_charge_from_grid:
-      name: HEMS Batteries Charge from grid control binary sensor
-      description: Charge from grid binary sensor of HEMS batteries controller.
-      selector:
-        entity:
-          domain: binary_sensor
-          include_entities:
-            - binary_sensor.batteries_charge_from_grid
-          multiple: false
-    binary_sensor_batteries_maximum_charging_power:
-      name: HEMS Batteries Maximum charging power control  binary sensor
-      description: Maximum charge power binary sensor of HEMS batteries controller.
-      selector:
-        entity:
-          domain: binary_sensor
-          include_entities:
-            - binary_sensor.batteries_maximum_charging_power
-          multiple: false
-    sensor_batteries_forcible_charge:
-      name: Batteries Forcible charge sensor
-      description: Forcible charge sensor of PV system's Batteries device.
-      selector:
-        entity:
-          domain: sensor
-          include_entities:
-            - sensor.batteries_forcible_charge
-          multiple: false
-    switch_batteries_charge_from_grid:
-      name: Batteries Charge from grid switch
-      description: Charge from grid switch of PV system's Batteries device.
-      selector:
-        entity:
-          domain: switch
-          include_entities:
-            - switch.batteries_charge_from_grid
-          multiple: false
-    number_batteries_maximum_charging_power:
-      name: Batteries Maximum charge power number
-      description: Maximum charge power number of PV system's Batteries device.
-      selector:
-        entity:
-          domain: number
-          include_entities:
-            - number.batteries_maximum_charging_power
-          multiple: false
-    batteries_device:
-      name: Batteries device
-      description: PV system's Batteries device.
-      selector:
-        device:
-          integration: huawei_solar
-          multiple: false
+    batteries_charge_discharge_control_settings:
+      name: Batteries Charge-Discharge controller settings
+      icon: mdi:cog
+      description: Configure sensors, binary sensors, switches, input numbers and devices for Batteries Charge-Discharge control.
+      input:
+        binary_sensor_batteries_forcible_charge:
+          name: HEMS Batteries Forcible charge control binary sensor
+          description: >-
+            Forcible charge binary sensor of HEMS batteries controller.
+            <br>
+            <br>Default: binary_sensor.batteries_forcible_charge
+          selector:
+            entity:
+              domain: binary_sensor
+              multiple: false
+          default: binary_sensor.batteries_forcible_charge
+        binary_sensor_batteries_charge_from_grid:
+          name: HEMS Batteries Charge from grid control binary sensor
+          description: >-
+            Charge from grid binary sensor of HEMS batteries controller.
+            <br>
+            <br>Default:  binary_sensor.batteries_charge_from_grid
+          selector:
+            entity:
+              domain: binary_sensor
+              multiple: false
+          default: binary_sensor.batteries_charge_from_grid
+        binary_sensor_batteries_maximum_charging_power:
+          name: HEMS Batteries Maximum charging power control binary sensor
+          description: >-
+            Maximum charge power binary sensor of HEMS batteries controller.
+            <br>
+            <br>Default: binary_sensor.batteries_maximum_charging_power
+          selector:
+            entity:
+              domain: binary_sensor
+              multiple: false
+          default: binary_sensor.batteries_maximum_charging_power
+        binary_sensor_batteries_maximum_discharging_power:
+          name: HEMS Batteries Maximum discharging power control binary sensor
+          description: >-
+            Maximum discharge power binary sensor of HEMS batteries controller.
+            <br>
+            <br>Default: binary_sensor.batteries_maximum_discharging_power
+          selector:
+            entity:
+              domain: binary_sensor
+              multiple: false
+          default: binary_sensor.batteries_maximum_discharging_power
+        sensor_batteries_maximum_charge_power:
+          name: Huawei Solar Batteries Rated charge power sensor
+          description: >-
+            Rated charge power sensor of PV system's Batteries device.
+            <br>
+            <br>Default: sensor.batteries_maximum_charge_power
+          selector:
+            entity:
+              multiple: false
+              filter:
+                - domain: sensor
+                  device_class: power
+          default: sensor.batteries_maximum_charge_power
+        sensor_batteries_maximum_discharge_power:
+          name: Huawei Solar Batteries Rated discharge power sensor
+          description: >-
+            Rated discharge power sensor of PV system's Batteries device.
+            <br>
+            <br>Default: sensor.batteries_maximum_discharge_power
+          selector:
+            entity:
+              multiple: false
+              filter:
+                - domain: sensor
+                  device_class: power
+          default: sensor.batteries_maximum_discharge_power
+        sensor_batteries_forcible_charge:
+          name: Huawei Solar Batteries Forcible charge sensor
+          description: >-
+            Forcible charge sensor of PV system's Batteries device.
+            <br>
+            <br>Default: sensor.batteries_forcible_charge
+          selector:
+            entity:
+              domain: sensor
+              multiple: false
+          default: sensor.batteries_forcible_charge
+        switch_batteries_charge_from_grid:
+          name: Huawei Solar Batteries Charge from grid switch
+          description: >-
+            Charge from grid switch of PV system's Batteries device.
+            <br>
+            <br>Default: switch.batteries_charge_from_grid
+          selector:
+            entity:
+              domain: switch
+              multiple: false
+          default: switch.batteries_charge_from_grid
+        number_batteries_maximum_charging_power:
+          name: Huawei Solar Batteries Maximum charge power number
+          description: >-
+            Maximum charge power number of PV system's Batteries device.
+            <br>
+            <br>Default: number.batteries_maximum_charging_power
+          selector:
+            entity:
+              domain: number
+              multiple: false
+          default: number.batteries_maximum_charging_power
+        batteries_device:
+          name: Huawei Solar Batteries device
+          description: PV system's Batteries device.
+          selector:
+            device:
+              integration: huawei_solar
+              multiple: false
+        trigger_frequency:
+          name: Trigger frequency
+          description: >-
+            Set the `time_pattern` for the automation trigger (in minutes).
+            <br>
+            <br>Default: /1; Will match every 1 minutes.
+            <br>Note: Must start with a `/`
+          default: "/1"
+          selector:
+            text:
 #
 # ########## Start: Automation ##########
 #
@@ -127,11 +194,12 @@ alias: 'Huawei Solar - Batteries Charge-Discharge Control'
 description: 'Batteries Charge-Discharge Management for Huawei LUNA2000-5/10/15-S0 connected to Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter'
 trigger:
 - platform: time_pattern
-  minutes: /1
+  minutes: !input trigger_frequency
 variables:
-  var: >-
-    {% from '032-emhass.jinja' import globalVariables %}
-    {{ globalVariables()|from_json }}
+  bat_rated_charge_power_id: !input sensor_batteries_maximum_charge_power
+  bat_rated_charge_power: "{{ states(bat_rated_charge_power_id)|float(5000) }}"
+  bat_rated_discharge_power_id: !input sensor_batteries_maximum_discharge_power
+  bat_rated_discharge_power: "{{ states(bat_rated_discharge_power_id)|float(5000) }}"
   bat_forcible_charge_id: !input binary_sensor_batteries_forcible_charge
   bat_target_soc: "{{ state_attr(bat_forcible_charge_id, 'bat_target_soc')|float(100) }}"
   bat_target_charge_power_id: !input binary_sensor_batteries_maximum_charging_power
@@ -154,7 +222,7 @@ action:
       then:
       - data:
           target_soc: '{{ bat_target_soc|float(100) }}'
-          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          power: '{{ bat_rated_charge_power|float(5000) }}'
           device_id: !input batteries_device
         action: huawei_solar.forcible_charge_soc
     - if:
@@ -181,7 +249,7 @@ action:
       then:
       - data:
           target_soc: '{{ bat_target_soc|float(100) }}'
-          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          power: '{{ bat_rated_charge_power|float(5000) }}'
           device_id: !input batteries_device
         action: huawei_solar.forcible_charge_soc
     - if:
@@ -236,7 +304,7 @@ action:
     - condition: and
       conditions:
       - condition: state
-        entity_id: binary_sensor.batteries_maximum_discharging_power
+        entity_id: !input binary_sensor_batteries_maximum_discharging_power
         state: 'off'
     sequence:
     - if:
@@ -247,7 +315,7 @@ action:
       then:
       - data:
           target_soc: '{{ bat_target_soc|float(100) }}'
-          power: '{{ var.batteries_rated_charge_power|float(5000) }}'
+          power: '{{ bat_rated_charge_power|float(5000) }}'
           device_id: !input batteries_device
         action: huawei_solar.forcible_charge_soc
     - if:

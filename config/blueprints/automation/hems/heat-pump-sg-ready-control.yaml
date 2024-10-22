@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -22,11 +24,10 @@
 # ########## Start: Blueprint ##########
 #
 blueprint:
-  name: heat_pump_sg_ready_control
+  name: Heat Pump - SG-Ready Control
   description: >-
-    ## Heat Pump - SG-Ready Control
-
-    Smart Grid Ready controller.
+    <br>
+    **Smart Grid Ready controller**.
 
     * automation.heat_pump_sg_ready_control
 
@@ -52,43 +53,62 @@ blueprint:
 
     * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
 
+    * All rights reserved.
+
   domain: automation
   homeassistant:
     min_version: 2024.10.1
   author: heinemannj
   source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/heat-pump-sg-ready-control.yaml
   input:
-    sg_ready_mode:
-      name: SG-Ready Operating mode control sensor
-      description: Operating mode sensor of Heat Pump SG-Ready controller.
-      selector:
-        entity:
-          filter:
-            - domain: sensor
-          include_entities:
-            - sensor.sg_ready_mode
-          multiple: false
-    hp_lock_switch:
-      name: SG-Ready Heat Pump Lock switch
-      description: Lock switch of Heat Pump SG-Ready controller (HP Terminal 1).
-      selector:
-        entity:
-          domain: switch
-          multiple: false
-    pv_excess_switch:
-      name: SG-Ready PV excess switch
-      description: PV excess switch of Heat Pump SG-Ready controller (HP Terminal 2).
-      selector:
-        entity:
-          domain: switch
-          multiple: false
-    domestic_hot_water_boost_switch:
-      name: Domestic Hot Water Boost switch
-      description: Domestic Hot Water Boost switch of Heat Pump.
-      selector:
-        entity:
-          domain: switch
-          multiple: false
+    sg_ready_control_settings:
+      name: Smart Grid Ready controller settings
+      icon: mdi:cog
+      description: Configure sensors and switches for Smart Grid Ready controller.
+      input:
+        sg_ready_mode:
+          name: SG-Ready Operating mode control sensor
+          description: >-
+            Operating mode sensor of Heat Pump SG-Ready controller.
+            <br>
+            <br>Default: sensor.sg_ready_mode
+          selector:
+            entity:
+              filter:
+                - domain: sensor
+              multiple: false
+          default: sensor.sg_ready_mode
+        hp_lock_switch:
+          name: SG-Ready Heat Pump Lock switch
+          description: Lock switch of Heat Pump SG-Ready controller (HP Terminal 1).
+          selector:
+            entity:
+              domain: switch
+              multiple: false
+        pv_excess_switch:
+          name: SG-Ready PV excess switch
+          description: PV excess switch of Heat Pump SG-Ready controller (HP Terminal 2).
+          selector:
+            entity:
+              domain: switch
+              multiple: false
+        domestic_hot_water_boost_switch:
+          name: Heat Pump Domestic Hot Water Boost switch
+          description: Domestic Hot Water Boost switch of Heat Pump.
+          selector:
+            entity:
+              domain: switch
+              multiple: false
+        trigger_frequency:
+          name: Trigger frequency
+          description: >-
+            Set the `time_pattern` for the automation trigger (in minutes).
+            <br>
+            <br>Default: /1; Will match every 1 minutes.
+            <br>Note: Must start with a `/`
+          default: "/1"
+          selector:
+            text:
 #
 # ########## Start: Automation ##########
 #
@@ -97,7 +117,7 @@ alias: 'Heat Pump - SG-Ready controller'
 description: 'Heat Pump: SG-Ready controller.'
 triggers:
 - trigger: time_pattern
-  minutes: /1
+  minutes: !input trigger_frequency
 conditions: []
 actions:
 - choose:
@@ -176,13 +196,13 @@ actions:
     - if:
       - condition: state
         entity_id: !input hp_lock_switch
-        state: 'off'
+        state: 'on'
       then:
       - metadata: {}
         data: {}
         target:
           entity_id: !input hp_lock_switch
-        action: switch.turn_on
+        action: switch.turn_off
     - if:
       - condition: state
         entity_id: !input pv_excess_switch
@@ -193,7 +213,7 @@ actions:
         target:
           entity_id: !input pv_excess_switch
         action: switch.turn_on
-    alias: "Turn-on command (Operating mode 4: Switching state, with terminal solution: 1:1)."
+    alias: "Turn-on command (Operating mode 4: Switching state, with terminal solution: 0:1)."
 
   default:
   - if:

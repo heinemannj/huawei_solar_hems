@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -98,6 +100,8 @@ template:
             {{ globalVariables()|from_json }}
           grid_power_forecast: "{{ states(var.grid_power_forecast)|float(0) }}"
           load_power_forecast: "{{ states(var.load_power_forecast)|float(0) }}"
+          inv_rated_power: "{{ states(var.inv_rated_power)|float(0) }}"
+          inv_max_active_power: "{{ states(var.inv_max_active_power)|float(0) }}"
           inv_input_power: "{{ states(var.inv_input_power)|float(0) }}"
           inv_active_power_forecast: "{{ states(var.inv_active_power_forecast)|float(0) }}"
           prediction_status: "{{ states(var.prediction_status) }}"
@@ -113,14 +117,22 @@ template:
           solar_energy_forecast_prediction_end: "{{ state_attr(var.solar_energy_forecast, 'prediction_end_energy')|float(0) }}"
           solar_energy_forecast_pv_excess_start: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_start_energy')|float(0) }}"
           solar_energy_forecast_pv_excess_end: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_end_energy')|float(0) }}"
+          bat_rated_charge_power: "{{ states(var.bat_rated_charge_power)|float(5000) }}"
+          bat_rated_discharge_power: "{{ states(var.bat_rated_discharge_power)|float(5000) }}"
           bat_soc: "{{ states(var.bat_soc)|float(0) }}"
-          bat_power: "{{ states(var.bat_power)|float(0) }}"
           bat_charge_energy_remaining: "{{ states(var.bat_charge_energy_remaining)|float(0) }}"
           bat_charge_energy_forecast: "{{ solar_energy_forecast - load_energy_forecast }}"
           bat_charge_energy_forecast_solar_noon: "{{ solar_energy_forecast_solar_noon - load_energy_forecast_solar_noon }}"
           bat_charge_energy_forecast_prediction_end: "{{ solar_energy_forecast_prediction_end - load_energy_forecast_prediction_end }}"
           bat_charge_energy_forecast_pv_excess_start: "{{ solar_energy_forecast_pv_excess_start - load_energy_forecast_pv_excess_start }}"
           bat_charge_energy_forecast_pv_excess_end: "{{ solar_energy_forecast_pv_excess_end - load_energy_forecast_pv_excess_end }}"
+          bat_soc_setpoint_low: "{{ states(var.bat_soc_setpoint_low)|float(0) }}"
+          bat_soc_setpoint_neutral: "{{ states(var.bat_soc_setpoint_neutral)|float(0) }}"
+          bat_soc_setpoint_high: "{{ states(var.bat_soc_setpoint_high)|float(0) }}"
+          bat_soc_setpoint_forcible_charge: "{{ states(var.bat_soc_setpoint_forcible_charge)|float(0) }}"
+          epexspot_quantile_setpoint_low: "{{ states(var.epexspot_quantile_setpoint_low)|float(0) }}"
+          epexspot_quantile_setpoint_neutral: "{{ states(var.epexspot_quantile_setpoint_neutral)|float(0) }}"
+          epexspot_quantile_setpoint_high: "{{ states(var.epexspot_quantile_setpoint_high)|float(0) }}"
     binary_sensor:
       #
       #
@@ -132,12 +144,11 @@ template:
           {{ load_power_forecast > 0
               and grid_power_forecast > 0
               and inv_active_power_forecast < 0
-              and epexspot_quantile <= var.epexspot_quantile_setpoint_low
+              and epexspot_quantile <= epexspot_quantile_setpoint_low
               and prediction_status == 'Optimal' }}
         attributes:
-          bat_target_soc: "{{ var.batteries_soc_setpoint_high }}"
           epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
-          epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
+          epexspot_quantile_setpoint_low: "{{ epexspot_quantile_setpoint_low }}"
           last_updated: "{{ t }}"
       #
       #
@@ -154,19 +165,19 @@ template:
             {% if charge_time > 0 %}
               {% set charge_power = (bat_charge_energy_remaining / charge_time * 1000)|float(0)|round(0) %}
             {% else %}
-              {% set charge_power = var.batteries_rated_charge_power %}
+              {% set charge_power = bat_rated_charge_power %}
             {% endif %}
 
-            {% if var.batteries_soc_setpoint_neutral < bat_soc < 100
+            {% if bat_soc_setpoint_neutral < bat_soc < 100
                 and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
-                and (inv_input_power - var.inverter_maximum_active_power) > charge_power %}
-              {{ inv_input_power - var.inverter_rated_power }}
-            {% elif var.batteries_soc_setpoint_neutral < bat_soc < 100
+                and (inv_input_power - inv_max_active_power) > charge_power %}
+              {{ inv_input_power - inv_rated_power }}
+            {% elif bat_soc_setpoint_neutral < bat_soc < 100
                 and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
-                and charge_power < var.batteries_rated_charge_power %}
+                and charge_power < bat_rated_charge_power %}
               {{ charge_power }}
             {% else %}
-              {{ var.batteries_rated_charge_power }}
+              {{ bat_rated_charge_power }}
             {% endif %}
           charge_end_time_expected: "{{ solar_noon_time }}"
           charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
@@ -182,20 +193,20 @@ template:
         unique_id: batteries_maximum_discharging_power
         icon: mdi:battery-charging-50
         state: >-
-            {% if epexspot_quantile <= var.epexspot_quantile_setpoint_low and bat_soc <= var.batteries_soc_setpoint_low %}
+            {% if epexspot_quantile <= epexspot_quantile_setpoint_low and bat_soc <= bat_soc_setpoint_low %}
               {{ 'off' }}
             {% else %}
               {{ 'on' }}
             {% endif %}
         attributes:
           maximum_discharging_power: >-
-            {% if epexspot_quantile <= var.epexspot_quantile_setpoint_low and bat_soc <= var.batteries_soc_setpoint_low %}
+            {% if epexspot_quantile <= epexspot_quantile_setpoint_low and bat_soc <= bat_soc_setpoint_low %}
               {{ 0 }}
             {% else %}
-              {{ var.batteries_rated_discharge_power }}
+              {{ bat_rated_discharge_power }}
             {% endif %}
-          soc_setpoint_low: "{{ var.batteries_soc_setpoint_low }}"
-          epexspot_quantile_setpoint_low: "{{ var.epexspot_quantile_setpoint_low }}"
+          soc_setpoint_low: "{{ bat_soc_setpoint_low }}"
+          epexspot_quantile_setpoint_low: "{{ epexspot_quantile_setpoint_low }}"
           last_updated: "{{ t }}"
       #
       #
@@ -205,17 +216,14 @@ template:
         icon: mdi:battery-charging-50
         state: >-
           {{ solar_energy_forecast > 0.0
-              and epexspot_quantile <= var.epexspot_quantile_setpoint_neutral
-              and bat_power < 3500.0
+              and epexspot_quantile <= epexspot_quantile_setpoint_neutral
               and bat_charge_energy_forecast_prediction_end <= bat_charge_energy_remaining }}
         attributes:
           bat_charge_energy_forecast_prediction_end: "{{ bat_charge_energy_forecast_prediction_end|float(0)|round(3) }}"
           bat_charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
-          bat_power: "{{ bat_power }}"
-          bat_power_setpoint: 3500
-          bat_target_soc: "{{ var.batteries_soc_setpoint_high }}"
+          bat_target_soc: "{{ bat_soc_setpoint_forcible_charge }}"
           epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
-          epexspot_quantile_setpoint_neutral: "{{ var.epexspot_quantile_setpoint_neutral|float(0)|round(4) }}"
+          epexspot_quantile_setpoint_neutral: "{{ epexspot_quantile_setpoint_neutral|float(0)|round(4) }}"
           last_updated: "{{ t }}"
 
   - trigger:
@@ -402,6 +410,86 @@ template:
           last_updated: "{{ t }}"
 #
 # ########## End: Persistent Template Sensors ##########
+#
+# ########## Start: Input numbers ##########
+#
+input_number:
+  #
+  #
+  # Default: 5.0
+  #
+  batteries_soc_setpoint_low:
+    name: batteries_soc_setpoint_low
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: '%'
+    mode: box
+  #
+  #
+  # Default: 67.0
+  #
+  batteries_soc_setpoint_neutral:
+    name: batteries_soc_setpoint_neutral
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: '%'
+    mode: box
+  #
+  #
+  # Default: 75.0
+  #
+  batteries_soc_setpoint_high:
+    name: batteries_soc_setpoint_high
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: '%'
+    mode: box
+  #
+  #
+  # Default: 90.0
+  #
+  batteries_soc_setpoint_forcible_charge:
+    name: batteries_soc_setpoint_forcible_charge
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: '%'
+    mode: box
+  #
+  #
+  # Default: 0.15
+  #
+  epexspot_quantile_setpoint_low:
+    name: epexspot_quantile_setpoint_low
+    min: 0
+    max: 1
+    step: 0.01
+    mode: box
+  #
+  #
+  # Default: 0.33
+  #
+  epexspot_quantile_setpoint_neutral:
+    name: epexspot_quantile_setpoint_neutral
+    min: 0
+    max: 1
+    step: 0.01
+    mode: box
+  #
+  #
+  # Default: 0.90
+  #
+  epexspot_quantile_setpoint_high:
+    name: epexspot_quantile_setpoint_high
+    min: 0
+    max: 1
+    step: 0.01
+    mode: box
+#
+# ########## End: Input numbers ##########
 #
 # ########## Start: Rest commands ##########
 #

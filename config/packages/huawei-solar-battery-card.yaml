@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -72,8 +74,9 @@ template:
             {% from '032-emhass.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           bat_soc: "{{ states(var.bat_soc)|float(0) }}"
-          bat_soc_energy: "{{ var.batteries_rated_capacity * bat_soc / 100 }}"
-          bat_soc_energy_remaining: "{{ var.batteries_rated_charge_energy * (1 - bat_soc / 100) }}"
+          bat_rated_capacity: "{{ states(var.bat_rated_capacity)|float(0) / 1000 }}"
+          bat_soc_energy: "{{ bat_rated_capacity * bat_soc / 100 }}"
+          bat_soc_energy_remaining: "{{ bat_rated_capacity * 1.15 * (1 - bat_soc / 100) }}"
           bat_charge_power_average_last_30mins: "{{ states(var.bat_charge_power_average_last_30mins)|float(0) / 1000 }}"
           bat_discharge_power_average_last_24h: "{{ states(var.bat_discharge_power_average_last_24h)|float(0) / 1000 }}"
     sensor:

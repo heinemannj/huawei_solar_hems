@@ -1,15 +1,15 @@
 type: custom:vertical-stack-in-card
 cards:
-  - entity: input_number.tibber_grundpreis_je_monat
+  - entity: input_number.tibber_basic_fee_monthly
     type: tile
     color: red
-  - entity: input_number.tibber_messtellengebuhr_je_tag
+  - entity: input_number.tibber_electricity_meter_fee_daily
     type: tile
     color: red
-  - entity: input_number.tibber_netznutzungsgebuhr_je_tag
+  - entity: input_number.tibber_grid_usage_fee_daily
     type: tile
     color: red
-  - entity: input_number.tibber_mehrwertsteuersatz
+  - entity: input_number.tibber_vat_rate
     type: tile
     color: red
 card_mod:

@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Entities ##########
 #
@@ -22,11 +24,10 @@
 # ########## Start: Blueprint ##########
 #
 blueprint:
-  name: huawei_solar_inverter_ventilation_control
+  name: Huawei Solar - Inverter Ventilation Control
   description: >-
-    ## Huawei Solar - Inverter Ventilation Control
-
-    Turns On a fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C.
+    <br>
+    **Turns On a fan if** Huawei SUN2000-3/4/5/6/8/10KTL-M1 **inverter temperature gets higher than 45°C**.
 
     * automation.huawei_solar_inverter_ventilation_control
 
@@ -52,29 +53,99 @@ blueprint:
 
     * [Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE)
 
+    * All rights reserved.
+
   domain: automation
   homeassistant:
     min_version: 2024.10.1
   author: heinemannj
   source_url: https://github.com/heinemannj/huawei_solar_hems/blob/main/config/blueprints/automation/hems/huawei-solar-inverter-ventilation-control.yaml
   input:
-    inverter_internal_temperature:
-      name: Inverter internal temperature sensor
-      description: Internal temperature sensor of PV system's Inverter device.
-      selector:
-        entity:
-          filter:
-            - domain: sensor
-          include_entities:
-            - sensor.inverter_internal_temperature
-          multiple: false
-    inverter_ventilation_fan:
-      name: Inverter ventilation fan
-      description: Ventilation smart fan of PV system's Inverter device.
-      selector:
-        entity:
-          domain: fan
-          multiple: false
+    inverter_ventilation_control_settings:
+      name: Inverter Ventilation controller settings
+      icon: mdi:cog
+      description: Configure sensors and devices for Inverter Ventilation controller.
+      input:
+        inverter_internal_temperature:
+          name: Huawei Solar Inverter internal temperature sensor
+          description: >-
+            Internal temperature sensor of PV system's Inverter device.
+            <br>
+            <br>Default: sensor.inverter_internal_temperature
+          selector:
+            entity:
+              filter:
+                - domain: sensor
+              multiple: false
+          default: sensor.inverter_internal_temperature
+        inverter_ventilation_fan:
+          name: Inverter ventilation fan
+          description: Ventilation smart fan of PV system's Inverter device.
+          selector:
+            entity:
+              domain: fan
+              multiple: false
+        inverter_ventilation_fan_speed:
+          name: Inverter ventilation fan speed
+          description: >-
+            Set the inverter ventilation fan speed (in percentage).
+            <br>
+            <br>Default: 33%
+          default: 33
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        inverter_ventilation_fan_oscillate:
+          name: Inverter ventilation fan oscillating
+          description: >-
+            Set the inverter ventilation fan oscillating mode.
+            <br>
+            <br>Default: true
+          default: true
+          selector:
+            boolean:
+        temperature_threshold_on:
+          name: Inverters internal temperature threshold - Turn ON
+          description: >-
+            Set the inverters internal temperature threshold to turn `ON` ventilation smart fan.
+            <br>
+            <br>Default: 45°C; Will match above 45°C.
+          default: 45
+          selector:
+            number:
+              min: 20
+              max: 65
+              step: 1
+              unit_of_measurement: '°C'
+              mode: box
+        temperature_threshold_off:
+          name: Inverters internal temperature threshold - Turn OFF
+          description: >-
+            Set the inverters internal temperature threshold to turn `OFF` ventilation smart fan.
+            <br>
+            <br>Default: 43°C; Will match below 43°C.
+          default: 43
+          selector:
+            number:
+              min: 20
+              max: 65
+              step: 1
+              unit_of_measurement: '°C'
+              mode: box
+        trigger_frequency:
+          name: Trigger frequency
+          description: >-
+            Set the `time_pattern` for the automation trigger (in minutes).
+            <br>
+            <br>Default: /1; Will match every 1 minutes.
+            <br>Note: Must start with a `/`
+          default: "/1"
+          selector:
+            text:
 #
 # ########## Start: Automation ##########
 #
@@ -83,7 +154,7 @@ alias: 'Huawei Solar - Inverter Ventilation Control'
 description: 'Turns On a fan if Huawei SUN2000-3/4/5/6/8/10KTL-M1 Inverter temperature gets higher than 45°C'
 triggers:
 - trigger: time_pattern
-  minutes: /1
+  minutes: !input trigger_frequency
   enabled: true
 conditions: []
 actions:
@@ -91,7 +162,7 @@ actions:
   - conditions:
     - condition: numeric_state
       entity_id: !input inverter_internal_temperature
-      below: 43
+      below: !input temperature_threshold_off
     - condition: state
       entity_id: !input inverter_ventilation_fan
       state: 'on'
@@ -103,7 +174,7 @@ actions:
   - conditions:
     - condition: numeric_state
       entity_id: !input inverter_internal_temperature
-      above: 45
+      above: !input temperature_threshold_on
     - condition: state
       entity_id: !input inverter_ventilation_fan
       state: 'off'
@@ -115,10 +186,10 @@ actions:
     - target:
         entity_id: !input inverter_ventilation_fan
       data:
-        percentage: 33
+        percentage: !input inverter_ventilation_fan_speed
       action: fan.set_percentage
     - data:
-        oscillating: true
+        oscillating: !input inverter_ventilation_fan_oscillate
       target:
         entity_id: !input inverter_ventilation_fan
       action: fan.oscillate

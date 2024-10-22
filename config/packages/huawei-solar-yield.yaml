@@ -12,8 +12,10 @@
 # documentation_url: https://github.com/heinemannj/huawei_solar_hems/wiki
 # author: https://github.com/heinemannj
 #
-# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 # Copyright (c) 2024 Joerg Heinemann
+# All rights reserved.
+#
+# license: https://github.com/heinemannj/huawei_solar_hems/blob/main/LICENSE
 #
 # ########## Setting for Huawei Solar Integration UPDATE_INTERVAL in const.py ##########
 #
@@ -56,24 +58,25 @@ template:
 
           {% from '032-emhass.jinja' import globalVariables %}
           {% set var = globalVariables()|from_json %}
+          {% set inv_rated_power = states(var.inv_rated_power)|float(0) %}
           {% set inv_input_power = states(var.inv_input_power)|float(0) %}
 
-          {% if inv_input_power < (var.inverter_rated_power * 0.05) %}
+          {% if inv_input_power < (inv_rated_power * 0.05) %}
             {# inv_input_power < 300 W #}
             {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (var.inverter_rated_power * 0.1) %}
+          {% elif inv_input_power < (inv_rated_power * 0.1) %}
             {# inv_input_power < 600 W #}
             {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (var.inverter_rated_power * 0.15) %}
+          {% elif inv_input_power < (inv_rated_power * 0.15) %}
             {# inv_input_power < 900 W #}
             {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (var.inverter_rated_power * 0.2) %}
+          {% elif inv_input_power < (inv_rated_power * 0.2) %}
             {# inv_input_power < 1200 W #}
             {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (var.inverter_rated_power * 0.25) %}
+          {% elif inv_input_power < (inv_rated_power * 0.25) %}
             {# inv_input_power < 1500 W #}
             {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (var.inverter_rated_power * 0.3) %}
+          {% elif inv_input_power < (inv_rated_power * 0.3) %}
             {# inv_input_power < 1800 W #}
             {{ (inv_input_power * 1.0038)|float(0) }}
           {% else %}
@@ -81,7 +84,7 @@ template:
             {{ (inv_input_power * 1.0063)|float(0) }}
           {% endif %}
 #
-# ########## End: Template Sensors ##########
+# ########## End: Persistent Template Sensors ##########
 #
 # ########## Start: Integration Sensors ##########
 #
