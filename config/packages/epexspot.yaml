@@ -23,10 +23,6 @@
 #
 # - binary_sensor.epex_spot_data_update
 #
-# - sensor.hwc_charge_interval_night
-# - sensor.heating_off_interval_morning
-# - sensor.heating_off_interval_evening
-#
 # - sensor.epex_spot_data_price
 # - sensor.epex_spot_data_net_price
 # - sensor.epex_spot_data_quantile
@@ -84,61 +80,6 @@ template:
           last_api_update: "{{ APIUpdate.last_update }}"
           next_poll_time: "{{ APIUpdate.next_poll_time }}"
           last_updated: "{{ now().isoformat() }}"
-
-  - trigger:
-      - platform: time
-        at: "00:15:00"
-    action:
-      - variables:
-          t: "{{ now().isoformat() }}"
-      - service: epex_spot.get_lowest_price_interval
-        data:
-          latest_end: "05:30:00"
-          duration:
-            hours: 1
-            minutes: 30
-        response_variable: hwc_charge_interval_night
-      - service: epex_spot.get_highest_price_interval
-        data:
-          latest_end: "11:00:00"
-          duration:
-            hours: 2
-            minutes: 30
-        response_variable: heating_off_interval_morning
-      - service: epex_spot.get_highest_price_interval
-        data:
-          earliest_start: "14:00:00"
-          latest_end: "23:00:00"
-          duration:
-            hours: 3
-            minutes: 0
-        response_variable: heating_off_interval_evening
-    sensor:
-      - name: hwc_charge_interval_night
-        unique_id: hwc_charge_interval_night
-        device_class: timestamp
-        state: "{{ hwc_charge_interval_night.start is defined and hwc_charge_interval_night.start }}"
-        attributes:
-          start: "{{ hwc_charge_interval_night.start|as_timestamp|timestamp_local }}"
-          end: "{{ hwc_charge_interval_night.end|as_timestamp|timestamp_local }}"
-          net_price_ct_per_kwh: "{{ hwc_charge_interval_night.net_price_ct_per_kwh }}"
-      - name: heating_off_interval_morning
-        unique_id: heating_off_interval_morning
-        device_class: timestamp
-        state: "{{ heating_off_interval_morning.start is defined and heating_off_interval_morning.start }}"
-        attributes:
-          start: "{{ heating_off_interval_morning.start|as_timestamp|timestamp_local }}"
-          end: "{{ heating_off_interval_morning.end|as_timestamp|timestamp_local }}"
-          net_price_ct_per_kwh: "{{ heating_off_interval_morning.net_price_ct_per_kwh }}"
-      - name: heating_off_interval_evening
-        unique_id: heating_off_interval_evening
-        device_class: timestamp
-        state: "{{ heating_off_interval_evening.start is defined and heating_off_interval_evening.start }}"
-        attributes:
-          start: "{{ heating_off_interval_evening.start|as_timestamp|timestamp_local }}"
-          end: "{{ heating_off_interval_evening.end|as_timestamp|timestamp_local }}"
-          net_price_ct_per_kwh: "{{ heating_off_interval_evening.net_price_ct_per_kwh }}"
-          last_updated: "{{ t }}"
 
   - trigger:
       - platform: state

@@ -19,25 +19,164 @@
 #
 # ########## Entities ##########
 #
-# - sensor.hems_sun_prediction_end
-# - sensor.hems_sun_pv_excess_end
+# - sensor.hems_sun_pv_excess_start_at_elevation
+# - sensor.hems_sun_pv_excess_end_at_elevation
+# - sensor.hems_sun_prediction_end_at_elevation
+#
 # - sensor.hems_sun_pv_excess_start
+# - sensor.hems_sun_pv_excess_end
+# - sensor.hems_sun_prediction_end
+#
+# - input_number.hems_sun_pv_excess_start_rising_offset
+# - input_number.hems_sun_pv_excess_end_setting_offset
+# - input_number.hems_sun_prediction_end_setting_offset
 #
 sun2:
   - unique_id: hems
     sensors:
-      - unique_id: prediction_end
-        time_at_elevation: 25
-        direction: setting
-        icon: mdi:weather-sunset-down
-        name: Prediction end
-      - unique_id: pv_excess_end
-        time_at_elevation: 15
-        direction: setting
-        icon: mdi:weather-sunset-down
-        name: PV excess end
-      - unique_id: pv_excess_start
+      - unique_id: pv_excess_start_at_elevation
         time_at_elevation: 15
         direction: rising
         icon: mdi:weather-sunset-up
-        name: PV excess start
+        name: PV excess start at elevation
+      - unique_id: pv_excess_end_at_elevation
+        time_at_elevation: 15
+        direction: setting
+        icon: mdi:weather-sunset-down
+        name: PV excess end at elevation
+      - unique_id: prediction_end_at_elevation
+        time_at_elevation: 25
+        direction: setting
+        icon: mdi:weather-sunset-down
+        name: Prediction end at elevation
+#
+# ########## Start: Persistent Template Sensors ##########
+#
+template:
+  - trigger:
+      - platform: time_pattern
+        minutes: "/1"
+    action:
+      - variables:
+          t: "{{ now().isoformat() }}"
+          var: >-
+            {% from '032-emhass.jinja' import globalVariables %}
+            {{ globalVariables()|from_json }}
+
+          rising_yesterday: "{{ state_attr(var.sun_rising_time, 'yesterday')|as_datetime|as_local }}"
+          rising_today: "{{ state_attr(var.sun_rising_time, 'today')|as_datetime|as_local }}"
+          rising_tomorrow: "{{ state_attr(var.sun_rising_time, 'tomorrow')|as_datetime|as_local }}"
+
+          setting_yesterday: "{{ state_attr(var.sun_setting_time, 'yesterday')|as_datetime|as_local }}"
+          setting_today: "{{ state_attr(var.sun_setting_time, 'today')|as_datetime|as_local }}"
+          setting_tomorrow: "{{ state_attr(var.sun_setting_time, 'tomorrow')|as_datetime|as_local }}"
+
+          daylight_yesterday: "{{ state_attr(var.daylight_duration, 'yesterday')|float(0) }}"
+          daylight_today: "{{ state_attr(var.daylight_duration, 'today')|float(0) }}"
+          daylight_tomorrow: "{{ state_attr(var.daylight_duration, 'tomorrow')|float(0) }}"
+
+          pv_excess_start_rising_offset: "{{ states(var.pv_excess_start_rising_offset)|float(0) }}"
+          pv_excess_end_setting_offset: "{{ states(var.pv_excess_end_setting_offset)|float(0) }}"
+          prediction_end_setting_offset: "{{ states(var.prediction_end_setting_offset)|float(0) }}"
+    sensor:
+      #
+      #
+      #
+      - name: "hems_sun_pv_excess_start"
+        unique_id: hems_sun_pv_excess_start
+        state: >-
+          {% from '032-sun2.jinja' import timeAtRisingOffset %}
+          {{ timeAtRisingOffset(rising_today, daylight_today, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
+        attributes:
+          yesterday: >-
+            {% from '032-sun2.jinja' import timeAtRisingOffset %}
+            {{ timeAtRisingOffset(rising_yesterday, daylight_yesterday, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
+          today:  >-
+            {% from '032-sun2.jinja' import timeAtRisingOffset %}
+            {{ timeAtRisingOffset(rising_today, daylight_today, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
+          tomorrow:  >-
+            {% from '032-sun2.jinja' import timeAtRisingOffset %}
+            {{ timeAtRisingOffset(rising_tomorrow, daylight_tomorrow, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
+          time_at_offset: "{{ pv_excess_start_rising_offset }}"
+          last_updated: "{{ t }}"
+      #
+      #
+      #
+      - name: "hems_sun_pv_excess_end"
+        unique_id: hems_sun_pv_excess_end
+        state: >-
+          {% from '032-sun2.jinja' import timeAtSettingOffset %}
+          {{ timeAtSettingOffset(setting_today, daylight_today, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
+        attributes:
+          yesterday: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_yesterday, daylight_yesterday, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
+          today: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_today, daylight_today, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
+          tomorrow: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_tomorrow, daylight_tomorrow, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
+          time_at_offset: "{{ pv_excess_end_setting_offset }}"
+          last_updated: "{{ t }}"
+      #
+      #
+      #
+      - name: "hems_sun_prediction_end"
+        unique_id: hems_sun_prediction_end
+        state: >-
+          {% from '032-sun2.jinja' import timeAtSettingOffset %}
+          {{ timeAtSettingOffset(setting_today, daylight_today, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
+        attributes:
+          yesterday: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_yesterday, daylight_yesterday, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
+          today: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_today, daylight_today, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
+          tomorrow: >-
+            {% from '032-sun2.jinja' import timeAtSettingOffset %}
+            {{ timeAtSettingOffset(setting_tomorrow, daylight_tomorrow, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
+          time_at_offset: "{{ prediction_end_setting_offset }}"
+          last_updated: "{{ t }}"
+#
+# ########## End: Persistent Template Sensors ##########
+#
+# ########## Start: Input numbers ##########
+#
+input_number:
+  #
+  #
+  # Default: 15.0
+  #
+  hems_sun_pv_excess_start_rising_offset:
+    name: hems_sun_pv_excess_start_rising_offset
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    mode: box
+  #
+  #
+  # Default: 15.0
+  #
+  hems_sun_pv_excess_end_setting_offset:
+    name: hems_sun_pv_excess_end_setting_offset
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    mode: box
+  #
+  #
+  # Default: 20.0
+  #
+  hems_sun_prediction_end_setting_offset:
+    name: hems_sun_prediction_end_setting_offset
+    min: 0
+    max: 100
+    step: 1
+    unit_of_measurement: "%"
+    mode: box
+#
+# ########## End: Input numbers ##########

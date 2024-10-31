@@ -59,29 +59,29 @@ template:
           {% from '032-emhass.jinja' import globalVariables %}
           {% set var = globalVariables()|from_json %}
           {% set inv_rated_power = states(var.inv_rated_power)|float(0) %}
-          {% set inv_input_power = states(var.inv_input_power)|float(0) %}
+          {% set inv_in_power = states(var.inv_in_power)|float(0) %}
 
-          {% if inv_input_power < (inv_rated_power * 0.05) %}
-            {# inv_input_power < 300 W #}
-            {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (inv_rated_power * 0.1) %}
-            {# inv_input_power < 600 W #}
-            {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (inv_rated_power * 0.15) %}
-            {# inv_input_power < 900 W #}
-            {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (inv_rated_power * 0.2) %}
-            {# inv_input_power < 1200 W #}
-            {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (inv_rated_power * 0.25) %}
-            {# inv_input_power < 1500 W #}
-            {{ (inv_input_power * 1.00)|float(0) }}
-          {% elif inv_input_power < (inv_rated_power * 0.3) %}
-            {# inv_input_power < 1800 W #}
-            {{ (inv_input_power * 1.0038)|float(0) }}
+          {% if inv_in_power < (inv_rated_power * 0.05) %}
+            {# inv_in_power < 300 W #}
+            {{ (inv_in_power * 1.00)|float(0) }}
+          {% elif inv_in_power < (inv_rated_power * 0.1) %}
+            {# inv_in_power < 600 W #}
+            {{ (inv_in_power * 1.00)|float(0) }}
+          {% elif inv_in_power < (inv_rated_power * 0.15) %}
+            {# inv_in_power < 900 W #}
+            {{ (inv_in_power * 1.00)|float(0) }}
+          {% elif inv_in_power < (inv_rated_power * 0.2) %}
+            {# inv_in_power < 1200 W #}
+            {{ (inv_in_power * 1.00)|float(0) }}
+          {% elif inv_in_power < (inv_rated_power * 0.25) %}
+            {# inv_in_power < 1500 W #}
+            {{ (inv_in_power * 1.00)|float(0) }}
+          {% elif inv_in_power < (inv_rated_power * 0.3) %}
+            {# inv_in_power < 1800 W #}
+            {{ (inv_in_power * 1.0038)|float(0) }}
           {% else %}
-            {# inv_input_power >= 1800 W #}
-            {{ (inv_input_power * 1.0063)|float(0) }}
+            {# inv_in_power >= 1800 W #}
+            {{ (inv_in_power * 1.0063)|float(0) }}
           {% endif %}
 #
 # ########## End: Persistent Template Sensors ##########

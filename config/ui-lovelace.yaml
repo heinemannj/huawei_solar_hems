@@ -7,9 +7,21 @@ mode: storage
 # Additional YAML dashboards
 #
 dashboards:
+  100-rooms-yaml:
+    mode: yaml
+    title: 100_Rooms
+    icon: mdi:home
+    show_in_sidebar: true
+    filename: dashboards/100-rooms/index.yaml
   420-pv-yaml:
     mode: yaml
     title: 420_PV
     icon: mdi:solar-power-variant
     show_in_sidebar: true
     filename: dashboards/420-pv/index.yaml
+  406-heating-yaml:
+    mode: yaml
+    title: 406_Heating
+    icon: mdi:hvac
+    show_in_sidebar: true
+    filename: dashboards/406-heating/index.yaml

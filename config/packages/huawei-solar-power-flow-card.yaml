@@ -65,9 +65,9 @@ template:
           var: >-
             {% from '032-emhass.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
-          inv_input_power: "{{ states(var.inv_input_power)|int(0) }}"
+          inv_in_power: "{{ states(var.inv_in_power)|int(0) }}"
           inv_active_power: "{{ states(var.inv_active_power)|int(0) }}"
-          bat_active_power: "{{ (inv_input_power - inv_active_power)|int(0) }}"
+          bat_active_power: "{{ (inv_in_power - inv_active_power)|int(0) }}"
           bat_charge_power: "{{ max(0, bat_active_power) }}"
           bat_discharge_power: "{{ -min(0, bat_active_power) }}"
           bat_charge_from_grid_power: "{{ -min(0, inv_active_power) }}"

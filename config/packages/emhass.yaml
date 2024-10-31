@@ -32,8 +32,17 @@
 #
 # - sensor.emhass_forecast_data
 #
+# - input_number.batteries_soc_setpoint_low
+# - input_number.batteries_soc_setpoint_neutral
+# - input_number.batteries_soc_setpoint_high
+# - input_number.batteries_soc_setpoint_forcible_charge
+#
+# - input_number.epexspot_quantile_setpoint_low
+# - input_number.epexspot_quantile_setpoint_neutral
+# - input_number.epexspot_quantile_setpoint_high
+#
 # ########## Rest commands ##########
-# 
+#
 # - emhass_publish_data
 # - emhass_perfect_optim
 # - emhass_dayahead_optim_forecast
@@ -51,37 +60,37 @@ automation emhass:
   #
   # Start rest command: emhass_naive_mpc_optim_forecast
   #
-  - id: 'emhass_naive_mpc_optim_forecast'
-    alias: 'EMHASS - naive mpc optim forecast'
-    description: 'EMHASS - naive mpc optimization - upto 48 hours forecast.'
+  - id: "emhass_naive_mpc_optim_forecast"
+    alias: "EMHASS - naive mpc optim forecast"
+    description: "EMHASS - naive mpc optimization - upto 48 hours forecast."
     triggers:
-    - trigger: time_pattern
-      minutes: /1
+      - trigger: time_pattern
+        minutes: /1
     actions:
-    - metadata: {}
-      data: {}
-      enabled: true
-      continue_on_error: false
-      response_variable: rest_response
-      action: rest_command.emhass_naive_mpc_optim_forecast
-    - if:
-      - condition: template
-        value_template: >-
-          {{ rest_response['status'] < 400 }}
-      then:
-      - data:
-          prefix: all
-        enabled: true
-        continue_on_error: true
-        response_variable: rest_response
-        action: rest_command.emhass_publish_data
-      else:
       - metadata: {}
-        data:
-          level: warning
-          message: '{{ rest_response[''content''] }}'
-          logger: EMHASS.MINUTE
-        action: system_log.write
+        data: {}
+        enabled: true
+        continue_on_error: false
+        response_variable: rest_response
+        action: rest_command.emhass_naive_mpc_optim_forecast
+      - if:
+          - condition: template
+            value_template: >-
+              {{ rest_response['status'] < 400 }}
+        then:
+          - data:
+              prefix: all
+            enabled: true
+            continue_on_error: true
+            response_variable: rest_response
+            action: rest_command.emhass_publish_data
+        else:
+          - metadata: {}
+            data:
+              level: warning
+              message: "{{ rest_response['content'] }}"
+              logger: EMHASS.MINUTE
+            action: system_log.write
     mode: single
 #
 # ########## End: Automation ##########
@@ -102,7 +111,7 @@ template:
           load_power_forecast: "{{ states(var.load_power_forecast)|float(0) }}"
           inv_rated_power: "{{ states(var.inv_rated_power)|float(0) }}"
           inv_max_active_power: "{{ states(var.inv_max_active_power)|float(0) }}"
-          inv_input_power: "{{ states(var.inv_input_power)|float(0) }}"
+          inv_in_power: "{{ states(var.inv_in_power)|float(0) }}"
           inv_active_power_forecast: "{{ states(var.inv_active_power_forecast)|float(0) }}"
           prediction_status: "{{ states(var.prediction_status) }}"
           epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
@@ -157,7 +166,7 @@ template:
         unique_id: batteries_maximum_charging_power
         icon: mdi:battery-charging-50
         state: "{{ bat_soc == 100
-                    or bat_charge_energy_forecast_solar_noon <= bat_charge_energy_remaining }}"
+          or bat_charge_energy_forecast_solar_noon <= bat_charge_energy_remaining }}"
         attributes:
           maximum_charging_power: >-
             {% set charge_time = ((solar_noon_time|as_timestamp - now().timestamp()) / 3600)|float(0) %}
@@ -170,8 +179,8 @@ template:
 
             {% if bat_soc_setpoint_neutral < bat_soc < 100
                 and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
-                and (inv_input_power - inv_max_active_power) > charge_power %}
-              {{ inv_input_power - inv_rated_power }}
+                and (inv_in_power - inv_max_active_power) > charge_power %}
+              {{ inv_in_power - inv_rated_power }}
             {% elif bat_soc_setpoint_neutral < bat_soc < 100
                 and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
                 and charge_power < bat_rated_charge_power %}
@@ -193,11 +202,11 @@ template:
         unique_id: batteries_maximum_discharging_power
         icon: mdi:battery-charging-50
         state: >-
-            {% if epexspot_quantile <= epexspot_quantile_setpoint_low and bat_soc <= bat_soc_setpoint_low %}
-              {{ 'off' }}
-            {% else %}
-              {{ 'on' }}
-            {% endif %}
+          {% if epexspot_quantile <= epexspot_quantile_setpoint_low and bat_soc <= bat_soc_setpoint_low %}
+            {{ 'off' }}
+          {% else %}
+            {{ 'on' }}
+          {% endif %}
         attributes:
           maximum_discharging_power: >-
             {% if epexspot_quantile <= epexspot_quantile_setpoint_low and bat_soc <= bat_soc_setpoint_low %}
@@ -235,8 +244,6 @@ template:
           var: >-
             {% from '032-emhass.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
-          sun_rising_time_today: "{{ state_attr(var.sun_rising_time, 'today')|as_datetime|as_local }}"
-          sun_setting_time_today: "{{ state_attr(var.sun_setting_time, 'today')|as_datetime|as_local }}"
           solar_noon_time_today: "{{ state_attr(var.solar_noon_time, 'today')|as_datetime|as_local }}"
           prediction_end_time_today: "{{ state_attr(var.prediction_end_time, 'today')|as_datetime|as_local }}"
           prediction_end_time_tomorrow: "{{ state_attr(var.prediction_end_time, 'tomorrow')|as_datetime|as_local }}"
@@ -254,17 +261,10 @@ template:
         unique_id: emhass_prediction_horizon
         state: "{{ ((prediction_end_time_tomorrow|as_timestamp - now()|as_timestamp)/60/30)|int(0) + 1 }}"
         attributes:
-          sun_rising_time_today: "{{ sun_rising_time_today }}"
-          sun_setting_time_today: "{{ sun_setting_time_today }}"
-          solar_noon_time_today: "{{ solar_noon_time_today }}"
           prediction_end_time_today: "{{ prediction_end_time_today }}"
           prediction_end_time_tomorrow: "{{ prediction_end_time_tomorrow }}"
           prediction_time_step: 30
-          prediction_elevation: 25
-          pv_excess_start_time_today: "{{ pv_excess_start_time_today }}"
-          pv_excess_start_elevation: 15
-          pv_excess_end_time_today: "{{ pv_excess_end_time_today }}"
-          pv_excess_end_elevation: 15
+          prediction_offset: 0.2
           last_updated: "{{ t }}"
       #
       #
@@ -373,7 +373,7 @@ template:
       - name: emhass_forecast_data
         unique_id: emhass_forecast_data
         #friendly_name: "emhass_forecast_data"
-#        state_class: "total"
+        #        state_class: "total"
         state_class: measurement
         unit_of_measurement: "EUR/kWh"
         icon: mdi:eye
@@ -423,7 +423,7 @@ input_number:
     min: 0
     max: 100
     step: 1
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
     mode: box
   #
   #
@@ -434,7 +434,7 @@ input_number:
     min: 0
     max: 100
     step: 1
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
     mode: box
   #
   #
@@ -445,7 +445,7 @@ input_number:
     min: 0
     max: 100
     step: 1
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
     mode: box
   #
   #
@@ -456,7 +456,7 @@ input_number:
     min: 0
     max: 100
     step: 1
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
     mode: box
   #
   #
@@ -597,5 +597,6 @@ rest_command:
       {
         "var_model":"sensor.house_consumption_power"
       }
+
 #
 # ########## End: Rest commands ##########

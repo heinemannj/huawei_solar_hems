@@ -67,10 +67,10 @@ blueprint:
     batteries_settings:
       name: Batteries SOC setpoint settings
       icon: mdi:cog
-      description: Configure Batteries SOC setpoint for Batteries Charge-Discharge Control.
+      description: Configure Batteries SOC setpoints for Batteries Charge-Discharge Control.
       input:
         batteries_soc_setpoint_low:
-          name: Batteries SOC setpoint low 
+          name: Batteries SOC setpoint low
           description: >-
             Set the Batteries SOC setpoint `low`.
             <br>
@@ -86,7 +86,7 @@ blueprint:
               unit_of_measurement: '%'
               mode: box
         batteries_soc_setpoint_neutral:
-          name: Batteries SOC setpoint neutral 
+          name: Batteries SOC setpoint neutral
           description: >-
             Set the Batteries SOC setpoint `neutral`.
             <br>
@@ -101,7 +101,7 @@ blueprint:
               unit_of_measurement: '%'
               mode: box
         batteries_soc_setpoint_high:
-          name: Batteries SOC setpoint high 
+          name: Batteries SOC setpoint high
           description: >-
             Set the Batteries SOC setpoint `high`.
             <br>
@@ -116,7 +116,7 @@ blueprint:
               unit_of_measurement: '%'
               mode: box
         batteries_soc_setpoint_forcible_charge:
-          name: Batteries SOC setpoint forcible charge 
+          name: Batteries SOC setpoint forcible charge
           description: >-
             Set the Batteries SOC setpoint `forcible charge`.
             <br>
@@ -130,13 +130,63 @@ blueprint:
               step: 1
               unit_of_measurement: '%'
               mode: box
+    emhass_settings:
+      name: EMHASS Prediction cycle settings
+      icon: mdi:cog
+      description: Configure Prediction cycle setpoints for EMHASS.
+      input:
+        pv_excess_start_rising_offset:
+          name: PV Excess Start - Rising offset
+          description: >-
+            Set the `Rising offset` (percentage of daylight hours) for Start time of PV Excess.
+            <br>
+            <br>Used by `load_forecast_remaining_today_every_minute` and `solcast_forecast_remaining_today_every_minute`.
+            <br>Default: 15.0; Adjust as required.
+          default: 15.0
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        pv_excess_end_setting_offset:
+          name: PV Excess End - Setting offset
+          description: >-
+            Set the `Setting offset` (percentage of daylight hours) for End time of PV Excess.
+            <br>
+            <br>Used by `load_forecast_remaining_today_every_minute` and `solcast_forecast_remaining_today_every_minute`.
+            <br>Default: 15.0; Adjust as required.
+          default: 15.0
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
+        prediction_end_setting_offset:
+          name: Prediction Cycle End - Setting offset
+          description: >-
+            Set the `Setting offset` (percentage of daylight hours) for End time of Prediction Cycle.
+            <br>
+            <br>Used by `emhass_prediction_horizon`, `load_forecast_remaining_today_every_minute` and `solcast_forecast_remaining_today_every_minute`.
+            <br>Default: 20.0; Adjust as required.
+          default: 20.0
+          selector:
+            number:
+              min: 0
+              max: 100
+              step: 1
+              unit_of_measurement: '%'
+              mode: box
     epexspot_settings:
       name: EPEXspot Quantile setpoint settings
       icon: mdi:cog
-      description: Configure EPEXspot Quantile setpoint for Batteries Charge-Discharge Control.
+      description: Configure EPEXspot Quantile setpoints for Batteries Charge-Discharge Control.
       input:
         epexspot_quantile_setpoint_low:
-          name: EPEXspot Quantile setpoint low 
+          name: EPEXspot Quantile setpoint low
           description: >-
             Set the EPEXspot Quantile setpoint `low`.
             <br>
@@ -150,7 +200,7 @@ blueprint:
               step: 0.01
               mode: box
         epexspot_quantile_setpoint_neutral:
-          name: EPEXspot Quantile setpoint neutral 
+          name: EPEXspot Quantile setpoint neutral
           description: >-
             Set the EPEXspot Quantile setpoint `neutral`.
             <br>
@@ -164,7 +214,7 @@ blueprint:
               step: 0.01
               mode: box
         epexspot_quantile_setpoint_high:
-          name: SEPEXspot Quantile setpoint high 
+          name: EPEXspot Quantile setpoint high
           description: >-
             Set the EPEXspot Quantile setpoint `high`.
             <br>
@@ -203,6 +253,24 @@ sequence:
       entity_id: input_number.batteries_soc_setpoint_forcible_charge
     data:
       value: !input batteries_soc_setpoint_forcible_charge
+  - alias: Set initial value of pv_excess_start_rising_offset
+    action: input_number.set_value
+    target:
+      entity_id: input_number.hems_sun_pv_excess_start_rising_offset
+    data:
+      value: !input pv_excess_start_rising_offset
+  - alias: Set initial value of pv_excess_end_setting_offset
+    action: input_number.set_value
+    target:
+      entity_id: input_number.hems_sun_pv_excess_end_setting_offset
+    data:
+      value: !input pv_excess_end_setting_offset
+  - alias: Set initial value of prediction_end_setting_offset
+    action: input_number.set_value
+    target:
+      entity_id: input_number.hems_sun_prediction_end_setting_offset
+    data:
+      value: !input prediction_end_setting_offset
   - alias: Set initial value of epexspot_quantile_setpoint_low
     action: input_number.set_value
     target:

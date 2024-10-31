@@ -31,22 +31,22 @@ card:
     annotations:
       xaxis:
         - x: ${new Date().getTime()}
-          borderColor: 'red'
-          fillColor: 'red'
+          borderColor: "red"
+          fillColor: "red"
           label:
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date().setHours(-24,0,0,0)}
           x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()}
-          fillColor: '#c2f0f0'
+          fillColor: "#c2f0f0"
           opacity: 0.2
           label:
             text: >-
               ${"Previous cycle - ☼ 00:00"}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_rising'].attributes.yesterday).getTime()}
           label:
             text: >-
@@ -55,16 +55,16 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.yesterday).getTime()}
           label:
             text: >-
-              ${"🔋 15°⚡ " + new Date(new
+              ${"🔋 ⚡ " + new Date(new
               Date(states['sensor.hems_sun_pv_excess_start'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.yesterday).getTime()}
           label:
             text: >-
@@ -73,16 +73,16 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.yesterday).getTime()}
           label:
             text: >-
-              ${"100%🔋 25°🌙 " + new Date(new
+              ${"🔋 🌙 " + new Date(new
               Date(states['sensor.hems_sun_prediction_end'].attributes.yesterday).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_setting'].attributes.yesterday).getTime()}
           label:
             text: >-
@@ -91,17 +91,17 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date().setHours(0,0,0,0)}
           x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()}
-          fillColor: '#ecffb3'
+          fillColor: "#ecffb3"
           opacity: 0.2
           label:
             text: >-
               ${"Actual cycle - ☼ 00:00"}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_rising'].attributes.today).getTime()}
           label:
             text: >-
@@ -110,16 +110,16 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.today).getTime()}
           label:
             text: >-
-              ${"🔋 15°⚡ " + new Date(new
+              ${"🔋 ⚡ " + new Date(new
               Date(states['sensor.hems_sun_pv_excess_start'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.today).getTime()}
           label:
             text: >-
@@ -128,18 +128,18 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()}
-          borderColor: 'blue'
-          fillColor: 'blue'
+          borderColor: "blue"
+          fillColor: "blue"
           label:
             text: >-
-              ${"100%🔋 25°🌙 " + new Date(new
+              ${"🔋 🌙 " + new Date(new
               Date(states['sensor.hems_sun_prediction_end'].attributes.today).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_setting'].attributes.today).getTime()}
           label:
             text: >-
@@ -148,17 +148,17 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date().setHours(24,0,0,0)}
           x2: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()+86400000}
-          fillColor: '#c2f0f0'
+          fillColor: "#c2f0f0"
           opacity: 0.2
           label:
             text: >-
               ${"Next cycle - ☼ 00:00"}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_rising'].attributes.tomorrow).getTime()}
           label:
             text: >-
@@ -167,16 +167,16 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()}
           label:
             text: >-
-              ${"🔋 15°⚡ " + new Date(new
+              ${"🔋 ⚡ " + new Date(new
               Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.tomorrow).getTime()}
           label:
             text: >-
@@ -185,55 +185,55 @@ card:
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()}
-          borderColor: 'Teal'
-          fillColor: 'Teal'
+          borderColor: "Teal"
+          fillColor: "Teal"
           label:
             text: >-
-              ${"100%🔋 25°🌙 " + new Date(new
+              ${"🔋 🌙 " + new Date(new
               Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()).toLocaleTimeString([],{hour:'2-digit',
               minute:'2-digit'})}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date().setHours(48,0,0,0)}
           label:
             text: >-
               ${"☼ 00:00"}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_rising'].attributes.tomorrow).getTime()+86400000}
           label:
             text: >-
               ${"🌙 "}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_pv_excess_start'].attributes.tomorrow).getTime()+86400000}
           label:
             text: >-
-              ${"🔋 15°⚡ "}
+              ${"🔋 ⚡ "}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_solar_noon'].attributes.tomorrow).getTime()+86400000}
           label:
             text: >-
               ${"☀️ "}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
         - x: ${new Date(states['sensor.hems_sun_prediction_end'].attributes.tomorrow).getTime()+86400000}
-          borderColor: 'blue'
-          fillColor: 'blue'
+          borderColor: "blue"
+          fillColor: "blue"
           label:
             text: >-
-              ${"100%🔋 25°🌙 "}
+              ${"🔋 🌙 "}
             borderWidth: 0
             style:
-              background: '#0000'
+              background: "#0000"
   graph_span: 5d
   span:
     start: day
@@ -242,14 +242,14 @@ card:
     yaxis_id: kW_2
   series:
     # Sun2 Integration
-    - entity: sensor.hems_sun_elevation
-      name: Sun Elevation
+    - entity: sensor.hems_sun_azimuth
+      name: Sun Azimuth
       type: line
       opacity: 1
       stroke_width: 0.8
       color: "orange"
       unit: °
-      yaxis_id: elevation
+      yaxis_id: azimuth
       show:
         in_header: false
       group_by:
@@ -645,4 +645,4 @@ card:
       name: Ø
       yaxis_id: header_only
   card_mod:
-    class: elevation-forecast-chart
+    class: azimuth-forecast-chart

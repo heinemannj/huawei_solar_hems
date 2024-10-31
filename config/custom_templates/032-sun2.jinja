@@ -1,0 +1,7 @@
+{%- macro timeAtRisingOffset(rising, daylight, offset) %}
+    {{- (rising|as_timestamp + daylight * 3600 * offset / 100)|timestamp_local|to_json -}}
+{%- endmacro %}
+
+{%- macro timeAtSettingOffset(setting, daylight, offset) %}
+    {{- (setting|as_timestamp - daylight * 3600 * offset / 100)|timestamp_local|to_json -}}
+{%- endmacro %}

@@ -440,34 +440,34 @@ entities:
               --paper-item-icon-color: #fdd835;
             {% endif %}
           }
-      - entity: sensor.hems_sun_elevation
-        name: Sun elevation for today
+      - entity: sensor.hems_sun_azimuth
+        name: Sun azimuth for today
         format: precision0
         entities:
           - entity: sensor.hems_sun_rising
-            name: Rising [0°]
+            name: Rising
             format: time
           - entity: sensor.hems_sun_pv_excess_start
-            name: PVExcessStart [15°]
+            name: PVExcessStart
             format: time
           - entity: sensor.hems_sun_solar_noon
-            name: SolarNoon [Max°]
+            name: SolarNoon
             format: time
           - entity: sensor.hems_sun_prediction_end
-            name: PredictionHorizon [25°]
+            name: PredictionHorizon
             format: time
           - entity: sensor.hems_sun_pv_excess_end
-            name: PVExcessEnd [15°]
+            name: PVExcessEnd
             format: time
           - entity: sensor.hems_sun_setting
-            name: Setting [0°]
+            name: Setting
             format: time
         type: custom:multiple-entity-row
         secondary_info: last-changed
         show_state: true
         style: |
           :host {
-            {% if states('sensor.hems_sun_elevation')|float(0) > 0 %}
+            {% if states('sensor.hems_sun_azimuth')|float(0) > 0 %}
               --paper-item-icon-color: #fdd835;
             {% endif %}
           }
@@ -478,25 +478,25 @@ entities:
           - entity: sensor.solcast_forecast_remaining_today_every_minute
             type: attribute
             attribute: pv_excess_start_energy
-            name: PVExcessStart [15°]
+            name: PVExcessStart
             format: precision3
             unit: kWh
           - entity: sensor.solcast_forecast_remaining_today_every_minute
             type: attribute
             attribute: solar_noon_energy
-            name: SolarNoon [Max°]
+            name: SolarNoon
             format: precision3
             unit: kWh
           - entity: sensor.solcast_forecast_remaining_today_every_minute
             type: attribute
             attribute: prediction_end_energy
-            name: PredictionHorizon [25°]
+            name: PredictionHorizon
             format: precision3
             unit: kWh
           - entity: sensor.solcast_forecast_remaining_today_every_minute
             type: attribute
             attribute: pv_excess_end_energy
-            name: PVExcessEnd [15°]
+            name: PVExcessEnd
             format: precision3
             unit: kWh
         type: custom:multiple-entity-row
@@ -575,25 +575,25 @@ entities:
           - entity: sensor.load_forecast_remaining_today_every_minute
             type: attribute
             attribute: pv_excess_start_energy
-            name: PVExcessStart [15°]
+            name: PVExcessStart
             format: precision3
             unit: kWh
           - entity: sensor.load_forecast_remaining_today_every_minute
             type: attribute
             attribute: solar_noon_energy
-            name: SolarNoon [Max°]
+            name: SolarNoon
             format: precision3
             unit: kWh
           - entity: sensor.load_forecast_remaining_today_every_minute
             type: attribute
             attribute: prediction_end_energy
-            name: PredictionHorizon [25°]
+            name: PredictionHorizon
             format: precision3
             unit: kWh
           - entity: sensor.load_forecast_remaining_today_every_minute
             type: attribute
             attribute: pv_excess_end_energy
-            name: PVExcessEnd [15°]
+            name: PVExcessEnd
             format: precision3
             unit: kWh
         type: custom:multiple-entity-row
@@ -732,25 +732,25 @@ entities:
           - entity: binary_sensor.batteries_maximum_charging_power
             type: attribute
             attribute: charge_energy_forecast_pv_excess_start
-            name: PVExcessStart [15°]
+            name: PVExcessStart
             format: precision3
             unit: kWh
           - entity: binary_sensor.batteries_maximum_charging_power
             type: attribute
             attribute: charge_energy_forecast_solar_noon
-            name: SolarNoon [Max°]
+            name: SolarNoon
             format: precision3
             unit: kWh
           - entity: binary_sensor.batteries_maximum_charging_power
             type: attribute
             attribute: charge_energy_forecast_prediction_end
-            name: PredictionHorizon [25°]
+            name: PredictionHorizon
             format: precision3
             unit: kWh
           - entity: binary_sensor.batteries_maximum_charging_power
             type: attribute
             attribute: charge_energy_forecast_pv_excess_end
-            name: PVExcessEnd [15°]
+            name: PVExcessEnd
             format: precision3
             unit: kWh
         type: custom:multiple-entity-row

@@ -137,7 +137,7 @@
             'inv_rated_power': 'sensor.inverter_rated_power',
             'inv_max_active_power': 'sensor.inverter_power',
 
-            'inv_input_power': 'sensor.inverter_input_power',
+            'inv_in_power': 'sensor.inverter_input_power',
             'inv_active_power': 'sensor.inverter_active_power',
             'grid_active_power': 'sensor.power_meter_active_power',
             'house_power': 'sensor.house_consumption_power',
@@ -146,13 +146,13 @@
             'bat_rated_charge_power': 'sensor.batteries_maximum_charge_power',
             'bat_rated_discharge_power': 'sensor.batteries_maximum_discharge_power',
 
-            'bat_power': 'sensor.batteries_charge_discharge_power',
-            'bat_charge_power_average_last_30mins': 'sensor.batteries_charge_power_average_last_30mins',
-            'bat_discharge_power_average_last_24h': 'sensor.batteries_discharge_power_average_last_24h',
+            'bat_in_power_mean_30min': 'sensor.batteries_charge_power_average_last_30mins',
+            'bat_out_power_mean_24h': 'sensor.batteries_discharge_power_average_last_24h',
 
             'bat_soc': 'sensor.batteries_state_of_capacity',
 
             'pv_yield_total': 'sensor.inverter_total_dc_input_energy',
+            'inv_in_grid_total': 'sensor.batteries_charge_from_grid_energy_total',
             'inv_out_total': 'sensor.inverter_total_yield',
             'bat_in_total': 'sensor.batteries_total_charge',
             'bat_out_total': 'sensor.batteries_total_discharge',
@@ -160,7 +160,6 @@
             'grid_in_total': 'sensor.power_meter_consumption',
 
             'pv_yield': 'sensor.pv_yield_daily',
-            'solar_yield': 'sensor.solar_yield_daily',
 
             'inv_in_solar': 'sensor.solar_yield_daily',
             'inv_in_grid': 'sensor.batteries_charge_from_grid_energy_daily',
@@ -197,10 +196,15 @@
 
             'sun_rising_time': 'sensor.hems_sun_rising',
             'sun_setting_time': 'sensor.hems_sun_setting',
+            'daylight_duration': 'sensor.hems_sun_daylight',
             'solar_noon_time': 'sensor.hems_sun_solar_noon',
-            'prediction_end_time': 'sensor.hems_sun_prediction_end',
             'pv_excess_start_time': 'sensor.hems_sun_pv_excess_start',
             'pv_excess_end_time': 'sensor.hems_sun_pv_excess_end',
+            'prediction_end_time': 'sensor.hems_sun_prediction_end',
+
+            'pv_excess_start_rising_offset': 'input_number.hems_sun_pv_excess_start_rising_offset',
+            'pv_excess_end_setting_offset': 'input_number.hems_sun_pv_excess_end_setting_offset',
+            'prediction_end_setting_offset': 'input_number.hems_sun_prediction_end_setting_offset',
 
             'epexspot_price': 'sensor.epex_spot_data_price',
             'epexspot_price_1': 'sensor.epex_spot_data_price_3',

@@ -246,7 +246,6 @@ multiscrape:
 #
 template:
   - trigger:
-
       - platform: state
         entity_id:
           - sensor.power_meter_consumption_energy_hourly

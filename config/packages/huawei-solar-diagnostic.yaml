@@ -147,7 +147,7 @@ template:
     sensor:
       - name: inverter_total_solar_yield
         unique_id: inverter_total_solar_yield
-        #friendly_name: "FusionSolar Ertrag Solar excl. Batterie (Lifetime)"
+        #friendly_name: "FusionSolar Solar Yield excl. Batteries (Lifetime)"
         state_class: "total"
         device_class: "energy"
         unit_of_measurement: "kWh"
@@ -190,23 +190,23 @@ template:
             {% from '032-emhass.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           pv_yield: "{{ states(var.pv_yield)|float(0) }}"
-          solar_yield: "{{ states(var.solar_yield)|float(0) }}"
+          inv_in_solar: "{{ states(var.inv_in_solar)|float(0) }}"
           inv_out: "{{ states(var.inv_out)|float(0) }}"
           bat_in: "{{ states(var.bat_in)|float(0) }}"
           bat_out: "{{ states(var.bat_out)|float(0) }}"
           inv_yield: "{{ pv_yield + bat_out - bat_in }}"
-          pv_loss: "{{ pv_yield - solar_yield }}"
-          bat_loss: "{{ solar_yield + bat_out - bat_in - inv_out }}"
+          pv_loss: "{{ pv_yield - inv_in_solar }}"
+          bat_loss: "{{ inv_in_solar + bat_out - bat_in - inv_out }}"
           inv_loss: "{{ pv_yield + bat_out - bat_in - inv_out }}"
           fusionsolar_yield: "{{ max(0, (inv_out - bat_out + bat_in)) }}"
-          pv_efficiency: "{{ solar_yield / pv_yield * 100 }}"
+          pv_efficiency: "{{ inv_in_solar / pv_yield * 100 }}"
           bat_efficiency: "{{ (1 - bat_loss / inv_out) * 100 }}"
           inv_efficiency: "{{ inv_out / (pv_yield + bat_out - bat_in) * 100 }}"
           inv_efficien_1: "{{ pv_efficiency / 100 * bat_efficiency }}"
     sensor:
       - name: inverter_daily_solar_yield
         unique_id: inverter_daily_solar_yield
-        #friendly_name: "FusionSolar Tagesertrag Solar excl. Batterie"
+        #friendly_name: "FusionSolar Solar Daily Yield excl. Batteries"
         state_class: "total"
         device_class: "energy"
         unit_of_measurement: "kWh"
@@ -222,7 +222,7 @@ template:
         state: "{{ inv_efficiency }}"
         attributes:
           pv_yield: "{{ pv_yield }}"
-          solar_yield: "{{ solar_yield }}"
+          solar_yield: "{{ inv_in_solar }}"
           inv_yield: "{{ inv_yield }}"
           fusionsolar_yield: "{{ fusionsolar_yield }}"
           bat_in: "{{ bat_in }}"
