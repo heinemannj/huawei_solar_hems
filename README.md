@@ -143,7 +143,7 @@ Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://gi
 
 ---
 
-[Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj)
+[Copyright © 2024 Joerg Heinemann](https://github.com/heinemannj)
 <br>All rights reserved.
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_hems.svg
