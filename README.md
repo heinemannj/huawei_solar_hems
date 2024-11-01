@@ -90,7 +90,7 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |PV system||
 |:---|:---:|
 |**PV strings**<br>- **PV1**: 10 x 390 Wp = **3900 Wp**<br>- **PV2**: 10 x 390 Wp = **3900 Wp**<br>- **Full occupancy** of the south/east roof<br>&#160;&#160;<sup>20 x Trina Vertex S TSM-390DE09.05 390 Wp = 7.8 kWp</sup><br>- Optimizers: No|<img src="assets/em-pv-strings.png" width=400>|
-|**Azimuth**<br>- Orientation of PV modules<br>- [NOAA Solar Calculator](https://gml.noaa.gov/grad/solcalc/)|<img src="assets/em-pv-strings-azimuth.png" width=400>|
+|**Azimuth**<br>- Orientation of PV modules<br>- [NOAA Solar Calculator](https://gml.noaa.gov/grad/solcalc/)|<img src="assets/solcalc-2024-06-21.png" width=400>|
 |**Improvement**<br>- Use **optimizers for all modules**<br><br>[Long String Design with Power Optimizer](https://assets.ctfassets.net/nh4y4z9oigt2/2lgFD2TEGsFWWCwZScAMRw/4c3e87c42d8e260daf14f156ccd2d23f/3_Upgrade_Your_Optimizer_Experience.pdf)<br>**will increase the total number of modules per string**<br>for expanding to the opposite side of the roof.|<img src="assets/em-pv-strings-azimuth.png" width=400>|
 |**Inverter**<br>- Type: `SUN2000-6KTL-M1 (High Current)`<br>- Firmware: V100R001C00SPC165<br>- MBUS Firmware: V100R001C00SPC335<br>- **Connect** to inverter: Via `SUN2000-<serial_no> WiFi`<br><br>**Batteries**<br>- Battery-1: `LUNA2000-5KW-C0`<br>- Battery-2: `LUNA2000-10KW-C0`<br>- Firmware : V100R002C00SPC624|<img src="assets/em-pv-system.png" width=400>|
 |**Power meter**<br>- Type: `Three phase`<br><br>**sDongle**<br>- Type: sDongleA-05 (WiFi / Ethernet)<br>- Connectivitiy: `Ethernet`<br>- Firmware: V200R022C10SPC118<br><br>|<img src="assets/em-sun2000-cabeling.png" width=400>|
