@@ -60,7 +60,7 @@
     {%- set last_start_time = net_price|map(attribute='start_time')|list|last %}
     {%- set array_length = net_price|map(attribute='start_time')|list|length %}
 
-    {% if (last_start_time|as_datetime).day < (now() + timedelta( days = 1)).day %}
+    {% if (last_start_time|as_datetime) < (today_at("00:00:00") + timedelta(days = 1)) %}
         {% for i in range((array_length - 24),array_length) %}
             {%- set var.result = var.result +
                 [{

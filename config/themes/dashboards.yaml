@@ -93,7 +93,7 @@ dashboards:
           width: auto !important;
           height: 320px !important;
       }
-      ha-card.azimuth-forecast-chart {
+      ha-card.prediction-horizon-chart {
           width: auto !important;
           height: 516px !important;
       }
@@ -115,7 +115,7 @@ dashboards:
       ha-card.solar-forecast-chart #header,
       ha-card.solar-forecast-chart-large-width #header,
       ha-card.solar-forecast-chart-full-width #header,
-      ha-card.azimuth-forecast-chart #header,
+      ha-card.prediction-horizon-chart #header,
       ha-card.tibber-chart-full-width #header,
       ha-card.tibber-consumption-chart-full-width #header,
       ha-card.tibber-brush-chart-full-width #header {
@@ -128,7 +128,7 @@ dashboards:
       ha-card.solar-forecast-chart #state__value > #state,
       ha-card.solar-forecast-chart-large-width #state__value > #state,
       ha-card.solar-forecast-chart-full-width #state__value > #state,
-      ha-card.azimuth-forecast-chart #state__value > #state,
+      ha-card.prediction-horizon-chart #state__value > #state,
       ha-card.tibber-chart-full-width #state__value > #state,
       ha-card.tibber-consumption-chart-full-width #state__value > #state,
       ha-card.tibber-brush-chart-full-width #state__value > #state {
@@ -139,7 +139,7 @@ dashboards:
       ha-card.solar-forecast-chart #state__value > #uom,
       ha-card.solar-forecast-chart-large-width #state__value > #uom,
       ha-card.solar-forecast-chart-full-width #state__value > #uom,
-      ha-card.azimuth-forecast-chart #state__value > #uom,
+      ha-card.prediction-horizon-chart #state__value > #uom,
       ha-card.tibber-chart-full-width #state__value > #uom,
       ha-card.tibber-consumption-chart-full-width #state__value > #uom,
       ha-card.tibber-brush-chart-full-width #state__value > #uom {

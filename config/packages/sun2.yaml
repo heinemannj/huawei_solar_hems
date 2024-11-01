@@ -19,10 +19,6 @@
 #
 # ########## Entities ##########
 #
-# - sensor.hems_sun_pv_excess_start_at_elevation
-# - sensor.hems_sun_pv_excess_end_at_elevation
-# - sensor.hems_sun_prediction_end_at_elevation
-#
 # - sensor.hems_sun_pv_excess_start
 # - sensor.hems_sun_pv_excess_end
 # - sensor.hems_sun_prediction_end
@@ -33,22 +29,23 @@
 #
 sun2:
   - unique_id: hems
-    sensors:
-      - unique_id: pv_excess_start_at_elevation
-        time_at_elevation: 15
-        direction: rising
-        icon: mdi:weather-sunset-up
-        name: PV excess start at elevation
-      - unique_id: pv_excess_end_at_elevation
-        time_at_elevation: 15
-        direction: setting
-        icon: mdi:weather-sunset-down
-        name: PV excess end at elevation
-      - unique_id: prediction_end_at_elevation
-        time_at_elevation: 25
-        direction: setting
-        icon: mdi:weather-sunset-down
-        name: Prediction end at elevation
+    observer_elevation: 10
+#    sensors:
+#      - unique_id: pv_excess_start_at_elevation
+#        time_at_elevation: 15
+#        direction: rising
+#        icon: mdi:weather-sunset-up
+#        name: PV excess start at elevation
+#      - unique_id: pv_excess_end_at_elevation
+#        time_at_elevation: 15
+#        direction: setting
+#        icon: mdi:weather-sunset-down
+#        name: PV excess end at elevation
+#      - unique_id: prediction_end_at_elevation
+#        time_at_elevation: 25
+#        direction: setting
+#        icon: mdi:weather-sunset-down
+#        name: Prediction end at elevation
 #
 # ########## Start: Persistent Template Sensors ##########
 #

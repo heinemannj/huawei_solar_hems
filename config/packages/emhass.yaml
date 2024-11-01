@@ -264,7 +264,6 @@ template:
           prediction_end_time_today: "{{ prediction_end_time_today }}"
           prediction_end_time_tomorrow: "{{ prediction_end_time_tomorrow }}"
           prediction_time_step: 30
-          prediction_offset: 0.2
           last_updated: "{{ t }}"
       #
       #
@@ -372,8 +371,8 @@ template:
       #
       - name: emhass_forecast_data
         unique_id: emhass_forecast_data
-        #friendly_name: "emhass_forecast_data"
-        #        state_class: "total"
+        # friendly_name: "emhass_forecast_data"
+        # state_class: "total"
         state_class: measurement
         unit_of_measurement: "EUR/kWh"
         icon: mdi:eye

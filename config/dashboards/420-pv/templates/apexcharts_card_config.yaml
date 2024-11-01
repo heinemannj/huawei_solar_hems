@@ -156,14 +156,6 @@ pv_solar_forecast_chart:
     #        title:
     #          text: Capacity [%]
     #          rotate: 90
-    - id: azimuth
-      show: false
-      opposite: true
-      decimals: 0
-      max: 360
-      min: 0
-      apex_config:
-        tickAmount: 1
     - id: kW
       show: true
       decimals: 3

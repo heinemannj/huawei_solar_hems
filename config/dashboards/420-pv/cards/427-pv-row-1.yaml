@@ -16,7 +16,6 @@ card:
     stroke:
       dashArray:
         - 0
-        - 0
         - 4
         - 0
         - 4
@@ -241,20 +240,6 @@ card:
   all_series_config:
     yaxis_id: kW_2
   series:
-    # Sun2 Integration
-    - entity: sensor.hems_sun_azimuth
-      name: Sun Azimuth
-      type: line
-      opacity: 1
-      stroke_width: 0.8
-      color: "orange"
-      unit: °
-      yaxis_id: azimuth
-      show:
-        in_header: false
-      group_by:
-        func: avg
-        duration: 5m
     # HUAWEI Solar Integration
     - entity: sensor.batteries_state_of_capacity
       name: Bat-SoC
@@ -645,4 +630,4 @@ card:
       name: Ø
       yaxis_id: header_only
   card_mod:
-    class: azimuth-forecast-chart
+    class: prediction-horizon-chart

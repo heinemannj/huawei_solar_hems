@@ -11,14 +11,14 @@
 
     {%- set last_data = data|map(attribute='start_time')|list|last %}
     {%- set last_data_ts = last_data|as_timestamp %}
-    {%- set tomorrow_ts = (t + timedelta( days = 1)).timestamp() %}
+    {%- set tomorrow_ts = (t + timedelta(days = 1)).timestamp() %}
 
     {% if last_data_ts >= tomorrow_ts %}
         {% if not tomorrow_data_available %}
             {%- set last_update = t.replace(microsecond=0) %}
         {% endif %}
         {% set tomorrow_data_available = true %}
-        {%- set next_poll_time = today_at("13:00:00") + timedelta( days = 1) %}
+        {%- set next_poll_time = today_at("13:00:00") + timedelta(days = 1) %}
     {% elif t <= t.replace(hour=13).replace(minute=0).replace(second=0).replace(microsecond=0) %}
         {% set tomorrow_data_available = false %}
         {%- set next_poll_time = t.replace(hour=13).replace(minute=0).replace(second=0).replace(microsecond=0) %}
