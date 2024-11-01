@@ -142,6 +142,10 @@ Already opened Discussion: [Huawei Solar Discussion > Dashboard #355](https://gi
   * `- !include /config/dashboards/420-pv/views/424-pv.yaml`.
 
 ---
+
+[Copyright (c) 2024 Joerg Heinemann](https://github.com/heinemannj)
+<br>All rights reserved.
+
 [commits-shield]: https://img.shields.io/github/commit-activity/y/heinemannj/huawei_solar_hems.svg
 [commits]: https://github.com/heinemannj/huawei_solar_hems/commits/master
 [actions-shield]: https://github.com/heinemannj/huawei_solar_hems/workflows/Home%20Assistant%20CI/badge.svg
