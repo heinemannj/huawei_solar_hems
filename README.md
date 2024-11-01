@@ -98,7 +98,7 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 |**Power meter**<br>- Type: `Three phase`<br><br>**sDongle**<br>- Type: sDongleA-05 (WiFi / Ethernet)<br>- Connectivitiy: `Ethernet`<br>- Firmware: V200R022C10SPC118<br><br>|<img src="assets/em-sun2000-cabeling.png" width=400>|
 |**Power distribution**||
 |**Power flows**|<img src="assets/em-power-flows.png" width=400>|
-|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>- [Documentation](assets/meter-cabinet-documentation.pdf)<br><br>**Wallbox**<br>- Wiring and fuses for future use.|<img src="assets/em-meter-cabinet.png" width=400>|
+|**Meter cabinet**<br>- Back-up fuses<br>- Surge protection<br>- Residual Current Devices (RCD)<br>- Circuit breaker<br><br>- [Documentation](documentation/meter-cabinet/meter-cabinet-documentation.pdf)<br><br>**Wallbox**<br>- Wiring and fuses for future use.|<img src="assets/em-meter-cabinet.png" width=400>|
 ||<img src="assets/em-meter-cabinet-label.png" width=400>|
 |**Energy measurement**||
 |**Energy flows**|<img src="assets/em-energy-flows.png" width=400>|
@@ -111,7 +111,7 @@ The provided custom sensors are based on a setup with **one** Huawei Smart Energ
 ||<img src="assets/em-shelly-pro-3em-cabeling.png" width=400>|
 |**Energy management**||
 |**Heat Pump Smart Grid Ready controller**<br><br><sup>- 2 x Shelly Plus 1<br>&#160;&#160;SG-Ready Heat Pump Lock switch (HP Terminal 1)<br>&#160;&#160;SG-Ready PV Excess switch (HP Terminal 2)</sup><br><br>**eBUS controller**<br><sup>- [eBUS Adapter Shield v5](https://adapter.ebusd.eu/)|<img src="assets/em-sg-ready-ebus-controller-1.png" width=400>|
-|- [SG-/PV-Ready Documentation](assets/Installation-Manual-PV-Ready-aroTherm-Plus.pdf)|<img src="assets/em-sg-ready-ebus-controller-2.png" width=400>|
+|- [SG-/PV-Ready Documentation](documentation/sg-ready-controller/Installation-Manual-PV-Ready-aroTherm-Plus.pdf)|<img src="assets/em-sg-ready-ebus-controller-2.png" width=400>|
 
 ## Notes
 
