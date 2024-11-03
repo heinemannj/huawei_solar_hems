@@ -51,6 +51,7 @@ template:
         entity_id:
           - sensor.inverter_input_power
           - sensor.inverter_active_power
+          - sensor.power_meter_active_power
         not_from:
           - "unknown"
           - "unavailable"
@@ -63,17 +64,17 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           inv_in_power: "{{ states(var.inv_in_power)|int(0) }}"
           inv_active_power: "{{ states(var.inv_active_power)|int(0) }}"
+          inv_in_grid_power: "{{ -min(0, inv_active_power) }}"
           bat_active_power: "{{ (inv_in_power - inv_active_power)|int(0) }}"
-          bat_charge_power: "{{ max(0, bat_active_power) }}"
-          bat_discharge_power: "{{ -min(0, bat_active_power) }}"
-          bat_charge_from_grid_power: "{{ -min(0, inv_active_power) }}"
+          bat_in_power: "{{ max(0, bat_active_power) }}"
+          bat_out_power: "{{ -min(0, bat_active_power) }}"
           grid_active_power: "{{ states(var.grid_active_power)|int(0) }}"
-          grid_export_power: "{{ max(0, grid_active_power) }}"
-          grid_import_power: "{{ -min(0, grid_active_power) }}"
+          grid_out_power: "{{ max(0, grid_active_power) }}"
+          grid_in_power: "{{ -min(0, grid_active_power) }}"
           house_power: "{{ inv_active_power - grid_active_power }}"
           house_power_with_correction: >-
             {% if house_power > 0 %}
@@ -107,8 +108,8 @@ template:
         state: "{{ bat_active_power }}"
       #
       # Battery Charge power for
-      # - sensor.batteries_charge_power_average_last_30mins
-      # - sensor.batteries_state_of_capacity_remaining_charge_time
+      # - sensor.batteries_charge_power_mean_30min
+      # - sensor.batteries_end_of_charge_time
       #
       - name: batteries_charge_power
         unique_id: batteries_charge_power
@@ -117,13 +118,13 @@ template:
         device_class: power
         unit_of_measurement: "W"
         icon: mdi:home-battery
-        state: "{{ bat_charge_power }}"
+        state: "{{ bat_in_power }}"
         attributes:
           last_updated: "{{ t }}"
       #
       # Battery Discharge power for
-      # - sensor.batteries_discharge_power_average_last_24h
-      # - sensor.batteries_state_of_capacity_remaining_discharge_time
+      # - sensor.batteries_discharge_power_mean_24h
+      # - sensor.batteries_end_of_discharge_time
       #
       - name: batteries_discharge_power
         unique_id: batteries_discharge_power
@@ -132,7 +133,7 @@ template:
         device_class: power
         unit_of_measurement: "W"
         icon: mdi:home-battery
-        state: "{{ bat_discharge_power }}"
+        state: "{{ bat_out_power }}"
         attributes:
           last_updated: "{{ t }}"
       #
@@ -144,7 +145,7 @@ template:
         device_class: power
         unit_of_measurement: "W"
         icon: mdi:home-battery
-        state: "{{ bat_charge_from_grid_power }}"
+        state: "{{ inv_in_grid_power }}"
       #
       # Sensor that reports the grid export power
       #
@@ -154,7 +155,7 @@ template:
         device_class: power
         unit_of_measurement: "W"
         icon: mdi:flash
-        state: "{{ grid_export_power }}"
+        state: "{{ grid_out_power }}"
       #
       # Sensor that reports the grid import power
       #
@@ -164,6 +165,6 @@ template:
         device_class: power
         unit_of_measurement: "W"
         icon: mdi:flash
-        state: "{{ grid_import_power }}"
+        state: "{{ grid_in_power }}"
 #
 # ########## End: Persistent Template Sensors ##########

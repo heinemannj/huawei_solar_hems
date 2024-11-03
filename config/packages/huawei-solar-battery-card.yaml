@@ -19,13 +19,13 @@
 #
 # ########## Entities ##########
 #
-# - sensor.batteries_discharge_power_average_last_24h
-# - sensor.batteries_charge_power_average_last_30mins
+# - sensor.batteries_discharge_power_mean_24h
+# - sensor.batteries_charge_power_mean_30min
 #
-# - sensor.batteries_state_of_capacity_energy
-# - sensor.batteries_state_of_capacity_remaining_discharge_time
-# - sensor.batteries_state_of_capacity_remaining_charge_energy
-# - sensor.batteries_state_of_capacity_remaining_charge_time
+# - sensor.batteries_state_of_energy
+# - sensor.batteries_end_of_charge_energy
+# - sensor.batteries_end_of_charge_time
+# - sensor.batteries_end_of_discharge_time
 #
 # ########## Start: Statistics Sensors ##########
 #
@@ -34,8 +34,8 @@ sensor:
   # Average of Battery Discharge Power (W) in last 24h
   #
   - platform: statistics
-    name: batteries_discharge_power_average_last_24h
-    unique_id: batteries_discharge_power_average_last_24h
+    name: batteries_discharge_power_mean_24h
+    unique_id: batteries_discharge_power_mean_24h
     entity_id: sensor.batteries_discharge_power
     state_characteristic: mean
     max_age:
@@ -44,8 +44,8 @@ sensor:
   # Average of Battery Charge Power (W) in last 30mins
   #
   - platform: statistics
-    name: batteries_charge_power_average_last_30mins
-    unique_id: batteries_charge_power_average_last_30mins
+    name: batteries_charge_power_mean_30min
+    unique_id: batteries_charge_power_mean_30min
     entity_id: sensor.batteries_charge_power
     state_characteristic: mean
     max_age:
@@ -68,68 +68,72 @@ template:
           - "unknown"
           - "unavailable"
           - "none"
+      - platform: time_pattern
+        seconds: /15
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
-          bat_soc: "{{ states(var.bat_soc)|float(0) }}"
-          bat_rated_capacity: "{{ states(var.bat_rated_capacity)|float(0) / 1000 }}"
-          bat_soc_energy: "{{ bat_rated_capacity * bat_soc / 100 }}"
-          bat_soc_energy_remaining: "{{ bat_rated_capacity * 1.15 * (1 - bat_soc / 100) }}"
           bat_in_power_mean_30min: "{{ states(var.bat_in_power_mean_30min)|float(0) / 1000 }}"
           bat_out_power_mean_24h: "{{ states(var.bat_out_power_mean_24h)|float(0) / 1000 }}"
+          bat_soc: "{{ states(var.bat_soc)|float(0) }}"
+          bat_rated_capacity: "{{ states(var.bat_rated_capacity)|float(0) / 1000 }}"
+          bat_soe: "{{ bat_rated_capacity * bat_soc / 100 }}"
+          bat_max_eoc: "{{ bat_rated_capacity * 1.15 }}"
+          bat_eoc: "{{ bat_max_eoc * (1 - bat_soc / 100) }}"
+          bat_eoc_time: >-
+            {% if bat_soc < 100 and bat_in_power_mean_30min > 0 %}
+              {% set decimal_hours = bat_eoc / bat_in_power_mean_30min %}
+              {% set minutes = (decimal_hours % 1 * 60) | round(0) %}
+              {{ decimal_hours | int(0) ~ 'h ' ~ minutes ~ 'min' }}
+            {% else %}
+              {{ bat_soc }} %
+            {% endif %}
+          bat_eod_time: >-
+            {% if bat_out_power_mean_24h > 0 %}
+              {% set decimal_hours = bat_soe / bat_out_power_mean_24h %}
+              {% set minutes = (decimal_hours % 1 * 60) | round(0) %}
+              {{ decimal_hours | int(0) ~ 'h ' ~ minutes ~ 'min' }}
+            {% else %}
+              {{ bat_soc }}
+            {% endif %}
     sensor:
       #
-      # Battery Remaining Energy for
-      # - sensor.batteries_state_of_capacity_remaining_discharge_time
+      # Batteries Remaining Energy for
+      # - sensor.batteries_end_of_discharge_time
       #
-      - name: batteries_state_of_capacity_energy
-        unique_id: batteries_state_of_capacity_energy
-        #friendly_name: "Battery Remaining Energy"
+      - name: batteries_state_of_energy
+        unique_id: batteries_state_of_energy
+        #friendly_name: "Batteries Remaining Energy"
         state_class: "total"
         device_class: energy
         unit_of_measurement: "kWh"
         icon: mdi:solar-power
-        state: "{{ bat_soc_energy }}"
+        state: "{{ bat_soe }}"
       #
-      # Estimation of remaining battery discharge time
+      # Estimation of remaining batteries charge energy for
+      # - sensor.batteries_end_of_charge_time
       #
-      - name: batteries_state_of_capacity_remaining_discharge_time
-        unique_id: batteries_state_of_capacity_remaining_discharge_time
-        state: >-
-          {% if bat_out_power_mean_24h > 0 %}
-            {% set decimal_hours = bat_soc_energy / bat_out_power_mean_24h %}
-            {% set minutes = (decimal_hours % 1 * 60) | round(0) %}
-            {{ decimal_hours | int(0) ~ 'h ' ~ minutes ~ 'min' }}
-          {% else %}
-            {{ bat_soc }}
-          {% endif %}
-      #
-      # Estimation of remaining battery charge energy for
-      # - sensor.batteries_state_of_capacity_remaining_charge_time
-      #
-      - name: batteries_state_of_capacity_remaining_charge_energy
-        unique_id: batteries_state_of_capacity_remaining_charge_energy
-        #friendly_name: "Battery Remaining Charge Energy"
+      - name: batteries_end_of_charge_energy
+        unique_id: batteries_end_of_charge_energy
+        #friendly_name: "Batteries Remaining Charge Energy"
         state_class: "total"
         device_class: energy
         unit_of_measurement: "kWh"
         icon: mdi:solar-power
-        state: "{{ bat_soc_energy_remaining }}"
+        state: "{{ bat_eoc }}"
       #
-      # Estimation of remaining battery charge time
+      # Estimation of remaining batteries charge time
       #
-      - name: batteries_state_of_capacity_remaining_charge_time
-        unique_id: batteries_state_of_capacity_remaining_charge_time
-        state: >-
-          {% if bat_soc < 100 and bat_in_power_mean_30min > 0 %}
-            {% set decimal_hours = bat_soc_energy_remaining / bat_in_power_mean_30min %}
-            {% set minutes = (decimal_hours % 1 * 60) | round(0) %}
-            {{ decimal_hours | int(0) ~ 'h ' ~ minutes ~ 'min' }}
-          {% else %}
-            {{ bat_soc }} %
-          {% endif %}
-
+      - name: batteries_end_of_charge_time
+        unique_id: batteries_end_of_charge_time
+        state: "{{ bat_eoc_time }}"
+      #
+      # Estimation of remaining batteries discharge time
+      #
+      - name: batteries_end_of_discharge_time
+        unique_id: batteries_end_of_discharge_time
+        state: "{{ bat_eod_time }}"
 #
 # ########## End: Persistent Template Sensors ##########

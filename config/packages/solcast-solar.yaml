@@ -26,22 +26,22 @@
 # ########## Start: Automation ##########
 #
 automation solcast:
-  - id: 'solcast_pv_forecast_api_update'
-    alias: 'SolCast PV Forecast - API Update'
-    description: 'Update the SolCast PV Forecast data during sunrise and sunset.'
+  - id: "solcast_pv_forecast_api_update"
+    alias: "SolCast PV Forecast - API Update"
+    description: "Update the SolCast PV Forecast data during sunrise and sunset."
     variables:
       next_poll_time: "{{ states('sensor.solcast_pv_forecast_api_update') }}"
     triggers:
-    - trigger: time_pattern
-      minutes: /3
+      - trigger: time_pattern
+        minutes: /3
     conditions:
-    - condition: template
-      value_template: "{{ now() >= next_poll_time|as_datetime|as_local }}"
+      - condition: template
+        value_template: "{{ now() >= next_poll_time|as_datetime|as_local }}"
     actions:
-    - delay:
-        seconds: '{{ range(7, 67)|random|int }}'
-    - data: {}
-      action: solcast_solar.update_forecasts
+      - delay:
+          seconds: "{{ range(7, 67)|random|int }}"
+      - data: {}
+        action: solcast_solar.update_forecasts
     mode: single
 #
 # ########## End: Automation ##########
@@ -56,11 +56,11 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
-          sunrise: "{{ state_attr(var.sun_rising_time,'today')|as_datetime|as_local }}"
-          sunrise_tomorrow: "{{ state_attr(var.sun_rising_time,'tomorrow')|as_datetime|as_local }}"
-          sunset: "{{ state_attr(var.sun_setting_time,'today')|as_datetime|as_local }}"
+          sunrise: "{{ state_attr(var.rising_time,'today')|as_datetime|as_local }}"
+          sunrise_tomorrow: "{{ state_attr(var.rising_time,'tomorrow')|as_datetime|as_local }}"
+          sunset: "{{ state_attr(var.setting_time,'today')|as_datetime|as_local }}"
           last_poll_time: "{{ states(var.solcast_last_poll_time)|as_datetime|as_local }}"
           api_request_limit: "{{ states(var.solcast_api_request_limit)|int(0) }}"
           api_request_used: "{{ states(var.solcast_api_request_used)|int(0) }}"
@@ -78,6 +78,7 @@ template:
     sensor:
       - name: solcast_pv_forecast_api_update
         unique_id: solcast_pv_forecast_api_update
+        device_class: timestamp
         state: "{{ next_poll_time }}"
         attributes:
           last_updated: "{{ t }}"
@@ -100,7 +101,7 @@ template:
 #        json_attributes:
 #        - forecasts
 #        icon: mdi:solar-power
-#    
+#
 #      - name: "Solcast Forecast 10"
 #        unique_id: solcast_pv_estimate10
 #        force_update: true
@@ -109,7 +110,7 @@ template:
 #        device_class: power
 #        state_class: measurement
 #        icon: mdi:solar-power
-#        
+#
 #      - name: "Solcast Forecast 90"
 #        unique_id: solcast_pv_estimate90
 #        force_update: true

@@ -30,23 +30,23 @@
 # ########## Start: Automation ##########
 #
 automation epexspot:
-  - id: 'epex_spot_fetch_data'
-    alias: 'EPEX Spot - Fetch data'
-    description: 'EPEX Spot: Fetch data from all services or a specific service.'
+  - id: "epex_spot_fetch_data"
+    alias: "EPEX Spot - Fetch data"
+    description: "EPEX Spot: Fetch data from all services or a specific service."
     variables:
       state: "{{ states('binary_sensor.epex_spot_data_update') }}"
       next_poll_time: "{{ state_attr('binary_sensor.epex_spot_data_update', 'next_poll_time') }}"
     triggers:
-    - trigger: time_pattern
-      minutes: /3
+      - trigger: time_pattern
+        minutes: /3
     conditions:
-    - condition: template
-      value_template: "{{ now() >= next_poll_time|as_datetime|as_local and state == 'off' }}"
+      - condition: template
+        value_template: "{{ now() >= next_poll_time|as_datetime|as_local and state == 'off' }}"
     actions:
-    - delay:
-        seconds: '{{ range(7, 67)|random|int }}'
-    - data: {}
-      action: epex_spot.fetch_data
+      - delay:
+          seconds: "{{ range(7, 67)|random|int }}"
+      - data: {}
+        action: epex_spot.fetch_data
     mode: single
 #
 # ########## End: Automation ##########
@@ -60,7 +60,7 @@ template:
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           data_update: "{{ states(var.epexspot_data_update) }}"
           last_update: "{{ state_attr(var.epexspot_data_update, 'last_update') }}"
@@ -90,7 +90,7 @@ template:
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           sensor_list: "{{ [var.epexspot_price_1, var.epexspot_price_2, var.epexspot_price_3] }}"
           sensor_active: >-
@@ -120,7 +120,7 @@ template:
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           sensor_list: "{{ [var.epexspot_net_price_1, var.epexspot_net_price_2, var.epexspot_net_price_3] }}"
           sensor_active: >-
@@ -149,7 +149,7 @@ template:
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           sensor_list: "{{ [var.epexspot_quantile_1, var.epexspot_quantile_2, var.epexspot_quantile_3] }}"
           sensor_active: >-

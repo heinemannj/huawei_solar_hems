@@ -440,9 +440,8 @@ entities:
               --paper-item-icon-color: #fdd835;
             {% endif %}
           }
-      - entity: sensor.hems_sun_azimuth
-        name: Sun azimuth for today
-        format: precision0
+      - entity: sensor.hems_sun_deconz_daylight
+        name: Sun phase for today
         entities:
           - entity: sensor.hems_sun_rising
             name: Rising
@@ -467,7 +466,7 @@ entities:
         show_state: true
         style: |
           :host {
-            {% if states('sensor.hems_sun_azimuth')|float(0) > 0 %}
+            {% if state_attr('sensor.hems_sun_deconz_daylight','daylight') %}
               --paper-item-icon-color: #fdd835;
             {% endif %}
           }
@@ -608,18 +607,18 @@ entities:
       - entity: binary_sensor.batteries_maximum_charging_power
         name: Maximum charging power
         entities:
-          - entity: sensor.batteries_state_of_capacity_remaining_charge_time
+          - entity: sensor.batteries_end_of_charge_time
             name: Remaining
-          - entity: sensor.batteries_state_of_capacity_remaining_charge_energy
+          - entity: sensor.batteries_end_of_charge_energy
             name: Remaining
             format: precision2
           - entity: number.batteries_end_of_charge_soc
             name: Max
           - entity: sensor.batteries_state_of_capacity
             name: State
-          - entity: sensor.batteries_state_of_capacity_energy
+          - entity: sensor.batteries_state_of_energy
             name: State
-          - entity: sensor.batteries_charge_power_average_last_30mins
+          - entity: sensor.batteries_charge_power_mean_30min
             name: Ø30mins
             format: precision0
           - entity: sensor.batteries_charge_power
@@ -634,7 +633,7 @@ entities:
       - entity: binary_sensor.batteries_maximum_discharging_power
         name: Maximum discharging power
         entities:
-          - entity: sensor.batteries_state_of_capacity_remaining_discharge_time
+          - entity: sensor.batteries_end_of_discharge_time
             name: Remaining
             format: precision2
           - entity: number.batteries_peak_shaving_soc
@@ -645,9 +644,9 @@ entities:
             name: Min
           - entity: sensor.batteries_state_of_capacity
             name: State
-          - entity: sensor.batteries_state_of_capacity_energy
+          - entity: sensor.batteries_state_of_energy
             name: State
-          - entity: sensor.batteries_discharge_power_average_last_24h
+          - entity: sensor.batteries_discharge_power_mean_24h
             name: Ø24h
             format: precision0
           - entity: sensor.batteries_discharge_power

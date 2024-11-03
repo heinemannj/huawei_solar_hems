@@ -11,7 +11,7 @@ use_new_flow_rate_model: true
 entities:
   home:
     entity: sensor.house_consumption_power
-    override_state: false
+    override_state: true
   solar:
     entity: sensor.inverter_input_power
   battery:

@@ -113,22 +113,12 @@
 #
 template:
   - trigger:
-      - platform: state
-        entity_id:
-          - sensor.inverter_total_yield
-        not_from:
-          - "unknown"
-          - "unavailable"
-          - "none"
-        not_to:
-          - "unknown"
-          - "unavailable"
-          - "none"
+      - platform: time_pattern
+        seconds: /15
     action:
       - variables:
-          t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           inv_out_total: "{{ states(var.inv_out_total)|float(0) }}"
           inv_in_grid_total: "{{ states(var.inv_in_grid_total)|float(0) }}"
@@ -177,22 +167,12 @@ template:
         state: "{{ self_sufficiency_total }}"
 
   - trigger:
-      - platform: state
-        entity_id:
-          - sensor.inverter_daily_yield
-        not_from:
-          - "unknown"
-          - "unavailable"
-          - "none"
-        not_to:
-          - "unknown"
-          - "unavailable"
-          - "none"
+      - platform: time_pattern
+        seconds: /15
     action:
       - variables:
-          t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           inv_out: "{{ states(var.inv_out)|float(0) }}"
           grid_out: "{{ states(var.grid_out)|float(0) }}"

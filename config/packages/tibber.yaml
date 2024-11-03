@@ -266,65 +266,65 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           feeActual: >
-            {% from '032-tibber-billing.jinja' import feeActual %}
+            {% from '032-tibber.jinja' import feeActual %}
             {{ feeActual()|from_json }}
           current_hour_consumption: "{{ states('sensor.power_meter_consumption_energy_hourly')|float(0) }}"
           current_hour_price: "{{ state_attr('sensor.tibber_prices', 'current') }}"
           hourly_cost: "{{ state_attr('sensor.tibber_hourly_cost', 'nodes') }}"
           hourly_cost_total: "{{ state_attr('sensor.tibber_hourly_cost_total', 'nodes') }}"
           hourly_cost_state: >-
-            {% from '032-tibber-billing.jinja' import actualState %}
+            {% from '032-tibber.jinja' import actualState %}
             {{ actualState(hourly_cost_total, 'totalCost') }}
           hourly_consumption_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(hourly_cost_total, 'consumption')|from_json }}
           hourly_totalCost_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(hourly_cost_total, 'totalCost')|from_json }}
           hourly_unitPrice_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(hourly_cost_total, 'unitPrice')|from_json }}
           daily_cost: "{{ state_attr('sensor.tibber_daily_cost', 'nodes') }}"
           daily_cost_total: "{{ state_attr('sensor.tibber_daily_cost_total', 'nodes') }}"
           daily_cost_state: >-
-            {% from '032-tibber-billing.jinja' import actualState %}
+            {% from '032-tibber.jinja' import actualState %}
             {{ actualState(daily_cost_total, 'totalCost') }}
           daily_consumption_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(daily_cost_total, 'consumption')|from_json }}
           daily_totalCost_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(daily_cost_total, 'totalCost')|from_json }}
           daily_unitPrice_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(daily_cost_total, 'unitPrice')|from_json }}
           monthly_cost: "{{ state_attr('sensor.tibber_monthly_cost', 'nodes') }}"
           monthly_cost_total: "{{ state_attr('sensor.tibber_monthly_cost_total', 'nodes') }}"
           monthly_cost_state: >-
-            {% from '032-tibber-billing.jinja' import actualState %}
+            {% from '032-tibber.jinja' import actualState %}
             {{ actualState(monthly_cost_total, 'totalCost') }}
           monthly_consumption_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(monthly_cost_total, 'consumption')|from_json }}
           monthly_totalCost_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(monthly_cost_total, 'totalCost')|from_json }}
           monthly_unitPrice_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(monthly_cost_total, 'unitPrice')|from_json }}
           yearly_cost: "{{ state_attr('sensor.tibber_yearly_cost', 'nodes') }}"
           yearly_cost_total: "{{ state_attr('sensor.tibber_yearly_cost_total', 'nodes') }}"
           yearly_cost_state: >-
-            {% from '032-tibber-billing.jinja' import actualState %}
+            {% from '032-tibber.jinja' import actualState %}
             {{ actualState(yearly_cost_total, 'totalCost') }}
           yearly_consumption_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(yearly_cost_total, 'consumption')|from_json }}
           yearly_totalCost_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(yearly_cost_total, 'totalCost')|from_json }}
           yearly_unitPrice_statistics: >-
-            {% from '032-tibber-billing.jinja' import statistics %}
+            {% from '032-tibber.jinja' import statistics %}
             {{ statistics(yearly_cost_total, 'unitPrice')|from_json }}
     sensor:
       #
@@ -343,13 +343,13 @@ template:
             {% set var = namespace(nodes = []) %}
 
             {%- for record in hourly_cost %}
-              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% from '032-tibber.jinja' import billingNode %}
               {% set var.nodes = var.nodes + [billingNode(record, hourly_cost_total, feeActual, 'hourly')|from_json] %}
             {%- endfor %}
 
-            {% from '032-tibber-billing.jinja' import costCurrentHour %}
+            {% from '032-tibber.jinja' import costCurrentHour %}
             {% set costCurrentHour = costCurrentHour(current_hour_consumption, current_hour_price)|from_json %}
-            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% from '032-tibber.jinja' import billingNode %}
             {% set var.nodes = var.nodes + [billingNode(costCurrentHour, hourly_cost_total, feeActual, 'hourly')|from_json] %}
 
             {{ var.nodes }}
@@ -395,13 +395,13 @@ template:
             {% set var = namespace(nodes = []) %}
 
             {%- for record in daily_cost %}
-              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% from '032-tibber.jinja' import billingNode %}
               {% set var.nodes = var.nodes + [billingNode(record, daily_cost_total, feeActual, 'daily')|from_json] %}
             {%- endfor %}
 
-            {% from '032-tibber-billing.jinja' import costCurrentDay %}
+            {% from '032-tibber.jinja' import costCurrentDay %}
             {% set costCurrentDay = costCurrentDay(hourly_cost_total)|from_json %}
-            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% from '032-tibber.jinja' import billingNode %}
             {% set var.nodes = var.nodes + [billingNode(costCurrentDay, daily_cost_total, feeActual, 'daily')|from_json] %}
 
             {{ var.nodes }}
@@ -447,13 +447,13 @@ template:
             {% set var = namespace(nodes = []) %}
 
             {%- for record in monthly_cost %}
-              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% from '032-tibber.jinja' import billingNode %}
               {% set var.nodes = var.nodes + [billingNode(record, monthly_cost_total, feeActual, 'monthly')|from_json] %}
             {%- endfor %}
 
-            {% from '032-tibber-billing.jinja' import costCurrentMonth %}
+            {% from '032-tibber.jinja' import costCurrentMonth %}
             {% set costCurrentMonth = costCurrentMonth(daily_cost_total)|from_json %}
-            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% from '032-tibber.jinja' import billingNode %}
             {% set var.nodes = var.nodes + [billingNode(costCurrentMonth, monthly_cost_total, feeActual, 'monthly')|from_json] %}
 
             {{ var.nodes }}
@@ -499,18 +499,18 @@ template:
             {% set var = namespace(nodes = []) %}
 
             {%- for record in yearly_cost %}
-              {% from '032-tibber-billing.jinja' import billingNode %}
+              {% from '032-tibber.jinja' import billingNode %}
               {% set var.nodes = var.nodes + [billingNode(record, yearly_cost_total, feeActual, 'yearly')|from_json] %}
             {%- endfor %}
 
-            {% from '032-tibber-billing.jinja' import costDummyYear %}
+            {% from '032-tibber.jinja' import costDummyYear %}
             {% set costDummyYear = costDummyYear()|from_json %}
-            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% from '032-tibber.jinja' import billingNode %}
             {% set var.nodes = var.nodes + [billingNode(costDummyYear, yearly_cost_total, feeActual, '')|from_json] %}
 
-            {% from '032-tibber-billing.jinja' import costCurrentYear %}
+            {% from '032-tibber.jinja' import costCurrentYear %}
             {% set costCurrentYear = costCurrentYear(monthly_cost_total)|from_json %}
-            {% from '032-tibber-billing.jinja' import billingNode %}
+            {% from '032-tibber.jinja' import billingNode %}
             {% set var.nodes = var.nodes + [billingNode(costCurrentYear, yearly_cost_total, feeActual, '')|from_json] %}
 
             {{ var.nodes }}
@@ -555,7 +555,7 @@ input_number:
     min: 0
     max: 10
     step: 0.01
-    unit_of_measurement: '€'
+    unit_of_measurement: "€"
     mode: box
   #
   #
@@ -566,7 +566,7 @@ input_number:
     min: 0
     max: 1
     step: 0.01
-    unit_of_measurement: '€'
+    unit_of_measurement: "€"
     mode: box
   #
   #
@@ -577,7 +577,7 @@ input_number:
     min: 0
     max: 0.1
     step: 0.0001
-    unit_of_measurement: '€'
+    unit_of_measurement: "€"
     mode: box
   #
   #

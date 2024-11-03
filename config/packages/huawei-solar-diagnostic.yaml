@@ -71,7 +71,7 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           pv_1_current: "{{ states(var.pv_1_current)|float(0) }}"
           pv_1_voltage: "{{ states(var.pv_1_voltage)|float(0) }}"
@@ -119,22 +119,13 @@ template:
   # - Energy left in the battery from yesterday
   #
   - trigger:
-      - platform: state
-        entity_id:
-          - sensor.inverter_total_yield
-        not_from:
-          - "unknown"
-          - "unavailable"
-          - "none"
-        not_to:
-          - "unknown"
-          - "unavailable"
-          - "none"
+      - platform: time_pattern
+        seconds: /15
     action:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           pv_yield_total: "{{ states(var.pv_yield_total)|float(0) }}"
           inv_out_total: "{{ states(var.inv_out_total)|float(0) }}"
@@ -172,22 +163,13 @@ template:
           inv_efficiency: "{{ inv_efficiency_total }}"
 
   - trigger:
-      - platform: state
-        entity_id:
-          - sensor.inverter_daily_yield
-        not_from:
-          - "unknown"
-          - "unavailable"
-          - "none"
-        not_to:
-          - "unknown"
-          - "unavailable"
-          - "none"
+      - platform: time_pattern
+        seconds: /15
     action:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           pv_yield: "{{ states(var.pv_yield)|float(0) }}"
           inv_in_solar: "{{ states(var.inv_in_solar)|float(0) }}"

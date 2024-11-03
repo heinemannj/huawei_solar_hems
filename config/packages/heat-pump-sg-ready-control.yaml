@@ -31,7 +31,7 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
           epexspot_quantile_setpoint_low: "{{ states(var.epexspot_quantile_setpoint_low)|float(0) }}"

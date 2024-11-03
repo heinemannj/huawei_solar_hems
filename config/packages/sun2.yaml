@@ -57,16 +57,16 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
 
-          rising_yesterday: "{{ state_attr(var.sun_rising_time, 'yesterday')|as_datetime|as_local }}"
-          rising_today: "{{ state_attr(var.sun_rising_time, 'today')|as_datetime|as_local }}"
-          rising_tomorrow: "{{ state_attr(var.sun_rising_time, 'tomorrow')|as_datetime|as_local }}"
+          rising_yesterday: "{{ state_attr(var.rising_time, 'yesterday')|as_datetime|as_local }}"
+          rising_today: "{{ state_attr(var.rising_time, 'today')|as_datetime|as_local }}"
+          rising_tomorrow: "{{ state_attr(var.rising_time, 'tomorrow')|as_datetime|as_local }}"
 
-          setting_yesterday: "{{ state_attr(var.sun_setting_time, 'yesterday')|as_datetime|as_local }}"
-          setting_today: "{{ state_attr(var.sun_setting_time, 'today')|as_datetime|as_local }}"
-          setting_tomorrow: "{{ state_attr(var.sun_setting_time, 'tomorrow')|as_datetime|as_local }}"
+          setting_yesterday: "{{ state_attr(var.setting_time, 'yesterday')|as_datetime|as_local }}"
+          setting_today: "{{ state_attr(var.setting_time, 'today')|as_datetime|as_local }}"
+          setting_tomorrow: "{{ state_attr(var.setting_time, 'tomorrow')|as_datetime|as_local }}"
 
           daylight_yesterday: "{{ state_attr(var.daylight_duration, 'yesterday')|float(0) }}"
           daylight_today: "{{ state_attr(var.daylight_duration, 'today')|float(0) }}"
@@ -81,6 +81,8 @@ template:
       #
       - name: "hems_sun_pv_excess_start"
         unique_id: hems_sun_pv_excess_start
+        device_class: timestamp
+        icon: mdi:weather-sunset-up
         state: >-
           {% from '032-sun2.jinja' import timeAtRisingOffset %}
           {{ timeAtRisingOffset(rising_today, daylight_today, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
@@ -88,19 +90,21 @@ template:
           yesterday: >-
             {% from '032-sun2.jinja' import timeAtRisingOffset %}
             {{ timeAtRisingOffset(rising_yesterday, daylight_yesterday, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
-          today:  >-
+          today: >-
             {% from '032-sun2.jinja' import timeAtRisingOffset %}
             {{ timeAtRisingOffset(rising_today, daylight_today, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
-          tomorrow:  >-
+          tomorrow: >-
             {% from '032-sun2.jinja' import timeAtRisingOffset %}
             {{ timeAtRisingOffset(rising_tomorrow, daylight_tomorrow, pv_excess_start_rising_offset)|from_json|as_datetime|as_local }}
-          time_at_offset: "{{ pv_excess_start_rising_offset }}"
+          rising_offset: "{{ pv_excess_start_rising_offset }}"
           last_updated: "{{ t }}"
       #
       #
       #
       - name: "hems_sun_pv_excess_end"
         unique_id: hems_sun_pv_excess_end
+        device_class: timestamp
+        icon: mdi:weather-sunset-down
         state: >-
           {% from '032-sun2.jinja' import timeAtSettingOffset %}
           {{ timeAtSettingOffset(setting_today, daylight_today, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
@@ -114,13 +118,15 @@ template:
           tomorrow: >-
             {% from '032-sun2.jinja' import timeAtSettingOffset %}
             {{ timeAtSettingOffset(setting_tomorrow, daylight_tomorrow, pv_excess_end_setting_offset)|from_json|as_datetime|as_local }}
-          time_at_offset: "{{ pv_excess_end_setting_offset }}"
+          setting_offset: "{{ pv_excess_end_setting_offset }}"
           last_updated: "{{ t }}"
       #
       #
       #
       - name: "hems_sun_prediction_end"
         unique_id: hems_sun_prediction_end
+        device_class: timestamp
+        icon: mdi:weather-sunset-down
         state: >-
           {% from '032-sun2.jinja' import timeAtSettingOffset %}
           {{ timeAtSettingOffset(setting_today, daylight_today, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
@@ -134,7 +140,7 @@ template:
           tomorrow: >-
             {% from '032-sun2.jinja' import timeAtSettingOffset %}
             {{ timeAtSettingOffset(setting_tomorrow, daylight_tomorrow, prediction_end_setting_offset)|from_json|as_datetime|as_local }}
-          time_at_offset: "{{ prediction_end_setting_offset }}"
+          setting_offset: "{{ prediction_end_setting_offset }}"
           last_updated: "{{ t }}"
 #
 # ########## End: Persistent Template Sensors ##########

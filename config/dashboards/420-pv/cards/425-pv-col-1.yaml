@@ -258,12 +258,12 @@ elements:
             from: 0
             to: 100
             hide: false
-  - entity: sensor.batteries_state_of_capacity_energy
+  - entity: sensor.batteries_state_of_energy
     style:
       left: 94.5%
       top: 60%
     type: state-label
-  - entity: sensor.batteries_state_of_capacity_remaining_discharge_time
+  - entity: sensor.batteries_end_of_discharge_time
     style:
       left: 94%
       top: 62%

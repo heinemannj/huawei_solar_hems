@@ -56,7 +56,7 @@ template:
           {# Check your Input Voltage of connected MPPTs #}
           {# Assuming an Input Voltage above 600 V #}
 
-          {% from '032-emhass.jinja' import globalVariables %}
+          {% from '032-hems.jinja' import globalVariables %}
           {% set var = globalVariables()|from_json %}
           {% set inv_rated_power = states(var.inv_rated_power)|float(0) %}
           {% set inv_in_power = states(var.inv_in_power)|float(0) %}

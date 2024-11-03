@@ -53,7 +53,7 @@ template:
     action:
       - variables:
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           inv_in_solar: "{{ states(var.inv_in_solar)|float(0) }}"
           inv_in_grid: "{{ states(var.inv_in_grid)|float(0) }}"
@@ -62,17 +62,17 @@ template:
           bat_out: "{{ states(var.bat_out)|float(0) }}"
           bat_in_loss_last: "{{ states(var.bat_in_loss)|float(0) }}"
           bat_out_loss_last: "{{ states(var.bat_out_loss)|float(0) }}"
-          total_loss: "{{ (inv_in_solar + inv_in_grid + bat_out - bat_in - inv_out)|float(0) }}"
+          inv_loss: "{{ (inv_in_solar + inv_in_grid + bat_out - bat_in - inv_out)|float(0) }}"
           bat_out_loss: >-
             {% if trigger.entity_id == var.bat_out %}
-              {{ total_loss - bat_in_loss_last }}
+              {{ inv_loss - bat_in_loss_last }}
             {% else %}
               {{ bat_out_loss_last }}
             {% endif %}
           bat_out_with_loss: "{{ (bat_out - bat_out_loss)|float(0) }}"
           bat_in_loss: >-
             {% if trigger.entity_id == var.bat_in %}
-              {{ total_loss - bat_out_loss_last }}
+              {{ inv_loss - bat_out_loss_last }}
             {% else %}
               {{ bat_in_loss_last }}
             {% endif %}
@@ -91,8 +91,8 @@ template:
         icon: mdi:solar-power
         state: >-
           {% if trigger.platform == 'state' %}
-            {% if total_loss > 0 %}
-              {{ total_loss }}
+            {% if inv_loss > 0 %}
+              {{ inv_loss }}
             {% else %}
               {{ states(var.inv_loss)|float(0) }}
             {% endif %}

@@ -10,7 +10,7 @@ clickable_entities: true
 entities:
   home:
     entity: sensor.house_consumption_energy_daily
-    override_state: false
+    override_state: true
   solar:
     entity: sensor.solar_yield_daily
   battery:

@@ -105,36 +105,36 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
-          grid_power_forecast: "{{ states(var.grid_power_forecast)|float(0) }}"
-          load_power_forecast: "{{ states(var.load_power_forecast)|float(0) }}"
+          grid_active_power_forecast: "{{ states(var.grid_active_power_forecast)|float(0) }}"
+          house_power_forecast: "{{ states(var.house_power_forecast)|float(0) }}"
           inv_rated_power: "{{ states(var.inv_rated_power)|float(0) }}"
           inv_max_active_power: "{{ states(var.inv_max_active_power)|float(0) }}"
           inv_in_power: "{{ states(var.inv_in_power)|float(0) }}"
           inv_active_power_forecast: "{{ states(var.inv_active_power_forecast)|float(0) }}"
           prediction_status: "{{ states(var.prediction_status) }}"
           epexspot_quantile: "{{ states(var.epexspot_quantile)|float(0) }}"
-          load_energy_forecast: "{{ states(var.load_energy_forecast)|float(0) }}"
-          load_energy_forecast_solar_noon: "{{ state_attr(var.load_energy_forecast, 'solar_noon_energy')|float(0) }}"
-          load_energy_forecast_prediction_end: "{{ state_attr(var.load_energy_forecast, 'prediction_end_energy')|float(0) }}"
-          load_energy_forecast_pv_excess_start: "{{ state_attr(var.load_energy_forecast, 'pv_excess_start_energy')|float(0) }}"
-          load_energy_forecast_pv_excess_end: "{{ state_attr(var.load_energy_forecast, 'pv_excess_end_energy')|float(0) }}"
-          solar_energy_forecast: "{{ states(var.solar_energy_forecast)|float(0) }}"
+          house_in_forecast: "{{ states(var.house_in_forecast)|float(0) }}"
+          house_in_forecast_solar_noon: "{{ state_attr(var.house_in_forecast, 'solar_noon_energy')|float(0) }}"
+          house_in_forecast_prediction_end: "{{ state_attr(var.house_in_forecast, 'prediction_end_energy')|float(0) }}"
+          house_in_forecast_pv_excess_start: "{{ state_attr(var.house_in_forecast, 'pv_excess_start_energy')|float(0) }}"
+          house_in_forecast_pv_excess_end: "{{ state_attr(var.house_in_forecast, 'pv_excess_end_energy')|float(0) }}"
+          inv_in_solar_forecast: "{{ states(var.inv_in_solar_forecast)|float(0) }}"
           solar_noon_time: "{{ state_attr(var.solar_noon_time, 'today')|as_datetime|as_local }}"
-          solar_energy_forecast_solar_noon: "{{ state_attr(var.solar_energy_forecast, 'solar_noon_energy')|float(0) }}"
-          solar_energy_forecast_prediction_end: "{{ state_attr(var.solar_energy_forecast, 'prediction_end_energy')|float(0) }}"
-          solar_energy_forecast_pv_excess_start: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_start_energy')|float(0) }}"
-          solar_energy_forecast_pv_excess_end: "{{ state_attr(var.solar_energy_forecast, 'pv_excess_end_energy')|float(0) }}"
+          inv_in_solar_forecast_solar_noon: "{{ state_attr(var.inv_in_solar_forecast, 'solar_noon_energy')|float(0) }}"
+          inv_in_solar_forecast_prediction_end: "{{ state_attr(var.inv_in_solar_forecast, 'prediction_end_energy')|float(0) }}"
+          inv_in_solar_forecast_pv_excess_start: "{{ state_attr(var.inv_in_solar_forecast, 'pv_excess_start_energy')|float(0) }}"
+          inv_in_solar_forecast_pv_excess_end: "{{ state_attr(var.inv_in_solar_forecast, 'pv_excess_end_energy')|float(0) }}"
           bat_rated_charge_power: "{{ states(var.bat_rated_charge_power)|float(5000) }}"
           bat_rated_discharge_power: "{{ states(var.bat_rated_discharge_power)|float(5000) }}"
           bat_soc: "{{ states(var.bat_soc)|float(0) }}"
-          bat_charge_energy_remaining: "{{ states(var.bat_charge_energy_remaining)|float(0) }}"
-          bat_charge_energy_forecast: "{{ solar_energy_forecast - load_energy_forecast }}"
-          bat_charge_energy_forecast_solar_noon: "{{ solar_energy_forecast_solar_noon - load_energy_forecast_solar_noon }}"
-          bat_charge_energy_forecast_prediction_end: "{{ solar_energy_forecast_prediction_end - load_energy_forecast_prediction_end }}"
-          bat_charge_energy_forecast_pv_excess_start: "{{ solar_energy_forecast_pv_excess_start - load_energy_forecast_pv_excess_start }}"
-          bat_charge_energy_forecast_pv_excess_end: "{{ solar_energy_forecast_pv_excess_end - load_energy_forecast_pv_excess_end }}"
+          bat_eoc: "{{ states(var.bat_eoc)|float(0) }}"
+          bat_charge_energy_forecast: "{{ inv_in_solar_forecast - house_in_forecast }}"
+          bat_charge_energy_forecast_solar_noon: "{{ inv_in_solar_forecast_solar_noon - house_in_forecast_solar_noon }}"
+          bat_charge_energy_forecast_prediction_end: "{{ inv_in_solar_forecast_prediction_end - house_in_forecast_prediction_end }}"
+          bat_charge_energy_forecast_pv_excess_start: "{{ inv_in_solar_forecast_pv_excess_start - house_in_forecast_pv_excess_start }}"
+          bat_charge_energy_forecast_pv_excess_end: "{{ inv_in_solar_forecast_pv_excess_end - house_in_forecast_pv_excess_end }}"
           bat_soc_setpoint_low: "{{ states(var.bat_soc_setpoint_low)|float(0) }}"
           bat_soc_setpoint_neutral: "{{ states(var.bat_soc_setpoint_neutral)|float(0) }}"
           bat_soc_setpoint_high: "{{ states(var.bat_soc_setpoint_high)|float(0) }}"
@@ -150,8 +150,8 @@ template:
         unique_id: batteries_charge_from_grid
         icon: mdi:battery-charging-50
         state: >-
-          {{ load_power_forecast > 0
-              and grid_power_forecast > 0
+          {{ house_power_forecast > 0
+              and grid_active_power_forecast > 0
               and inv_active_power_forecast < 0
               and epexspot_quantile <= epexspot_quantile_setpoint_low
               and prediction_status == 'Optimal' }}
@@ -166,30 +166,30 @@ template:
         unique_id: batteries_maximum_charging_power
         icon: mdi:battery-charging-50
         state: "{{ bat_soc == 100
-          or bat_charge_energy_forecast_solar_noon <= bat_charge_energy_remaining }}"
+          or bat_charge_energy_forecast_solar_noon <= bat_eoc }}"
         attributes:
           maximum_charging_power: >-
             {% set charge_time = ((solar_noon_time|as_timestamp - now().timestamp()) / 3600)|float(0) %}
 
             {% if charge_time > 0 %}
-              {% set charge_power = (bat_charge_energy_remaining / charge_time * 1000)|float(0)|round(0) %}
+              {% set charge_power = (bat_eoc / charge_time * 1000)|float(0)|round(0) %}
             {% else %}
               {% set charge_power = bat_rated_charge_power %}
             {% endif %}
 
             {% if bat_soc_setpoint_neutral < bat_soc < 100
-                and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
+                and bat_charge_energy_forecast_solar_noon > bat_eoc
                 and (inv_in_power - inv_max_active_power) > charge_power %}
               {{ inv_in_power - inv_rated_power }}
             {% elif bat_soc_setpoint_neutral < bat_soc < 100
-                and bat_charge_energy_forecast_solar_noon > bat_charge_energy_remaining
+                and bat_charge_energy_forecast_solar_noon > bat_eoc
                 and charge_power < bat_rated_charge_power %}
               {{ charge_power }}
             {% else %}
               {{ bat_rated_charge_power }}
             {% endif %}
           charge_end_time_expected: "{{ solar_noon_time }}"
-          charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
+          charge_energy_remaining: "{{ bat_eoc|float(0)|round(3) }}"
           charge_energy_forecast_solar_noon: "{{ bat_charge_energy_forecast_solar_noon|float(0)|round(3) }}"
           charge_energy_forecast_prediction_end: "{{ bat_charge_energy_forecast_prediction_end|float(0)|round(3) }}"
           charge_energy_forecast_pv_excess_start: "{{ bat_charge_energy_forecast_pv_excess_start|float(0)|round(3) }}"
@@ -224,12 +224,12 @@ template:
         unique_id: batteries_forcible_charge
         icon: mdi:battery-charging-50
         state: >-
-          {{ solar_energy_forecast > 0.0
+          {{ inv_in_solar_forecast > 0.0
               and epexspot_quantile <= epexspot_quantile_setpoint_neutral
-              and bat_charge_energy_forecast_prediction_end <= bat_charge_energy_remaining }}
+              and bat_charge_energy_forecast_prediction_end <= bat_eoc }}
         attributes:
           bat_charge_energy_forecast_prediction_end: "{{ bat_charge_energy_forecast_prediction_end|float(0)|round(3) }}"
-          bat_charge_energy_remaining: "{{ bat_charge_energy_remaining|float(0)|round(3) }}"
+          bat_eoc: "{{ bat_eoc|float(0)|round(3) }}"
           bat_target_soc: "{{ bat_soc_setpoint_forcible_charge }}"
           epexspot_quantile: "{{ epexspot_quantile|float(0)|round(4) }}"
           epexspot_quantile_setpoint_neutral: "{{ epexspot_quantile_setpoint_neutral|float(0)|round(4) }}"
@@ -242,14 +242,15 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           solar_noon_time_today: "{{ state_attr(var.solar_noon_time, 'today')|as_datetime|as_local }}"
           prediction_end_time_today: "{{ state_attr(var.prediction_end_time, 'today')|as_datetime|as_local }}"
           prediction_end_time_tomorrow: "{{ state_attr(var.prediction_end_time, 'tomorrow')|as_datetime|as_local }}"
+          prediction_horizon: "{{ ((prediction_end_time_tomorrow|as_timestamp - now()|as_timestamp)/60/30)|int(0) + 1 }}"
           pv_excess_start_time_today: "{{ state_attr(var.pv_excess_start_time, 'today')|as_datetime|as_local }}"
           pv_excess_end_time_today: "{{ state_attr(var.pv_excess_end_time, 'today')|as_datetime|as_local }}"
-          load_power_forecast: "{{ state_attr(var.load_power_forecast, 'forecasts') }}"
+          house_power_forecast: "{{ state_attr(var.house_power_forecast, 'forecasts') }}"
           solcast: >
             {% from '032-emhass.jinja' import convertDate %}
             {{ convertDate(state_attr(var.solcast_forecast_today, 'detailedForecast'), 'period_start')|from_json }}
@@ -259,7 +260,7 @@ template:
       #
       - name: "emhass_prediction_horizon"
         unique_id: emhass_prediction_horizon
-        state: "{{ ((prediction_end_time_tomorrow|as_timestamp - now()|as_timestamp)/60/30)|int(0) + 1 }}"
+        state: "{{ prediction_horizon }}"
         attributes:
           prediction_end_time_today: "{{ prediction_end_time_today }}"
           prediction_end_time_tomorrow: "{{ prediction_end_time_tomorrow }}"
@@ -279,32 +280,32 @@ template:
           {%- set ts_end_time = ((as_timestamp(today_at("00:00:00") + timedelta( days = 1))/1800)|round(0,'floor')|int * 1800) %}
 
           {% from '032-emhass.jinja' import forecastPeriod %}
-          {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+          {{ forecastPeriod(house_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
         attributes:
           solar_noon_time: "{{ solar_noon_time_today }}"
           solar_noon_energy: >-
             {%- set ts_end_time = solar_noon_time_today|as_timestamp %}
 
             {% from '032-emhass.jinja' import forecastPeriod %}
-            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+            {{ forecastPeriod(house_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
           prediction_end_time: "{{ prediction_end_time_today }}"
           prediction_end_energy: >-
             {%- set ts_end_time = prediction_end_time_today|as_timestamp %}
 
             {% from '032-emhass.jinja' import forecastPeriod %}
-            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+            {{ forecastPeriod(house_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
           pv_excess_start_time: "{{ pv_excess_start_time_today }}"
           pv_excess_start_energy: >-
             {%- set ts_end_time = pv_excess_start_time_today|as_timestamp %}
 
             {% from '032-emhass.jinja' import forecastPeriod %}
-            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+            {{ forecastPeriod(house_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
           pv_excess_end_time: "{{ pv_excess_end_time_today }}"
           pv_excess_end_energy: >-
             {%- set ts_end_time = pv_excess_end_time_today|as_timestamp %}
 
             {% from '032-emhass.jinja' import forecastPeriod %}
-            {{ forecastPeriod(load_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
+            {{ forecastPeriod(house_power_forecast, 'date', 'p_load_forecast', 1000, ts_end_time)|float(0) }}
           last_updated: "{{ t }}"
       #
       #
@@ -350,7 +351,7 @@ template:
       - variables:
           t: "{{ now().isoformat() }}"
           var: >-
-            {% from '032-emhass.jinja' import globalVariables %}
+            {% from '032-hems.jinja' import globalVariables %}
             {{ globalVariables()|from_json }}
           epexspot_net_price: "{{ states(var.epexspot_net_price)|float(0) / 100 }}"
           net_price: >-

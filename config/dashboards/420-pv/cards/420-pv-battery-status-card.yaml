@@ -8,9 +8,9 @@ mushroom-template-card-defaults: &mushroom-template-card-template
 type: custom:vertical-stack-in-card
 cards:
   - <<: *mushroom-template-card-template
-    primary: "{{ states('sensor.batteries_state_of_capacity_remaining_charge_time') }}"
+    primary: "{{ states('sensor.batteries_end_of_charge_time') }}"
     icon: mdi:battery-arrow-up
-    entity: sensor.batteries_state_of_capacity_remaining_charge_time
+    entity: sensor.batteries_end_of_charge_time
     icon_color: "#f06292"
     card_mod:
       class: mushroom-pv-status-card-margin-top
@@ -22,16 +22,16 @@ cards:
     card_mod:
       class: mushroom-pv-status-card
   - <<: *mushroom-template-card-template
-    primary: "{{ states('sensor.batteries_state_of_capacity_energy')|float(0)|round(2) }} kWh"
+    primary: "{{ states('sensor.batteries_state_of_energy')|float(0)|round(2) }} kWh"
     icon: mdi:battery-high
-    entity: sensor.batteries_state_of_capacity_energy
+    entity: sensor.batteries_state_of_energy
     icon_color: "#f06292"
     card_mod:
       class: mushroom-pv-status-card
   - <<: *mushroom-template-card-template
-    primary: "{{ states('sensor.batteries_state_of_capacity_remaining_discharge_time') }}"
+    primary: "{{ states('sensor.batteries_end_of_discharge_time') }}"
     icon: mdi:battery-arrow-down
-    entity: sensor.batteries_state_of_capacity_remaining_discharge_time
+    entity: sensor.batteries_end_of_discharge_time
     icon_color: "#4db6ac"
     card_mod:
       class: mushroom-pv-status-card
